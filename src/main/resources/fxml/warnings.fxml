@@ -8,13 +8,23 @@
    <children>
       <Pane prefHeight="200.0" prefWidth="206.0">
          <children>
+
             <Label layoutX="61.0" layoutY="14.0" text="Warnings" textFill="#f00909">
                <font>
                   <Font size="20.0" />
-               </font></Label>
-            <Label layoutX="44.0" layoutY="83.0" text="Wrong Id or Password" />
-            <Button fx:id="againButton" layoutX="122.0" layoutY="143.0" mnemonicParsing="false" onAction="#doAgain" text="Do again" />
-            <CheckBox fx:id="confirmCheckBox" layoutX="24.0" layoutY="147.0" mnemonicParsing="false" text="Confirm" />
+               </font>
+            </Label>
+
+            <Label layoutX="44.0" layoutY="83.0"
+                   text="Wrong Id or Password" />
+
+            <Button fx:id="againButton"
+                    onAction="#doAgain" text="Do again"
+                    layoutX="122.0" layoutY="143.0" mnemonicParsing="false"/>
+
+            <CheckBox fx:id="confirmCheckBox"
+                      text="Confirm"
+                      layoutX="24.0" layoutY="147.0" mnemonicParsing="false"/>
          </children>
       </Pane>
    </children>
