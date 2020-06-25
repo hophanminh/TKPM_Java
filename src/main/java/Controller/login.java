@@ -37,7 +37,7 @@ public class login {
             // go to main
             Stage main = (Stage) idEmployee.getScene().getWindow();
             Parent root = FXMLLoader.load(getClass().getResource("/fxml/main.fxml"));
-            main.setScene(new Scene(root, 668, 560));
+            main.setScene(new Scene(root, 668, 592));
             main.show();
 
         } else {
