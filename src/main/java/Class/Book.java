@@ -7,7 +7,6 @@ import java.util.Set;
 @Entity
 @Table(name ="book")
 public class Book extends Item {
-
     @Column(name = "authorBook")
     private String authorBook;
 
@@ -19,10 +18,6 @@ public class Book extends Item {
 
     @Column(name = "yearBook")
     private int year;
-//
-//    @ManyToOne
-//    @JoinColumn(name = "idItem", nullable = false)
-//    private Item item;
 
     @ManyToMany(cascade = {CascadeType.ALL})
     @JoinTable(

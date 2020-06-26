@@ -6,7 +6,7 @@ import java.util.Set;
 
 @Entity
 @Table(name = "item")
-@Inheritance(strategy=InheritanceType.SINGLE_TABLE)
+@Inheritance(strategy=InheritanceType.JOINED)
 public class Item {
     @Id
     @Column(name = "idItem")
