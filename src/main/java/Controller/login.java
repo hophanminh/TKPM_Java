@@ -1,5 +1,4 @@
 package Controller;
-import Main.Main;
 
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
@@ -11,17 +10,17 @@ import javafx.scene.control.Alert;
 import javafx.scene.control.Button;
 import javafx.scene.control.PasswordField;
 import javafx.scene.control.TextField;
-import javafx.scene.layout.Pane;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
-import javafx.stage.StageStyle;
 
 import java.io.IOException;
 
 public class login {
-
+    @FXML
     public TextField idEmployee;
+    @FXML
     public PasswordField passwordEmployee;
+    @FXML
     public Button LoginButton;
 
     public void login(ActionEvent actionEvent) throws IOException {
@@ -58,5 +57,9 @@ public class login {
             idEmployee.clear();
             passwordEmployee.clear();
         }
+    }
+
+    public void onEnter(ActionEvent actionEvent) {
+        LoginButton.fire();
     }
 }
