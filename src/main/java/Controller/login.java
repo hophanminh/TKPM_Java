@@ -1,20 +1,14 @@
 package Controller;
-import Main.Main;
-
 import javafx.event.ActionEvent;
-import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
-import javafx.scene.Node;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.control.Alert;
 import javafx.scene.control.Button;
 import javafx.scene.control.PasswordField;
 import javafx.scene.control.TextField;
-import javafx.scene.layout.Pane;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
-import javafx.stage.StageStyle;
 
 import java.io.IOException;
 
@@ -42,13 +36,16 @@ public class login {
 
         } else {
             System.out.println("Wrong id or password");
+            //Stage loginWindow = (Stage)((Node)actionEvent.getSource()).getScene().getWindow();  // set owner
+            Stage loginWindow = (Stage) idEmployee.getScene().getWindow(); // set owner
 
             // Create and display Alert
             Alert loginFail = new Alert(Alert.AlertType.WARNING);
             loginFail.setTitle("Login failed");
             loginFail.setHeaderText(null);
             loginFail.setContentText("Wrong Id or Password. Please try again");
-            Stage loginWindow = (Stage)((Node)actionEvent.getSource()).getScene().getWindow();  // set owner
+
+            // Lock alert
             loginFail.initOwner(loginWindow);
             loginFail.initModality(Modality.WINDOW_MODAL);
 
