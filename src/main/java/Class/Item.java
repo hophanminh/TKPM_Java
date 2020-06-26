@@ -6,6 +6,7 @@ import java.util.Set;
 
 @Entity
 @Table(name = "item")
+@Inheritance(strategy=InheritanceType.SINGLE_TABLE)
 public class Item {
     @Id
     @Column(name = "idItem")
@@ -33,9 +34,9 @@ public class Item {
             inverseJoinColumns = {@JoinColumn(name = "item_idItem")}
     )
     Set<Genre> storageList = new HashSet<>();
-
-    @OneToMany(fetch = FetchType.EAGER, mappedBy = "item")
-    protected Set<Book> bookList = new HashSet<>();
+//
+//    @OneToMany(fetch = FetchType.EAGER, mappedBy = "item")
+//    protected Set<Book> bookList = new HashSet<>();
 
     public int getIdItem() {
         return idItem;

@@ -8,7 +8,7 @@
         <property name = "connection.driver_class">com.mysql.jdbc.Driver</property>
 
         <!-- Minh -->
-        <property name = "connection.url">jdbc:mysql://localhost:3012/TKPM_QuanLyNhaSach</property>
+        <property name = "connection.url">jdbc:mysql://localhost:3012/tkpm_quanlynhasach</property>
         <property name = "connection.username">root</property>
         <property name="connection.password">root</property>
 
@@ -36,14 +36,16 @@
         <property name = "generate_statistics">true</property>
         <property name = "hibernate.jdbc.batch_versioned_data">true </property>
 
-        <!-- Add more models class here
-        <mapping class="Company"/>
-        <mapping class="Employee"/>
-        -->
-
-        <mapping resource="employee.hbm.xml"/>
-        <mapping resource="company.hbm.xml"/>
-
+        <mapping class="Class.Bill"/>
+        <mapping class="Class.Book"/>
+        <mapping class="Class.Company"/>
+        <mapping class="Class.Customer"/>
+        <mapping class="Class.Discount"/>
+        <mapping class="Class.Employee"/>
+        <mapping class="Class.Genre"/>
+        <mapping class="Class.Item"/>
+        <mapping class="Class.Storage"/>
+        <mapping class="Class.Store"/>
 
     </session-factory>
 </hibernate-configuration>

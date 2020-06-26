@@ -1,4 +1,8 @@
 package Controller;
+
+import Class.Employee;
+import DAO.EmployeeDAO;
+
 import javafx.event.ActionEvent;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
@@ -11,6 +15,7 @@ import javafx.stage.Modality;
 import javafx.stage.Stage;
 
 import java.io.IOException;
+import java.util.List;
 
 public class login {
     @FXML
@@ -20,14 +25,19 @@ public class login {
     @FXML
     public Button LoginButton;
 
+    private EmployeeDAO employeeDAO;
+
     public void login(ActionEvent actionEvent) throws IOException {
+        employeeDAO = new EmployeeDAO();
+
         //loginButton.setText("Welcome");
         String id = idEmployee.getText();
         String pass = passwordEmployee.getText();
         System.out.println("ID: "+ id);
         System.out.println("Password: " + pass);
 
-        if(id.equals("hophanminh") && pass.equals("hophanminh1")) {
+        List<Employee> list = this.employeeDAO.getListEmployee();
+        if(list.contains(id) && this.employeeDAO.getPassword(id).equals(pass) ){
             System.out.println("Login...");
 
             // go to main
