@@ -6,6 +6,7 @@ import java.util.Set;
 
 @Entity
 @Table(name ="book")
+@PrimaryKeyJoinColumn(name = "idBook")
 public class Book extends Item {
     @Column(name = "authorBook")
     private String authorBook;
