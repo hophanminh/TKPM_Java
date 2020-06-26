@@ -40,12 +40,11 @@ public class EmployeeDAO {
         try{
             session.getTransaction().begin();
 
-            String sql ="SELECT s FROM employee s" ;
+            String sql ="SELECT s FROM employee s";
 
-            Query<Employee> result = session.createQuery(sql);
-
-            List<Employee> list = result.getResultList();
+            List<Employee> list = session.createQuery(sql).getResultList();;
             return list;
+
         } catch (Exception exception) {
             exception.printStackTrace();
             session.getTransaction().rollback();

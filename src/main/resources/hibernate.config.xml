@@ -47,7 +47,5 @@
         <mapping class="Class.Storage"/>
         <mapping class="Class.Store"/>
 
-
-
     </session-factory>
 </hibernate-configuration>
