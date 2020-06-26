@@ -3,7 +3,6 @@ package DAO;
 import org.hibernate.Session;
 import org.hibernate.SessionFactory;
 import utils.HibernateUtils;
-import Class.Employee;
 
 import javax.persistence.Query;
 import java.util.List;
@@ -11,43 +10,51 @@ import java.util.List;
 public class EmployeeDAO {
 
 
-    SessionFactory sessionFactory = HibernateUtils.getSessionFactory();
-    Session session = sessionFactory.getCurrentSession();
 
 
     public EmployeeDAO(){
     }
 
-    public String getPassword(String nameEmployee){
+    public String getPassword(String nameEmployee1){
+
+        SessionFactory sessionFactory = HibernateUtils.getSessionFactory();
+        Session session = sessionFactory.getCurrentSession();
 
         try{
             session.getTransaction().begin();
 
-            String sql = "SELECT employee.passwordEmployee " +
-                    "   FROM employee " +
-                    "   WHERE employee.nameEmployee == " + nameEmployee ;
-            Query result = session.createQuery(sql);
+            String sql = "select e.passwordEmployee from Employee e where e.nameEmployee = \'"+ nameEmployee1 + "\'";
+            Query result = session.createSQLQuery(sql);
             String password = result.getResultList().get(0).toString();
+            System.out.println(password);
             return password;
         } catch (Exception exception) {
             exception.printStackTrace();
             session.getTransaction().rollback();
+        } finally {
+            session.close();
         }
         return "CANNOT FIND";
     }
 
-    public List<Employee> getListEmployee(){
+    public List<String> getNameEmployee(){
+
+        SessionFactory sessionFactory = HibernateUtils.getSessionFactory();
+        Session session = sessionFactory.getCurrentSession();
+        
         try{
             session.getTransaction().begin();
 
-            String sql ="SELECT s FROM employee s";
+            String sql ="SELECT e.nameEmployee FROM employee e";
 
-            List<Employee> list = session.createQuery(sql).getResultList();;
+            List<String> list = session.createSQLQuery(sql).getResultList();
             return list;
 
         } catch (Exception exception) {
             exception.printStackTrace();
             session.getTransaction().rollback();
+        } finally {
+            session.close();
         }
         return null;
 

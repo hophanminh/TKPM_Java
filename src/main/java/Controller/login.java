@@ -4,6 +4,7 @@ import Class.Employee;
 import DAO.EmployeeDAO;
 
 import javafx.event.ActionEvent;
+import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
@@ -31,12 +32,12 @@ public class login {
         employeeDAO = new EmployeeDAO();
 
         //loginButton.setText("Welcome");
-        String id = idEmployee.getText();
-        String pass = passwordEmployee.getText();
+        String id = idEmployee.getText().trim();
+        String pass = passwordEmployee.getText().trim();
         System.out.println("ID: "+ id);
         System.out.println("Password: " + pass);
 
-        List<Employee> list = this.employeeDAO.getListEmployee();
+        List<String> list = this.employeeDAO.getNameEmployee();
         if(list.contains(id) && this.employeeDAO.getPassword(id).equals(pass) ){
             System.out.println("Login...");
 
