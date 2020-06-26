@@ -1,62 +1,44 @@
 package DAO;
+import Class.*;
+import Main.*;
 
 import org.hibernate.Session;
 import org.hibernate.SessionFactory;
 import utils.HibernateUtils;
 
-import javax.persistence.Query;
+import org.hibernate.query.Query;
 import java.util.List;
 
 public class EmployeeDAO {
-
-
-
-
     public EmployeeDAO(){
     }
 
-    public String getPassword(String nameEmployee1){
+    public Boolean checkLogin(String name, String pass){
 
-        SessionFactory sessionFactory = HibernateUtils.getSessionFactory();
-        Session session = sessionFactory.getCurrentSession();
+        // get global session
+        Session session = Main.getSession();
 
         try{
             session.getTransaction().begin();
 
-            String sql = "select e.passwordEmployee from Employee e where e.nameEmployee = \'"+ nameEmployee1 + "\'";
-            Query result = session.createSQLQuery(sql);
-            String password = result.getResultList().get(0).toString();
-            System.out.println(password);
-            return password;
+            Query<Employee> query = session.createQuery(
+                    "from Employee e " +
+                            "where e.nameEmployee = :name AND e.passwordEmployee = :pass", Employee.class
+            );
+            query.setParameter("name",name).setParameter("pass",pass);
+            List<Employee> resultList = query.list();
+
+            // if empty -> no account with input name and password
+            if (resultList.isEmpty()) {
+                return false;
+            }
+            else {
+                return true;
+            }
         } catch (Exception exception) {
             exception.printStackTrace();
             session.getTransaction().rollback();
-        } finally {
-            session.close();
-        }
-        return "CANNOT FIND";
-    }
-
-    public List<String> getNameEmployee(){
-
-        SessionFactory sessionFactory = HibernateUtils.getSessionFactory();
-        Session session = sessionFactory.getCurrentSession();
-        
-        try{
-            session.getTransaction().begin();
-
-            String sql ="SELECT e.nameEmployee FROM employee e";
-
-            List<String> list = session.createSQLQuery(sql).getResultList();
-            return list;
-
-        } catch (Exception exception) {
-            exception.printStackTrace();
-            session.getTransaction().rollback();
-        } finally {
-            session.close();
-        }
-        return null;
-
+        } 
+        return false;
     }
 }

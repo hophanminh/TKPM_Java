@@ -5,17 +5,26 @@ import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.stage.Stage;
+import org.hibernate.Session;
+import org.hibernate.SessionFactory;
+import utils.HibernateUtils;
 
 public class Main extends Application {
     private static Stage pStage;
-
     public static Stage getPrimaryStage() {
         return pStage;
     }
-
     private void setPrimaryStage(Stage pStage) {
         Main.pStage = pStage;
     }
+
+    private static SessionFactory sessionFactory = HibernateUtils.getSessionFactory();
+    private static Session session = sessionFactory.getCurrentSession();
+    public static Session getSession() {
+        return session;
+    }
+
+
 
     public static void main(String[] args) {
         launch(args);

@@ -32,13 +32,12 @@ public class login {
         employeeDAO = new EmployeeDAO();
 
         //loginButton.setText("Welcome");
-        String id = idEmployee.getText().trim();
+        String name = idEmployee.getText().trim();
         String pass = passwordEmployee.getText().trim();
-        System.out.println("ID: "+ id);
+        System.out.println("ID: "+ name);
         System.out.println("Password: " + pass);
 
-        List<String> list = this.employeeDAO.getNameEmployee();
-        if(list.contains(id) && this.employeeDAO.getPassword(id).equals(pass) ){
+        if(this.employeeDAO.checkLogin(name, pass)){
             System.out.println("Login...");
 
             // go to main

@@ -7,8 +7,11 @@
         <!-- Database connection settings -->
         <property name = "connection.driver_class">com.mysql.jdbc.Driver</property>
 
-        <!-- Minh -->
+        <!-- Minh
         <property name = "connection.url">jdbc:mysql://localhost:3012/tkpm_quanlynhasach</property>
+        -->
+        <property name = "connection.url">jdbc:mysql://localhost:3306/tkpm_quanlynhasach</property>
+
         <property name = "connection.username">root</property>
         <property name="connection.password">root</property>
 
