@@ -53,20 +53,13 @@ DROP TABLE IF EXISTS `book`;
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
 /*!50503 SET character_set_client = utf8mb4 */;
 CREATE TABLE `book` (
-  `idbook` int NOT NULL AUTO_INCREMENT,
-  `authorBook` varchar(45) DEFAULT NULL,
-  `descriptionBook` varchar(45) DEFAULT NULL,
-  `pulisherBook` varchar(45) DEFAULT NULL,
-  `yearBook` year DEFAULT NULL,
-  `item_idItem` int NOT NULL,
+  `authorBook` varchar(255) DEFAULT NULL,
+  `descriptionBook` varchar(255) DEFAULT NULL,
+  `pulisherBook` varchar(255) DEFAULT NULL,
+  `yearBook` int DEFAULT NULL,
   `idItem` int NOT NULL,
-  PRIMARY KEY (`idbook`,`item_idItem`),
-  KEY `fk_book_item1_idx` (`item_idItem`),
-  KEY `FK7gqi8kpljj6v5s1v2u5q17pa8` (`idItem`),
-  CONSTRAINT `FK7gqi8kpljj6v5s1v2u5q17pa8` FOREIGN KEY (`idItem`) REFERENCES `item` (`idItem`),
-  CONSTRAINT `fk_book_item1` FOREIGN KEY (`item_idItem`) REFERENCES `item` (`idItem`),
-  CONSTRAINT `FKrwim1q0hpb0l1qnrn9g58mqyp` FOREIGN KEY (`idbook`) REFERENCES `item` (`idItem`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+  PRIMARY KEY (`idItem`)
+) ENGINE=MyISAM DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -75,6 +68,7 @@ CREATE TABLE `book` (
 
 LOCK TABLES `book` WRITE;
 /*!40000 ALTER TABLE `book` DISABLE KEYS */;
+INSERT INTO `book` VALUES ('nguyen van a','comedy book','abc company',1999,2),('nguyen van b','sad book','cdf company',1976,3);
 /*!40000 ALTER TABLE `book` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -211,6 +205,7 @@ CREATE TABLE `employee` (
 
 LOCK TABLES `employee` WRITE;
 /*!40000 ALTER TABLE `employee` DISABLE KEYS */;
+INSERT INTO `employee` VALUES (1,'abc','admin','admin','123',1,1234,'0001-01-01 00:00:00',1,NULL,NULL);
 /*!40000 ALTER TABLE `employee` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -222,10 +217,10 @@ DROP TABLE IF EXISTS `genre`;
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
 /*!50503 SET character_set_client = utf8mb4 */;
 CREATE TABLE `genre` (
-  `idGenre` int NOT NULL AUTO_INCREMENT,
-  `nameGenre` varchar(45) DEFAULT NULL,
+  `idGenre` int NOT NULL,
+  `nameGenre` varchar(255) DEFAULT NULL,
   PRIMARY KEY (`idGenre`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+) ENGINE=MyISAM DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -267,12 +262,11 @@ DROP TABLE IF EXISTS `item`;
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
 /*!50503 SET character_set_client = utf8mb4 */;
 CREATE TABLE `item` (
-  `idItem` int NOT NULL AUTO_INCREMENT,
-  `nameItem` varchar(45) NOT NULL,
-  `priceItem` int NOT NULL,
-  PRIMARY KEY (`idItem`),
-  UNIQUE KEY `idItems_UNIQUE` (`idItem`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+  `idItem` int NOT NULL,
+  `nameItem` varchar(255) DEFAULT NULL,
+  `priceItem` int DEFAULT NULL,
+  PRIMARY KEY (`idItem`)
+) ENGINE=MyISAM DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -281,6 +275,7 @@ CREATE TABLE `item` (
 
 LOCK TABLES `item` WRITE;
 /*!40000 ALTER TABLE `item` DISABLE KEYS */;
+INSERT INTO `item` VALUES (1,'pen',1000),(2,'book1',1500),(3,'book2',1300),(4,'apple',500);
 /*!40000 ALTER TABLE `item` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -292,16 +287,12 @@ DROP TABLE IF EXISTS `storage`;
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
 /*!50503 SET character_set_client = utf8mb4 */;
 CREATE TABLE `storage` (
-  `idstorage` int NOT NULL,
-  `addressStorage` varchar(45) NOT NULL,
-  `company_idCompany` int NOT NULL,
+  `idStorage` int NOT NULL,
+  `addressStorage` varchar(255) DEFAULT NULL,
   `idCompany` int NOT NULL,
-  PRIMARY KEY (`idstorage`,`company_idCompany`),
-  KEY `fk_storage_company1_idx` (`company_idCompany`),
-  KEY `FK5rl56air366vk8dn1yf70gve9` (`idCompany`),
-  CONSTRAINT `FK5rl56air366vk8dn1yf70gve9` FOREIGN KEY (`idCompany`) REFERENCES `company` (`idCompany`),
-  CONSTRAINT `fk_storage_company1` FOREIGN KEY (`company_idCompany`) REFERENCES `company` (`idCompany`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+  PRIMARY KEY (`idStorage`),
+  KEY `FK5rl56air366vk8dn1yf70gve9` (`idCompany`)
+) ENGINE=MyISAM DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -345,19 +336,14 @@ DROP TABLE IF EXISTS `store`;
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
 /*!50503 SET character_set_client = utf8mb4 */;
 CREATE TABLE `store` (
-  `idstore` int NOT NULL AUTO_INCREMENT,
-  `addressStore` varchar(45) NOT NULL,
-  `revenueStore` int DEFAULT NULL,
+  `idStore` int NOT NULL,
+  `addressStore` varchar(255) DEFAULT NULL,
   `outcomeStore` int DEFAULT NULL,
-  `company_idCompany` int NOT NULL,
+  `revenueStore` int DEFAULT NULL,
   `idCompany` int NOT NULL,
-  PRIMARY KEY (`idstore`,`company_idCompany`),
-  UNIQUE KEY `idstore_UNIQUE` (`idstore`),
-  KEY `fk_store_company_idx` (`company_idCompany`),
-  KEY `FKb9s2x22rcoag9h75tiasn9i3g` (`idCompany`),
-  CONSTRAINT `fk_store_company` FOREIGN KEY (`company_idCompany`) REFERENCES `company` (`idCompany`),
-  CONSTRAINT `FKb9s2x22rcoag9h75tiasn9i3g` FOREIGN KEY (`idCompany`) REFERENCES `company` (`idCompany`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+  PRIMARY KEY (`idStore`),
+  KEY `FKb9s2x22rcoag9h75tiasn9i3g` (`idCompany`)
+) ENGINE=MyISAM DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -402,4 +388,4 @@ UNLOCK TABLES;
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
--- Dump completed on 2020-06-26 23:22:47
+-- Dump completed on 2020-06-27 16:30:27

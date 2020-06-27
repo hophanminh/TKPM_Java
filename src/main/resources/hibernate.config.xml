@@ -33,7 +33,7 @@
 
         <!-- Automatically validates or exports schema DDL to the database when the SessionFactory is created -->
         <!-- validate, create, update, create-drop -->
-        <property name="hibernate.hbm2ddl.auto">update</property>
+        <property name="hibernate.hbm2ddl.auto">validate</property>
 
         <property name = "hibernate.jdbc.batch_size">20</property>
         <property name = "hibernate.order_inserts">true </property>

@@ -6,7 +6,6 @@ import java.util.Set;
 
 @Entity
 @Table(name ="book")
-@PrimaryKeyJoinColumn(name = "idBook")
 public class Book extends Item {
     @Column(name = "authorBook")
     private String authorBook;
@@ -58,5 +57,13 @@ public class Book extends Item {
 
     public void setYear(int year) {
         this.year = year;
+    }
+
+    @Override
+    public String toString() {
+        return  idItem +
+                " - " + nameItem +
+                " - " + priceItem +
+                " - " + authorBook;
     }
 }

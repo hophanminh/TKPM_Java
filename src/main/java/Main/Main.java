@@ -21,7 +21,7 @@ public class Main extends Application {
     private static SessionFactory sessionFactory = HibernateUtils.getSessionFactory();
     private static Session session = sessionFactory.getCurrentSession();
     public static Session getSession() {
-        return session;
+        return sessionFactory.getCurrentSession();
     }
 
 

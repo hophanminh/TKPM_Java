@@ -3,9 +3,6 @@ import Class.*;
 import Main.*;
 
 import org.hibernate.Session;
-import org.hibernate.SessionFactory;
-import utils.HibernateUtils;
-
 import org.hibernate.query.Query;
 import java.util.List;
 
@@ -28,6 +25,8 @@ public class EmployeeDAO {
             query.setParameter("name",name).setParameter("pass",pass);
             List<Employee> resultList = query.list();
 
+            session.getTransaction().commit();
+
             // if empty -> no account with input name and password
             if (resultList.isEmpty()) {
                 return false;
@@ -38,7 +37,7 @@ public class EmployeeDAO {
         } catch (Exception exception) {
             exception.printStackTrace();
             session.getTransaction().rollback();
-        } 
+        }
         return false;
     }
 }

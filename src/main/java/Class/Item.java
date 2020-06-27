@@ -61,4 +61,11 @@ public class Item {
     public void setPriceItem(int priceItem) {
         this.priceItem = priceItem;
     }
+
+    @Override
+    public String toString() {
+        return idItem +
+                " - " + nameItem +
+                " - " + priceItem;
+    }
 }
