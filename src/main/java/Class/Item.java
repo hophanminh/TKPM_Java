@@ -38,6 +38,15 @@ public class Item {
 //    @OneToMany(fetch = FetchType.EAGER, mappedBy = "item")
 //    protected Set<Book> bookList = new HashSet<>();
 
+//    public Item(String nameItem, int priceItem){
+//        this.nameItem = nameItem;
+//        this.priceItem = priceItem;
+//    }
+//
+//    public Item(){
+//
+//    }
+
     public int getIdItem() {
         return idItem;
     }

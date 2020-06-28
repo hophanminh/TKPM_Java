@@ -27,6 +27,10 @@ public class Book extends Item {
     )
     Set<Genre> genreList = new HashSet<>();
 
+//    public Book(String nameBook, int priceBook){
+//        super(nameBook, priceBook);
+//    }
+
     public String getAuthorBook() {
         return authorBook;
     }

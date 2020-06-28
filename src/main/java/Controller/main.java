@@ -5,14 +5,13 @@ import DAO.Item_BookDAO;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
-import javafx.scene.Node;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
-import javafx.scene.control.*;
+import javafx.scene.control.ComboBox;
+import javafx.scene.control.TableColumn;
+import javafx.scene.control.TableView;
 import javafx.scene.control.cell.PropertyValueFactory;
-import javafx.stage.Modality;
 import javafx.stage.Stage;
-import javafx.stage.StageStyle;
 import org.controlsfx.control.textfield.TextFields;
 
 import java.io.IOException;
@@ -61,5 +60,14 @@ public class main {
 
         // clear search bar after select
         //searchBar.setValue(null);
+    }
+
+    public void addItem(ActionEvent actionEvent) throws IOException {
+
+        Stage addItemScreen = (Stage) searchBar.getScene().getWindow();
+        Parent root = FXMLLoader.load(getClass().getResource("/fxml/addItem.fxml"));
+        addItemScreen.setScene(new Scene(root, 668, 592));
+        addItemScreen.show();
+
     }
 }
