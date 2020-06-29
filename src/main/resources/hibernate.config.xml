@@ -20,7 +20,7 @@
 
         <!-- SQL dialect -->
         <!--property name="dialect">org.hibernate.dialect.MySQLDialect</property-->
-        <property name = "hibernate.dialect">org.hibernate.dialect.MySQL5Dialect</property>
+        <property name = "hibernate.dialect">org.hibernate.dialect.MySQL5InnoDBDialect</property>
 
         <!-- Enable Hibernate's automatic session context management -->
         <property name = "current_session_context_class">thread</property>
@@ -33,7 +33,7 @@
 
         <!-- Automatically validates or exports schema DDL to the database when the SessionFactory is created -->
         <!-- validate, create, update, create-drop -->
-        <property name="hibernate.hbm2ddl.auto">validate</property>
+        <property name="hibernate.hbm2ddl.auto">update</property>
 
         <property name = "hibernate.jdbc.batch_size">20</property>
         <property name = "hibernate.order_inserts">true </property>

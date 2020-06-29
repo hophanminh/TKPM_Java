@@ -34,4 +34,29 @@ public class Item_BookDAO {
         }
         return resultList;
     }
+
+    public Item getIDItem(int id){
+
+        // get global session
+        Session session = Main.getSession();
+        List<Item> resultList = null;
+
+        try{
+            session.getTransaction().begin();
+
+            // get all Item and book from database
+            Query<Item> query = session.createQuery(
+                    "from Item " +
+                    "where idItem = :id", Item.class
+            );
+            query.setParameter("id",id);
+            resultList = query.list();
+
+            session.getTransaction().commit();
+        } catch (Exception exception) {
+            exception.printStackTrace();
+            session.getTransaction().rollback();
+        }
+        return resultList.get(0);
+    }
 }

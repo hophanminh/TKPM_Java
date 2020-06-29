@@ -1,5 +1,9 @@
 package Class;
 
+import javafx.beans.binding.Bindings;
+import javafx.beans.binding.NumberBinding;
+import javafx.beans.property.*;
+
 import javax.persistence.*;
 import java.util.HashSet;
 import java.util.Set;
@@ -16,27 +20,31 @@ public class Item {
     @Column(name = "nameItem")
     protected String nameItem;
 
+    @Column(name = "quantityItem")
+    protected int quantityItem;
+
     @Column(name = "priceItem")
-    protected int priceItem;
+    protected float priceItem;
 
     @ManyToMany(cascade = {CascadeType.ALL})
     @JoinTable(
             name = "store_has_item",
-            joinColumns = {@JoinColumn(name = "store_idStore")},
-            inverseJoinColumns = {@JoinColumn(name = "item_idItem")}
+            joinColumns = {@JoinColumn(name = "item_idItem")},
+            inverseJoinColumns = {@JoinColumn(name = "store_idStore")}
     )
-    Set<Genre> storeList = new HashSet<>();
+    Set<Store> storeList = new HashSet<>();
 
     @ManyToMany(cascade = {CascadeType.ALL})
     @JoinTable(
             name = "storage_has_item",
-            joinColumns = {@JoinColumn(name = "storage_idStore")},
-            inverseJoinColumns = {@JoinColumn(name = "item_idItem")}
+            joinColumns = {@JoinColumn(name = "item_idItem")},
+            inverseJoinColumns = {@JoinColumn(name = "storage_idStore")}
     )
-    Set<Genre> storageList = new HashSet<>();
-//
-//    @OneToMany(fetch = FetchType.EAGER, mappedBy = "item")
-//    protected Set<Book> bookList = new HashSet<>();
+    Set<Storage> storageList = new HashSet<>();
+
+    @Transient
+    IntegerProperty quantity = new SimpleIntegerProperty(1);
+
 
     public int getIdItem() {
         return idItem;
@@ -54,18 +62,40 @@ public class Item {
         this.nameItem = nameItem;
     }
 
-    public int getPriceItem() {
+    public float getPriceItem() {
         return priceItem;
     }
 
-    public void setPriceItem(int priceItem) {
+    public void setPriceItem(float priceItem) {
         this.priceItem = priceItem;
+    }
+
+    public int getQuantityItem() {
+        return quantityItem;
+    }
+
+    public void setQuantityItem(int quantityItem) {
+        this.quantityItem = quantityItem;
+    }
+
+    public int getQuantity() {
+        return quantity.get();
+    }
+
+    public IntegerProperty quantityProperty() {
+        return quantity;
+    }
+
+    public void setQuantity(int quantity) {
+        this.quantity.set(quantity);
     }
 
     @Override
     public String toString() {
         return idItem +
                 " - " + nameItem +
-                " - " + priceItem;
+                " - " + priceItem +
+                " - Remain: " + quantityItem;
     }
+
 }

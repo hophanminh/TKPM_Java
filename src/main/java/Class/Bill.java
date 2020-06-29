@@ -24,8 +24,9 @@ public class Bill {
     private String noteBill;
 
     @ManyToOne
-    @JoinColumn(name = "idCustomer", nullable = false)
+    @JoinColumn(name = "idCustomer", nullable = true)
     private Customer customer;
+
 
     public int getIdBill() {
         return idBill;

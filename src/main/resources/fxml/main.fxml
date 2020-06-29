@@ -126,6 +126,9 @@
          <GridPane.margin>
             <Insets bottom="5.0" left="10.0" right="5.0" top="5.0" />
          </GridPane.margin>
+         <columnResizePolicy>
+            <TableView fx:constant="CONSTRAINED_RESIZE_POLICY" />
+         </columnResizePolicy>
       </TableView>
       <GridPane prefHeight="59.0" prefWidth="668.0" style="-fx-background-color: blue;" GridPane.columnSpan="4" GridPane.rowIndex="4">
          <columnConstraints>
@@ -178,11 +181,11 @@
           <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
         </rowConstraints>
          <children>
-            <ComboBox fx:id="searchBar" onAction="#selectItem" prefHeight="25.0" prefWidth="482.0" GridPane.halignment="CENTER" GridPane.valignment="CENTER">
-               <padding>
-                  <Insets left="5.0" right="5.0" />
-               </padding>
-            </ComboBox>
+            <TextField fx:id="searchBar" onAction="#selectItem" promptText="type id or name of item then press ENTER" GridPane.halignment="CENTER">
+               <GridPane.margin>
+                  <Insets left="10.0" right="5.0" />
+               </GridPane.margin>
+            </TextField>
          </children>
       </GridPane>
    </children>
