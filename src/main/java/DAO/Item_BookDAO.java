@@ -1,10 +1,8 @@
 package DAO;
-import Class.*;
-import Main.*;
-
+import Class.Item;
+import Main.Main;
 import org.hibernate.Session;
 import org.hibernate.query.Query;
-import java.util.List;
 
 import java.util.List;
 
@@ -58,5 +56,24 @@ public class Item_BookDAO {
             session.getTransaction().rollback();
         }
         return resultList.get(0);
+        
+    public void addItem(String name, int price){
+        Session session = Main.getSession();
+
+        try {
+            session.getTransaction().begin();
+
+            Query<Item> query = session.createSQLQuery(
+                    "INSERT INTO Item(nameItem, priceItem) VALUES (:name, :price)"
+            );
+            query.setParameter("name",name).setParameter("price",price);
+            query.executeUpdate();
+
+            session.getTransaction().commit();
+
+        } catch(Exception exception) {
+            exception.printStackTrace();
+            session.getTransaction().rollback();
+        }
     }
 }

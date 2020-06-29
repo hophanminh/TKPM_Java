@@ -46,6 +46,15 @@ public class Item {
     IntegerProperty quantity = new SimpleIntegerProperty(1);
 
 
+//    public Item(String nameItem, int priceItem){
+//        this.nameItem = nameItem;
+//        this.priceItem = priceItem;
+//    }
+//
+//    public Item(){
+//
+//    }
+
     public int getIdItem() {
         return idItem;
     }

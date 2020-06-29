@@ -10,17 +10,13 @@ import javafx.collections.ListChangeListener;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
-import javafx.geometry.Pos;
-import javafx.scene.Node;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
-import javafx.scene.control.*;
+import javafx.scene.control.ComboBox;
+import javafx.scene.control.TableColumn;
+import javafx.scene.control.TableView;
 import javafx.scene.control.cell.PropertyValueFactory;
-import javafx.scene.control.skin.TableHeaderRow;
-import javafx.scene.control.skin.TableViewSkinBase;
-import javafx.stage.Modality;
 import javafx.stage.Stage;
-import javafx.stage.StageStyle;
 import org.controlsfx.control.textfield.TextFields;
 import javafx.util.Callback;
 
@@ -213,5 +209,14 @@ public class main {
         Item newItem = Item_BookDAO.getIDItem(index);
         // add to table
         tableItem.getItems().add(newItem);
+    }
+
+    public void addItem(ActionEvent actionEvent) throws IOException {
+
+        Stage addItemScreen = (Stage) searchBar.getScene().getWindow();
+        Parent root = FXMLLoader.load(getClass().getResource("/fxml/addItem.fxml"));
+        addItemScreen.setScene(new Scene(root, 668, 592));
+        addItemScreen.show();
+
     }
 }
