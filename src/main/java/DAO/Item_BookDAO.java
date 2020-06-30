@@ -10,13 +10,13 @@ public class Item_BookDAO {
     public Item_BookDAO(){
     }
 
-    public List<Item> getAllItem() {
+    public List<Item> getAllItem(){
 
         // get global session
         Session session = Main.getSession();
         List<Item> resultList = null;
 
-        try {
+        try{
             session.getTransaction().begin();
 
             // get all Item and book from database
@@ -33,18 +33,19 @@ public class Item_BookDAO {
         return resultList;
     }
 
-    public Item getIDItem(int id) {
+    public Item getIDItem(int id){
 
         // get global session
         Session session = Main.getSession();
         List<Item> resultList = null;
 
-        try {
+        try{
             session.getTransaction().begin();
 
             // get all Item and book from database
             Query<Item> query = session.createQuery(
-                    "from Item where idItem = :id", Item.class
+                    "from Item " +
+                    "where idItem = :id", Item.class
             );
             query.setParameter("id",id);
             resultList = query.list();
@@ -55,9 +56,8 @@ public class Item_BookDAO {
             session.getTransaction().rollback();
         }
         return resultList.get(0);
-
-    }
-    public void addItem(String name, int price) {
+        
+    public void addItem(String name, int price){
         Session session = Main.getSession();
 
         try {
