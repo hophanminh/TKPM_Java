@@ -1,4 +1,4 @@
-package Class;
+package Model.Class;
 
 import javax.persistence.*;
 import java.util.HashSet;
@@ -65,9 +65,10 @@ public class Book extends Item {
 
     @Override
     public String toString() {
+
         return  idItem +
                 " - " + nameItem +
-                " - " + priceItem +
-                " - " + authorBook;
+                " - Giá: " + priceItem +
+                " - Tác giả: " + authorBook;
     }
 }

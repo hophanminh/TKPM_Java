@@ -1,4 +1,4 @@
-package Class;
+package Model.Class;
 
 import javafx.beans.binding.Bindings;
 import javafx.beans.binding.NumberBinding;
@@ -103,8 +103,7 @@ public class Item {
     public String toString() {
         return idItem +
                 " - " + nameItem +
-                " - " + priceItem +
-                " - Remain: " + quantityItem;
+                " - Giá: " + priceItem;
     }
 
 }

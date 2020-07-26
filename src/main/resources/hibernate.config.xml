@@ -7,23 +7,26 @@
         <!-- Database connection settings -->
         <property name = "connection.driver_class">com.mysql.jdbc.Driver</property>
 
-        <!-- Phan Minh -->
-        <property name = "connection.url">jdbc:mysql://localhost:3012/tkpm_quanlynhasach</property>
+        <!-- Phan Minh
+        <property name = "connection.url">jdbc:mysql://localhost:3012/bookstore?autoReconnect=true&amp;useUnicode=true&amp;createDatabaseIfNotExist=true&amp;characterEncoding=utf-8</property>
+         -->
 
-
-        <!-- Quang Minh
-        <property name = "connection.url">jdbc:mysql://localhost:3306/tkpm_quanlynhasach</property>
+        <!-- Phần sau ? trên mục connection.url là tự tạo database khi không có db và tự xài utf-8
         -->
+
+        <!-- Quang Minh -->
+        <property name = "connection.url">jdbc:mysql://localhost:3306/bookstore?autoReconnect=true&amp;useUnicode=true&amp;createDatabaseIfNotExist=true&amp;characterEncoding=utf-8</property>
+
 
         <property name = "connection.username">root</property>
         <property name="connection.password">root</property>
 
         <!-- JDBC connection pool (use the built-in) -->
-        <property name = "connection.pool_size">1</property>
+        <property name = "connection.pool_size">20</property>
 
         <!-- SQL dialect -->
         <!--property name="dialect">org.hibernate.dialect.MySQLDialect</property-->
-        <property name = "hibernate.dialect">org.hibernate.dialect.MySQL5InnoDBDialect</property>
+        <property name = "hibernate.dialect">org.hibernate.dialect.MySQL8Dialect</property>
 
         <!-- Enable Hibernate's automatic session context management -->
         <property name = "current_session_context_class">thread</property>
@@ -44,16 +47,16 @@
         <property name = "generate_statistics">true</property>
         <property name = "hibernate.jdbc.batch_versioned_data">true </property>
 
-        <mapping class="Class.Bill"/>
-        <mapping class="Class.Book"/>
-        <mapping class="Class.Company"/>
-        <mapping class="Class.Customer"/>
-        <mapping class="Class.Discount"/>
-        <mapping class="Class.Employee"/>
-        <mapping class="Class.Genre"/>
-        <mapping class="Class.Item"/>
-        <mapping class="Class.Storage"/>
-        <mapping class="Class.Store"/>
+        <mapping class="Model.Class.Bill"/>
+        <mapping class="Model.Class.Book"/>
+        <mapping class="Model.Class.Company"/>
+        <mapping class="Model.Class.Customer"/>
+        <mapping class="Model.Class.Discount"/>
+        <mapping class="Model.Class.Employee"/>
+        <mapping class="Model.Class.Genre"/>
+        <mapping class="Model.Class.Item"/>
+        <mapping class="Model.Class.Storage"/>
+        <mapping class="Model.Class.Store"/>
 
     </session-factory>
 </hibernate-configuration>

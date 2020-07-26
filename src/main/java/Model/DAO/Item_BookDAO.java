@@ -1,28 +1,36 @@
-package DAO;
-import Class.Item;
+package Model.DAO;
+import Model.Class.Employee;
+import Model.Class.Item;
 import Main.Main;
 import org.hibernate.Session;
 import org.hibernate.query.Query;
 
 import java.util.List;
+import java.util.prefs.Preferences;
 
 public class Item_BookDAO {
+    Preferences pref;
+
     public Item_BookDAO(){
     }
 
     public List<Item> getAllItem(){
-
-        // get global session
         Session session = Main.getSession();
         List<Item> resultList = null;
+
+        //
+        pref = Preferences.userNodeForPackage(Employee.class);
+        int idStore = pref.getInt("defaultStore", -1);
 
         try{
             session.getTransaction().begin();
 
             // get all Item and book from database
             Query<Item> query = session.createQuery(
-                    "from Item " , Item.class
+                    "FROM Item as i JOIN FETCH i.storeList as s " +
+                    "WHERE s.idStore = :idStore " , Item.class
             );
+            query.setParameter("idStore", idStore);
             resultList = query.list();
 
             session.getTransaction().commit();
@@ -33,9 +41,7 @@ public class Item_BookDAO {
         return resultList;
     }
 
-    public Item getIDItem(int id) {
-
-        // get global session
+    public Item getItemById(int id) {
         Session session = Main.getSession();
         List<Item> resultList = null;
 

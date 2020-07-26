@@ -1,36 +1,73 @@
 package Controller;
 
-import Class.Book;
-import Class.Item;
-import DAO.Item_BookDAO;
+import Model.Class.Book;
+import Model.Class.Employee;
+import Model.Class.Item;
+import Model.DAO.Item_BookDAO;
+import impl.org.controlsfx.skin.AutoCompletePopup;
 import javafx.beans.property.SimpleObjectProperty;
 import javafx.beans.property.SimpleStringProperty;
 import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableValue;
 import javafx.collections.ListChangeListener;
-import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.geometry.Pos;
-import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.control.*;
 import javafx.scene.control.cell.PropertyValueFactory;
+import javafx.scene.layout.BorderPane;
+import javafx.scene.layout.HBox;
+import javafx.scene.layout.Priority;
 import javafx.stage.Stage;
 import javafx.util.Callback;
+import org.controlsfx.control.textfield.AutoCompletionBinding;
 import org.controlsfx.control.textfield.TextFields;
 
 import java.io.IOException;
 import java.util.List;
+import java.util.prefs.Preferences;
 
-public class main {
-    @FXML
-    private TextField searchBar;
-
-    @FXML
-    private TableView tableItem;
-
+public class MainController implements Controller {
+    private Stage thisStage;
+    private Preferences pref;
     private Item_BookDAO  Item_BookDAO;
+    private TableView tableView;
+
+    @FXML
+    private HBox searchPane;
+
+    @FXML
+    private BorderPane borderPane;
+
+    @FXML
+    private Button addItem;
+
+    public MainController(Stage stage) {
+        try {
+            thisStage = stage;
+            pref = Preferences.userNodeForPackage(Employee.class);
+            Item_BookDAO = new Item_BookDAO();
+
+            FXMLLoader loader = new FXMLLoader(getClass().getResource("/fxml/main.fxml"));
+            loader.setController(this);
+            thisStage.setScene(new Scene(loader.load(), 668, 592));
+            thisStage.setTitle("Quản lý nhà sách");
+            thisStage.setResizable(false);
+
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
+
+    public void showStage() {
+        thisStage.show();
+    }
+
+    public void reloadStage() {
+        MainController reload = new MainController(thisStage);
+        reload.showStage();
+    }
 
     @FXML
     private void initialize() {
@@ -39,7 +76,57 @@ public class main {
         List<Item> listItem = Item_BookDAO.getAllItem();
 
         // Create autocomplete search bar
-        TextFields.bindAutoCompletion(searchBar, listItem);
+        if (listItem != null) {
+            // create textfield with clear button
+            TextField searchBar = TextFields.createClearableTextField();
+
+            // add autocomplete
+            AutoCompletionBinding auto = TextFields.bindAutoCompletion(searchBar, listItem);
+            auto.setMinWidth(searchPane.getPrefWidth());
+            auto.setVisibleRowCount(10);
+
+            //add into panel
+            searchPane.getChildren().add(searchBar);
+            HBox.setHgrow(searchBar, Priority.ALWAYS);
+
+            // when press enter in searchBar
+            searchBar.setOnAction(actionEvent -> {
+                // get input text
+                String selected = searchBar.getText();
+                // find id of item (first split)
+                String[] listString = selected.split("-");
+                // get item from database
+                try
+                {
+                    int index = Integer.parseInt(listString[0].trim());
+                    Item newItem = Item_BookDAO.getItemById(index);
+                    // add to table
+                    if (newItem != null) {
+                        tableView.getItems().add(newItem);
+                    }
+                } catch (NumberFormatException ex) {
+                }
+            });
+        }
+
+        // create tableview
+        tableView = createTableView();
+        ScrollPane scroll = new ScrollPane(tableView);
+        scroll.setFitToHeight(true);
+        scroll.setFitToWidth(true);
+        borderPane.setCenter(null);
+        borderPane.setCenter(scroll);
+
+
+        addItem.setOnAction(actionEvent -> {
+            AddItem controller = new AddItem(thisStage, this);
+            controller.showStage();
+        });
+
+    }
+
+    private TableView createTableView(){
+        TableView newTable = new TableView();
 
         // Add column to Tableview
         TableColumn idColumn = new TableColumn("ID");
@@ -108,7 +195,7 @@ public class main {
                                             if (quantity.getText().matches("[^1-9]+")) {
                                                 quantity.setText("1");
                                             }
-                                            Item currentItem =  (Item)tableItem.getItems().get(getIndex());
+                                            Item currentItem =  (Item)tableView.getItems().get(getIndex());
                                             currentItem.setQuantity(Integer.parseInt(quantity.getText()));
                                         }
                                     }
@@ -129,7 +216,7 @@ public class main {
                                     setGraphic(quantity);
                                     setText(null);
 
-                                    Item currentItem =  (Item)tableItem.getItems().get(getIndex());
+                                    Item currentItem =  (Item)tableView.getItems().get(getIndex());
                                     String text = Integer.toString(currentItem.getQuantity());
                                     quantity.setText(text);
                                 }
@@ -142,6 +229,8 @@ public class main {
 
         // Create column with clear button
         TableColumn clearColumn = new TableColumn("Action");
+        clearColumn.setMinWidth(50);
+        clearColumn.setMaxWidth(50);
         clearColumn.setStyle( "-fx-alignment: CENTER;");
         Callback<TableColumn<Item, String>, TableCell<Item, String>> cellFactory2
                 = //
@@ -156,7 +245,7 @@ public class main {
                             final Button btn = new Button("X");
                             {
                                 btn.setOnAction(event -> {
-                                    tableItem.getItems().remove(getIndex());
+                                    tableView.getItems().remove(getIndex());
                                 });
                             }
 
@@ -180,43 +269,24 @@ public class main {
         clearColumn.setCellFactory(cellFactory2);
 
         TableColumn[] columns = {idColumn, nameColumn, priceColumn, authorColumn, quantityColumn, clearColumn};
-        tableItem.getColumns().addAll(columns);
+        newTable.getColumns().addAll(columns);
 
         // make column not dragable
-        tableItem.getColumns().addListener(new ListChangeListener() {
+        newTable.getColumns().addListener(new ListChangeListener() {
             public boolean suspended;
             @Override
             public void onChanged(Change change) {
                 change.next();
                 if (change.wasReplaced() && !suspended) {
                     this.suspended = true;
-                    tableItem.getColumns().setAll(columns);
+                    newTable.getColumns().setAll(columns);
                     this.suspended = false;
                 }
             }
         });
+        newTable.setColumnResizePolicy(TableView.CONSTRAINED_RESIZE_POLICY);
+
+        return newTable;
     }
 
-    // when press enter in searchBar
-    public void selectItem(ActionEvent actionEvent) throws IOException {
-        // get input text
-        String selected = searchBar.getText();
-        // find id of item (first split)
-        String[] listString = selected.split("-");
-        int index = Integer.parseInt(listString[0].trim());
-        // get item from database
-        Item_BookDAO = new Item_BookDAO();
-        Item newItem = Item_BookDAO.getIDItem(index);
-        // add to table
-        tableItem.getItems().add(newItem);
-    }
-
-    public void addItem(ActionEvent actionEvent) throws IOException {
-
-        Stage addItemScreen = (Stage) searchBar.getScene().getWindow();
-        Parent root = FXMLLoader.load(getClass().getResource("/fxml/addItem.fxml"));
-        addItemScreen.setScene(new Scene(root, 668, 592));
-        addItemScreen.show();
-
-    }
 }

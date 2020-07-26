@@ -1,29 +1,22 @@
 package Main;
 
+import Controller.Login;
+import Model.Class.Employee;
 import javafx.application.Application;
-import javafx.fxml.FXMLLoader;
-import javafx.scene.Parent;
-import javafx.scene.Scene;
 import javafx.stage.Stage;
 import org.hibernate.Session;
 import org.hibernate.SessionFactory;
 import utils.HibernateUtils;
 
-public class Main extends Application {
-    private static Stage pStage;
-    public static Stage getPrimaryStage() {
-        return pStage;
-    }
-    private void setPrimaryStage(Stage pStage) {
-        Main.pStage = pStage;
-    }
+import java.util.prefs.Preferences;
 
+public class Main extends Application {
+    Preferences pref;
     private static SessionFactory sessionFactory = HibernateUtils.getSessionFactory();
     private static Session session = sessionFactory.getCurrentSession();
     public static Session getSession() {
         return sessionFactory.getCurrentSession();
     }
-
 
 
     public static void main(String[] args) {
@@ -32,11 +25,14 @@ public class Main extends Application {
 
     @Override
     public void start(Stage primaryStage) throws Exception{
-        setPrimaryStage(primaryStage);
+        // clear login info when open
+        pref = Preferences.userNodeForPackage(Employee.class);
+        int store = pref.getInt("defaultStore", -1);
+        pref.clear();
+        pref.putInt("defaultStore", store);
 
-        Parent root = FXMLLoader.load(getClass().getResource("/fxml/login.fxml"));
-        primaryStage.setScene(new Scene(root, 400, 200));
-        primaryStage.show();
+        Login controller1 = new Login(primaryStage);
+        controller1.showStage();
     }
 }
 

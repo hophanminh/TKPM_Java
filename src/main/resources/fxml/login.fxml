@@ -5,7 +5,7 @@
 <?import javafx.scene.layout.*?>
 <?import javafx.scene.text.*?>
 
-<GridPane minHeight="200.0" minWidth="380.0" xmlns="http://javafx.com/javafx/10.0.2-internal" xmlns:fx="http://javafx.com/fxml/1" fx:controller="Controller.login">
+<GridPane minHeight="200.0" minWidth="380.0" xmlns="http://javafx.com/javafx/10.0.2-internal" xmlns:fx="http://javafx.com/fxml/1">
    <columnConstraints>
       <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" />
       <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
@@ -35,17 +35,16 @@
             <Insets bottom="5.0" left="5.0" right="5.0" top="5.0" />
          </GridPane.margin></Label>
 
-                <TextField fx:id="idEmployee" onAction="#onEnter" prefHeight="25.0" prefWidth="231.0" GridPane.columnIndex="1" GridPane.columnSpan="2" GridPane.rowIndex="1">
+                <TextField fx:id="usernameField" prefHeight="25.0" prefWidth="231.0" GridPane.columnIndex="1" GridPane.columnSpan="2" GridPane.rowIndex="1">
          <GridPane.margin>
             <Insets bottom="5.0" left="5.0" right="20.0" top="5.0" />
          </GridPane.margin></TextField>
 
-                <PasswordField fx:id="passwordEmployee" onAction="#onEnter" prefHeight="25.0" prefWidth="231.0" GridPane.columnIndex="1" GridPane.columnSpan="2" GridPane.rowIndex="2">
+                <PasswordField fx:id="passwordField" prefHeight="25.0" prefWidth="231.0" GridPane.columnIndex="1" GridPane.columnSpan="2" GridPane.rowIndex="2">
          <GridPane.margin>
             <Insets bottom="5.0" left="5.0" right="20.0" top="5.0" />
          </GridPane.margin></PasswordField>
-
-                <Button fx:id="LoginButton" onAction="#login" text="Đăng nhập" GridPane.columnIndex="2" GridPane.halignment="RIGHT" GridPane.rowIndex="3">
+                <Button fx:id="loginButton" text="Đăng nhập" GridPane.columnIndex="2" GridPane.halignment="RIGHT" GridPane.rowIndex="3">
          <GridPane.margin>
             <Insets bottom="5.0" left="5.0" right="20.0" top="5.0" />
          </GridPane.margin></Button>
