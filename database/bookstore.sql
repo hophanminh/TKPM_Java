@@ -23,7 +23,7 @@ DROP TABLE IF EXISTS `bill`;
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
 /*!50503 SET character_set_client = utf8mb4 */;
 CREATE TABLE `bill` (
-  `idBill` int NOT NULL,
+  `idBill` int NOT NULL AUTO_INCREMENT,
   `dateBill` datetime(6) DEFAULT NULL,
   `madeBill` int DEFAULT NULL,
   `noteBill` varchar(255) DEFAULT NULL,
@@ -106,7 +106,7 @@ DROP TABLE IF EXISTS `company`;
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
 /*!50503 SET character_set_client = utf8mb4 */;
 CREATE TABLE `company` (
-  `idCompany` int NOT NULL,
+  `idCompany` int NOT NULL AUTO_INCREMENT,
   `nameCompany` varchar(255) DEFAULT NULL,
   PRIMARY KEY (`idCompany`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
@@ -129,7 +129,7 @@ DROP TABLE IF EXISTS `customer`;
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
 /*!50503 SET character_set_client = utf8mb4 */;
 CREATE TABLE `customer` (
-  `idCustomer` int NOT NULL,
+  `idCustomer` int NOT NULL AUTO_INCREMENT,
   `dobCustomer` datetime(6) DEFAULT NULL,
   `emailCustomer` varchar(255) DEFAULT NULL,
   `identifyIDCustomer` varchar(255) DEFAULT NULL,
@@ -158,7 +158,7 @@ DROP TABLE IF EXISTS `discount`;
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
 /*!50503 SET character_set_client = utf8mb4 */;
 CREATE TABLE `discount` (
-  `idDiscount` int NOT NULL,
+  `idDiscount` int NOT NULL AUTO_INCREMENT,
   `discount` int DEFAULT NULL,
   `endDate` datetime(6) DEFAULT NULL,
   `startDate` datetime(6) DEFAULT NULL,
@@ -186,7 +186,7 @@ DROP TABLE IF EXISTS `employee`;
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
 /*!50503 SET character_set_client = utf8mb4 */;
 CREATE TABLE `employee` (
-  `id` int NOT NULL,
+  `id` int NOT NULL AUTO_INCREMENT,
   `address` varchar(255) DEFAULT NULL,
   `name` varchar(255) DEFAULT NULL,
   `password` varchar(255) DEFAULT NULL,
@@ -224,7 +224,7 @@ DROP TABLE IF EXISTS `genre`;
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
 /*!50503 SET character_set_client = utf8mb4 */;
 CREATE TABLE `genre` (
-  `idGenre` int NOT NULL,
+  `idGenre` int NOT NULL AUTO_INCREMENT,
   `nameGenre` varchar(255) DEFAULT NULL,
   PRIMARY KEY (`idGenre`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
@@ -269,7 +269,7 @@ DROP TABLE IF EXISTS `item`;
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
 /*!50503 SET character_set_client = utf8mb4 */;
 CREATE TABLE `item` (
-  `idItem` int NOT NULL,
+  `idItem` int NOT NULL AUTO_INCREMENT,
   `nameItem` varchar(255) DEFAULT NULL,
   `priceItem` float DEFAULT NULL,
   `quantityItem` int DEFAULT NULL,
@@ -295,7 +295,7 @@ DROP TABLE IF EXISTS `storage`;
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
 /*!50503 SET character_set_client = utf8mb4 */;
 CREATE TABLE `storage` (
-  `idStorage` int NOT NULL,
+  `idStorage` int NOT NULL AUTO_INCREMENT,
   `addressStorage` varchar(255) DEFAULT NULL,
   `nameStorage` varchar(255) DEFAULT NULL,
   `idCompany` int NOT NULL,
@@ -348,7 +348,7 @@ DROP TABLE IF EXISTS `store`;
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
 /*!50503 SET character_set_client = utf8mb4 */;
 CREATE TABLE `store` (
-  `idStore` int NOT NULL,
+  `idStore` int NOT NULL AUTO_INCREMENT,
   `addressStore` varchar(255) DEFAULT NULL,
   `nameStore` varchar(255) DEFAULT NULL,
   `outcomeStore` int DEFAULT NULL,
