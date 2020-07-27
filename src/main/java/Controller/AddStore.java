@@ -15,7 +15,7 @@ import javafx.stage.Stage;
 import java.io.IOException;
 import java.util.prefs.Preferences;
 
-public class AddStore {
+public class AddStore implements Controller {
     private Stage thisStage;
     private Controller previousController;
     private StoreDAO storeDAO;
@@ -35,6 +35,7 @@ public class AddStore {
 
     public AddStore(Stage previousStage, Controller previous){
         try {
+            // create new stage, after finished use "Controller previous" to reload previous stage
             thisStage = new Stage();
             previousController = previous;
             storeDAO = new StoreDAO();
@@ -57,6 +58,11 @@ public class AddStore {
 
     public void showStage() {
         thisStage.show();
+    }
+
+    public void reloadStage() {
+        AddStore reload = new AddStore(thisStage, previousController);
+        reload.showStage();
     }
 
     @FXML

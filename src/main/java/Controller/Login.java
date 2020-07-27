@@ -17,7 +17,7 @@ import javafx.stage.Stage;
 import java.io.IOException;
 import java.util.prefs.Preferences;
 
-public class Login {
+public class Login implements Controller {
     private Stage thisStage;
     private Preferences pref;
     private EmployeeDAO employeeDAO;
@@ -32,6 +32,7 @@ public class Login {
 
     public Login(Stage stage){
         try {
+            // keep stage, change scene
             thisStage = stage;
             pref = Preferences.userNodeForPackage(Employee.class);
             employeeDAO = new EmployeeDAO();
@@ -45,7 +46,6 @@ public class Login {
         } catch (IOException e) {
             e.printStackTrace();
         }
-
     }
 
     public void showStage() {
@@ -60,6 +60,11 @@ public class Login {
                     "Chưa cài đặt cửa hàng mặc định cho phần mềm. Vui lòng đăng nhập bằng tài khoản admin để cài đặt.");
             failAlert.showAndWait();
         }
+    }
+
+    public void reloadStage() {
+        Login reload = new Login(thisStage);
+        reload.showStage();
     }
 
 

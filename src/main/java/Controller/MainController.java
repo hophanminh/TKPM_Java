@@ -25,6 +25,8 @@ import org.controlsfx.control.textfield.AutoCompletionBinding;
 import org.controlsfx.control.textfield.TextFields;
 
 import java.io.IOException;
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 import java.util.List;
 import java.util.prefs.Preferences;
 
@@ -45,6 +47,7 @@ public class MainController implements Controller {
 
     public MainController(Stage stage) {
         try {
+            // keep stage, change scene
             thisStage = stage;
             pref = Preferences.userNodeForPackage(Employee.class);
             Item_BookDAO = new Item_BookDAO();
@@ -102,6 +105,7 @@ public class MainController implements Controller {
                     Item newItem = Item_BookDAO.getItemById(index);
                     // add to table
                     if (newItem != null) {
+                        newItem.setQuantityItem(1);             // only default 1 when sell
                         tableView.getItems().add(newItem);
                     }
                 } catch (NumberFormatException ex) {
@@ -132,6 +136,8 @@ public class MainController implements Controller {
         TableColumn idColumn = new TableColumn("ID");
         idColumn.setCellValueFactory(new PropertyValueFactory<>("idItem"));
         idColumn.setStyle( "-fx-alignment: CENTER;");
+        idColumn.setMinWidth(80);
+        idColumn.setMaxWidth(80);
 
         TableColumn nameColumn = new TableColumn("Name");
         nameColumn.setCellValueFactory(new PropertyValueFactory<>("nameItem"));
@@ -142,21 +148,45 @@ public class MainController implements Controller {
         priceColumn.setStyle( "-fx-alignment: CENTER;");
 
         TableColumn<Item, String> authorColumn = new TableColumn("Author");
-        authorColumn.setCellValueFactory(cellData -> {
-            // check if row is item or book class
-            Item item = cellData.getValue() ;
-            if (item instanceof Book) {
-                return new SimpleStringProperty(((Book)item).getAuthorBook());
-            }
-            return new SimpleObjectProperty<>(null);
-        });
+        Callback<TableColumn<Item, String>, TableCell<Item, String>> cellFactory
+                = //
+                new Callback<TableColumn<Item, String>, TableCell<Item, String>>()
+                {
+                    @Override
+                    public TableCell call(final TableColumn<Item, String> param)
+                    {
+                        final TableCell<Item, String> cell = new TableCell<Item, String>()
+                        {
+                            @Override
+                            public void updateItem(String item, boolean empty)
+                            {
+                                super.updateItem(item, empty);
+                                if (empty) {
+                                    setGraphic(null);
+                                    setText(null);
+                                }
+                                else {
+                                    setGraphic(null);
+
+                                    Item selected = (Item) newTable.getItems().get(getIndex());
+                                    if (selected instanceof Book) {
+                                        setText(((Book) selected).getAuthorBook());
+                                    }
+                                    setText(null);
+                                }
+                            }
+                        };
+                        return cell;
+                    }
+                };
+        authorColumn.setCellFactory(cellFactory);
         authorColumn.setStyle( "-fx-alignment: CENTER;");
 
         // Create column with quantity textfield
         TableColumn<Item, Integer> quantityColumn = new TableColumn("Quantity");
-        quantityColumn.setCellValueFactory(cellData -> cellData.getValue().quantityProperty().asObject());
-        quantityColumn.setStyle( "-fx-alignment: CENTER;");
-        Callback<TableColumn<Item, Integer>, TableCell<Item, Integer>> cellFactory
+        quantityColumn.setMinWidth(120);
+        quantityColumn.setMaxWidth(120);
+        Callback<TableColumn<Item, Integer>, TableCell<Item, Integer>> cellFactory2
                 = //
                 new Callback<TableColumn<Item, Integer>, TableCell<Item, Integer>>()
                 {
@@ -165,49 +195,47 @@ public class MainController implements Controller {
                     {
                         final TableCell<Item, Integer> cell = new TableCell<Item, Integer>()
                         {
-
-                            final TextField quantity = new TextField();
-                            {
-
-                                // can only enter number
-                                quantity.textProperty().addListener(new ChangeListener<String>() {
-                                    @Override
-                                    public void changed(ObservableValue<? extends String> observable, String oldValue,
-                                                        String newValue) {
-                                        // "\d*": only number and matches between zero and unlimited times
-                                        if (!newValue.matches("\\d*")) {
-                                            quantity.setText(newValue.replaceAll("[^\\d]", ""));
-                                        }
-                                    }
-                                });
-                                // when out of focus, prevent blank and zero
-                                quantity.focusedProperty().addListener(new ChangeListener<Boolean>() {
-                                    @Override
-                                    public void changed(ObservableValue<? extends Boolean> observable, Boolean oldValue,
-                                                        Boolean newValue)
-                                    {
-                                        if (!newValue) {
-                                            // prevent blank value
-                                            if (quantity.getText().trim().isEmpty()) {
-                                                quantity.setText("1");
-                                            }
-                                            //remove 0 ("[^1-9]+" is zero)
-                                            if (quantity.getText().matches("[^1-9]+")) {
-                                                quantity.setText("1");
-                                            }
-                                            Item currentItem =  (Item)tableView.getItems().get(getIndex());
-                                            currentItem.setQuantity(Integer.parseInt(quantity.getText()));
-                                        }
-                                    }
-                                });
-                                quantity.setAlignment(Pos.CENTER);
-                            }
-
                             // auto add to table when add new row
                             @Override
                             public void updateItem(Integer item, boolean empty)
                             {
                                 super.updateItem(item, empty);
+                                final TextField quantity = new TextField();
+                                {
+                                    // can only enter number
+                                    quantity.textProperty().addListener(new ChangeListener<String>() {
+                                        @Override
+                                        public void changed(ObservableValue<? extends String> observable, String oldValue,
+                                                            String newValue) {
+                                            // "\d*": only number and matches between zero and unlimited times
+                                            if (!newValue.matches("\\d*")) {
+                                                quantity.setText(newValue.replaceAll("[^\\d]", ""));
+                                            }
+                                        }
+                                    });
+                                    // when out of focus, prevent blank and zero
+                                    quantity.focusedProperty().addListener(new ChangeListener<Boolean>() {
+                                        @Override
+                                        public void changed(ObservableValue<? extends Boolean> observable, Boolean oldValue,
+                                                            Boolean newValue)
+                                        {
+                                            if (!newValue) {
+                                                // prevent blank value
+                                                if (quantity.getText().trim().isEmpty()) {
+                                                    quantity.setText("1");
+                                                }
+                                                //remove 0 ("[^1-9]+" is zero)
+                                                if (quantity.getText().matches("[^1-9]+")) {
+                                                    quantity.setText("1");
+                                                }
+                                                Item selected =  (Item)tableView.getItems().get(getIndex());
+                                                selected.setQuantityItem(Integer.parseInt(quantity.getText()));
+                                            }
+                                        }
+                                    });
+                                    quantity.setAlignment(Pos.CENTER);
+                                }
+
                                 if (empty) {
                                     setGraphic(null);
                                     setText(null);
@@ -216,23 +244,24 @@ public class MainController implements Controller {
                                     setGraphic(quantity);
                                     setText(null);
 
-                                    Item currentItem =  (Item)tableView.getItems().get(getIndex());
-                                    String text = Integer.toString(currentItem.getQuantity());
-                                    quantity.setText(text);
+                                    Item selected =  (Item)tableView.getItems().get(getIndex());
+                                    int num = selected.getQuantityItem();
+                                    quantity.setText(Integer.toString(num));
                                 }
                             }
                         };
                         return cell;
                     }
                 };
-        quantityColumn.setCellFactory(cellFactory);
+        quantityColumn.setCellFactory(cellFactory2);
+        quantityColumn.setStyle( "-fx-alignment: CENTER;");
 
         // Create column with clear button
         TableColumn clearColumn = new TableColumn("Action");
         clearColumn.setMinWidth(50);
         clearColumn.setMaxWidth(50);
         clearColumn.setStyle( "-fx-alignment: CENTER;");
-        Callback<TableColumn<Item, String>, TableCell<Item, String>> cellFactory2
+        Callback<TableColumn<Item, String>, TableCell<Item, String>> cellFactory3
                 = //
                 new Callback<TableColumn<Item, String>, TableCell<Item, String>>()
                 {
@@ -242,17 +271,17 @@ public class MainController implements Controller {
                         final TableCell<Item, String> cell = new TableCell<Item, String>()
                         {
 
-                            final Button btn = new Button("X");
-                            {
-                                btn.setOnAction(event -> {
-                                    tableView.getItems().remove(getIndex());
-                                });
-                            }
-
                             @Override
                             public void updateItem(String item, boolean empty)
                             {
                                 super.updateItem(item, empty);
+                                final Button btn = new Button("X");
+                                {
+                                    btn.setOnAction(event -> {
+                                        tableView.getItems().remove(getIndex());
+                                    });
+                                }
+
                                 if (empty) {
                                     setGraphic(null);
                                     setText(null);
@@ -266,7 +295,7 @@ public class MainController implements Controller {
                         return cell;
                     }
                 };
-        clearColumn.setCellFactory(cellFactory2);
+        clearColumn.setCellFactory(cellFactory3);
 
         TableColumn[] columns = {idColumn, nameColumn, priceColumn, authorColumn, quantityColumn, clearColumn};
         newTable.getColumns().addAll(columns);

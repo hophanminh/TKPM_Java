@@ -16,7 +16,7 @@ import javafx.stage.Stage;
 import java.io.IOException;
 import java.util.prefs.Preferences;
 
-public class AddItem {
+public class AddItem implements Controller {
     private Stage thisStage;
     private Controller previousController;
     private Preferences pref;
@@ -54,6 +54,11 @@ public class AddItem {
 
     public void showStage() {
         thisStage.show();
+    }
+
+    public void reloadStage() {
+        AddItem reload = new AddItem(thisStage, previousController);
+        reload.showStage();
     }
 
     @FXML

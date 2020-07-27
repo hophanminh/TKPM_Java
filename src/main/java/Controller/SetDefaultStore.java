@@ -33,6 +33,7 @@ public class SetDefaultStore implements Controller {
 
     public SetDefaultStore(Stage stage) {
         try {
+            // keep stage, change scene
             thisStage = stage;
             storeDAO = new StoreDAO();
             pref = Preferences.userNodeForPackage(Employee.class);

@@ -42,10 +42,6 @@ public class Item {
     )
     Set<Storage> storageList = new HashSet<>();
 
-    @Transient
-    IntegerProperty quantity = new SimpleIntegerProperty(1);
-
-
 //    public Item(String nameItem, int priceItem){
 //        this.nameItem = nameItem;
 //        this.priceItem = priceItem;
@@ -85,18 +81,6 @@ public class Item {
 
     public void setQuantityItem(int quantityItem) {
         this.quantityItem = quantityItem;
-    }
-
-    public int getQuantity() {
-        return quantity.get();
-    }
-
-    public IntegerProperty quantityProperty() {
-        return quantity;
-    }
-
-    public void setQuantity(int quantity) {
-        this.quantity.set(quantity);
     }
 
     @Override

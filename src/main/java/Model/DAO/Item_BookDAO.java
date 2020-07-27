@@ -18,7 +18,7 @@ public class Item_BookDAO {
         Session session = Main.getSession();
         List<Item> resultList = null;
 
-        //
+        // only get item from store where app is used
         pref = Preferences.userNodeForPackage(Employee.class);
         int idStore = pref.getInt("defaultStore", -1);
 
@@ -63,6 +63,7 @@ public class Item_BookDAO {
         }
         return resultList.get(0);
     }
+
     public void addItem(String name, int price){
         Session session = Main.getSession();
 
