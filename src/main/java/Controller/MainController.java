@@ -4,9 +4,9 @@ import Model.Class.Book;
 import Model.Class.Employee;
 import Model.Class.Item;
 import Model.DAO.Item_BookDAO;
-import impl.org.controlsfx.skin.AutoCompletePopup;
-import javafx.beans.property.SimpleObjectProperty;
-import javafx.beans.property.SimpleStringProperty;
+import javafx.animation.Animation;
+import javafx.animation.KeyFrame;
+import javafx.animation.Timeline;
 import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableValue;
 import javafx.collections.ListChangeListener;
@@ -21,12 +21,13 @@ import javafx.scene.layout.HBox;
 import javafx.scene.layout.Priority;
 import javafx.stage.Stage;
 import javafx.util.Callback;
+import javafx.util.Duration;
 import org.controlsfx.control.textfield.AutoCompletionBinding;
 import org.controlsfx.control.textfield.TextFields;
+import utils.DateUtil;
 
 import java.io.IOException;
 import java.time.LocalDateTime;
-import java.time.format.DateTimeFormatter;
 import java.util.List;
 import java.util.prefs.Preferences;
 
@@ -35,6 +36,23 @@ public class MainController implements Controller {
     private Preferences pref;
     private Item_BookDAO  Item_BookDAO;
     private TableView tableView;
+    private final Duration duration = new Duration(1000); // 1000ms = 1s
+
+    @FXML
+    private Label totalCost;
+    @FXML
+    private Label summary;
+    @FXML
+    private Label tax;
+    @FXML
+    private Label discount; // Change to Choice Box or automatic
+    @FXML
+    private Label dateMakeBill;
+    @FXML
+    private Label nameSaleMan;
+
+    @FXML
+    private TextField nameCustomer;
 
     @FXML
     private HBox searchPane;
@@ -44,6 +62,8 @@ public class MainController implements Controller {
 
     @FXML
     private Button addItem;
+    @FXML
+    private Button employeeList;
 
     public MainController(Stage stage) {
         try {
@@ -74,13 +94,24 @@ public class MainController implements Controller {
 
     @FXML
     private void initialize() {
+        // Set name of seller
+        nameSaleMan.setText(pref.get("name", "NULL"));
+
+        // refresh time every second
+        Timeline timeline = new Timeline(new KeyFrame(this.duration, ev -> {
+            LocalDateTime now = LocalDateTime.now();
+            dateMakeBill.setText(DateUtil.formatDate(now));
+        }));
+        timeline.setCycleCount(Animation.INDEFINITE);
+        timeline.play();
+
         // get all item in database
         Item_BookDAO = new Item_BookDAO();
         List<Item> listItem = Item_BookDAO.getAllItem();
 
         // Create autocomplete search bar
         if (listItem != null) {
-            // create textfield with clear button
+            // create text field with clear button
             TextField searchBar = TextFields.createClearableTextField();
 
             // add autocomplete
@@ -113,7 +144,7 @@ public class MainController implements Controller {
             });
         }
 
-        // create tableview
+        // create table view
         tableView = createTableView();
         ScrollPane scroll = new ScrollPane(tableView);
         scroll.setFitToHeight(true);
@@ -127,6 +158,10 @@ public class MainController implements Controller {
             controller.showStage();
         });
 
+        // Get list employees of store
+        employeeList.setOnAction(actionEvent -> {
+
+        });
     }
 
     private TableView createTableView(){
@@ -317,5 +352,4 @@ public class MainController implements Controller {
 
         return newTable;
     }
-
 }

@@ -1,9 +1,7 @@
 package Controller;
 
 import Model.Class.Employee;
-import Model.Class.Store;
 import Model.DAO.EmployeeDAO;
-
 import View.AlertDialog;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
@@ -79,6 +77,7 @@ public class Login implements Controller {
             System.out.println("Password: " + pass);
 
             Employee loginUser = employeeDAO.getEmployeeByUsername(username);
+            System.out.println(loginUser);
             // no username in database or wrong password
             //if (loginUser == null || !BCrypt.checkpw(pass, loginUser.getPassword())) {    // when have signup -> bcrypt
             if (loginUser == null || !loginUser.getPassword().equals(pass)) {
