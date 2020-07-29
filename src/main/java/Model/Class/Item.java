@@ -1,9 +1,5 @@
 package Model.Class;
 
-import javafx.beans.binding.Bindings;
-import javafx.beans.binding.NumberBinding;
-import javafx.beans.property.*;
-
 import javax.persistence.*;
 import java.util.HashSet;
 import java.util.Set;
@@ -25,6 +21,9 @@ public class Item {
 
     @Column(name = "priceItem")
     protected float priceItem;
+
+    @Column(name = "costItem")
+    protected float costItem;
 
     @ManyToMany(cascade = {CascadeType.ALL})
     @JoinTable(
@@ -50,6 +49,13 @@ public class Item {
 //    public Item(){
 //
 //    }
+
+    public Item(String nameItem, float costItem, float priceItem, int quantityItem){
+        this.nameItem = nameItem;
+        this.costItem = costItem;
+        this.priceItem = priceItem;
+        this.quantityItem = quantityItem;
+    }
 
     public int getIdItem() {
         return idItem;

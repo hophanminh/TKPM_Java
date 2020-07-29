@@ -15,9 +15,12 @@ public class Genre {
     @Column(name = "nameGenre")
     private String nameGenre;
 
-    @ManyToMany(mappedBy = "genreList")
-    private Set<Book> bookList = new HashSet<>();
+    @OneToMany(fetch = FetchType.EAGER, mappedBy = "genre")
+    private Set<Book_has_Genre> book_has_genres = new HashSet<>();
 
+    public Genre(String nameGenre){
+        this.nameGenre = nameGenre;
+    }
     public int getIdGenre() {
         return idGenre;
     }

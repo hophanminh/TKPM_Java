@@ -1,9 +1,9 @@
 package Controller;
 
 import Model.Class.Employee;
+import Model.Class.Item;
 import Model.DAO.Item_BookDAO;
 import View.AlertDialog;
-import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Scene;
@@ -23,9 +23,12 @@ public class AddItem implements Controller {
 
     @FXML
     public TextField textNameItem;
-
     @FXML
     public TextField textPriceItem;
+    @FXML
+    public TextField textCostItem;
+    @FXML
+    public TextField textQuantityItem;
 
     @FXML
     public Button submitButton;
@@ -64,27 +67,56 @@ public class AddItem implements Controller {
     @FXML
     private void initialize() {
         submitButton.setOnAction(actionEvent -> {
-            System.out.println("hi");
-            System.out.println("Name: " + textNameItem.getText());
-            System.out.println("Price: " + Integer.valueOf(textPriceItem.getText()));
+            System.out.println("Add Item");
 
-            String nameItem = textNameItem.getText();
-            if(isNumber(textPriceItem.getText())){
+            String nameItem = textNameItem.getText().trim();
+            int costItem = 0;
+            int priceItem = 0;
+            int quantityItem = 0;
+
+            // Kiem tra dieu kien
+            String error = "";
+            if(!isNumber(textCostItem.getText().trim()))
+                error += "Giá gốc phải là một số\n";
+            else costItem = Integer.valueOf(textCostItem.getText().trim());
+
+            if(!isNumber(textPriceItem.getText().trim()))
+                error += "Giá thành phải là một số\n";
+            else priceItem = Integer.valueOf(textPriceItem.getText().trim());
+
+            if(!isNumber(textQuantityItem.getText().trim()))
+                error += "Số lượng phải là một số\n";
+            else quantityItem = Integer.valueOf(textQuantityItem.getText().trim());
+
+            if(textNameItem == null || textCostItem == null || textPriceItem == null || textQuantityItem == null)
+                error += "Phải nhập đủ hết các trường dữ liệu\n";
+
+            if(costItem >= priceItem)
+                error += "Giá bán phải cao hơn giá gốc\n";
+
+            if(error.equals("")){
                 Item_BookDAO item_bookDAO = new Item_BookDAO();
-                //Item item = new Item(textNameItem.getText(), Integer.valueOf(textPriceItem.getText()));
-                item_bookDAO.addItem(nameItem, Integer.valueOf(textPriceItem.getText()));
+                Item item = new Item(nameItem, costItem, priceItem, quantityItem);
+                item_bookDAO.addItem(item);
+                AlertDialog success = new AlertDialog();
+                Alert successAlert = success.createAlert(thisStage,
+                        "INFORMATION",
+                        "Success",
+                        "Add successfully");
+                successAlert.showAndWait();
                 System.out.println("Success");
             } else {
                 // Create and display AlertWindow
                 AlertDialog fail = new AlertDialog();
                 Alert failAlert = fail.createAlert(thisStage,
                         "WARNING",
-                        "Sai cú pháp",
-                        "Giá tiền phải là một con số.");
+                        "Sai cú pháp", error);
                 failAlert.showAndWait();
 
                 textNameItem.clear();
                 textPriceItem.clear();
+                textCostItem.clear();
+                textQuantityItem.clear();
             }
         });
     }

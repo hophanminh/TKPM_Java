@@ -64,20 +64,12 @@ public class Item_BookDAO {
         return resultList.get(0);
     }
 
-    public void addItem(String name, int price){
+    public void addItem(Item item){
         Session session = Main.getSession();
-
         try {
             session.getTransaction().begin();
-
-            Query<Item> query = session.createSQLQuery(
-                    "INSERT INTO Item(nameItem, priceItem) VALUES (:name, :price)"
-            );
-            query.setParameter("name",name).setParameter("price",price);
-            query.executeUpdate();
-
+            session.save(item);
             session.getTransaction().commit();
-
         } catch(Exception exception) {
             exception.printStackTrace();
             session.getTransaction().rollback();

@@ -19,13 +19,15 @@ public class Book extends Item {
     @Column(name = "yearBook")
     private int year;
 
-    @ManyToMany(cascade = {CascadeType.ALL})
-    @JoinTable(
-            name = "book_has_genre",
-            joinColumns = {@JoinColumn(name = "book_idBook")},
-            inverseJoinColumns = {@JoinColumn(name = "genre_idGenre")}
-    )
-    Set<Genre> genreList = new HashSet<>();
+    @OneToMany(fetch = FetchType.EAGER, mappedBy = "book")
+    Set<Book_has_Genre> book_has_genres = new HashSet<>();
+
+    public Book(String nameItem, float costItem, float priceItem, int quantityItem, String authorBook, String descriptionBook, String pulisherBook, int yearBook) {
+        super(nameItem, costItem, priceItem, quantityItem);
+        this.authorBook = authorBook;
+        this.pulisherBook = pulisherBook;
+        this.year = yearBook;
+    }
 
 //    public Book(String nameBook, int priceBook){
 //        super(nameBook, priceBook);
