@@ -4,7 +4,7 @@
 <?import javafx.scene.control.*?>
 <?import javafx.scene.layout.*?>
 
-<AnchorPane prefHeight="400.0" prefWidth="600.0" xmlns="http://javafx.com/javafx/10.0.2-internal" xmlns:fx="http://javafx.com/fxml/1">
+<AnchorPane xmlns="http://javafx.com/javafx/10.0.2-internal" xmlns:fx="http://javafx.com/fxml/1">
    <children>
       <VBox layoutX="-1.0" layoutY="-3.0" prefHeight="400.0" prefWidth="600.0">
          <children>
@@ -14,12 +14,12 @@
                      <children>
                         <HBox alignment="CENTER" prefHeight="100.0" prefWidth="200.0">
                            <children>
-                              <ChoiceBox prefWidth="150.0" />
+                              <ChoiceBox fx:id="ssChoiceBox" prefWidth="150.0" />
                            </children>
                         </HBox>
                         <HBox alignment="CENTER" prefHeight="100.0" prefWidth="200.0">
                            <children>
-                              <ChoiceBox prefWidth="150.0" />
+                              <ChoiceBox fx:id="ieChoiceBox" prefWidth="150.0" />
                            </children>
                         </HBox>
                         <HBox alignment="CENTER" prefHeight="100.0" prefWidth="200.0" />
@@ -37,19 +37,19 @@
                                  <children>
                                     <HBox alignment="CENTER_LEFT" prefHeight="43.0" prefWidth="364.0">
                                        <children>
-                                          <TextField prefHeight="26.0" prefWidth="361.0" />
+                                          <TextField fx:id="searchText" prefHeight="26.0" prefWidth="361.0" />
                                        </children>
                                     </HBox>
                                     <HBox alignment="CENTER_LEFT" prefHeight="43.0" prefWidth="59.0">
                                        <children>
-                                          <Button mnemonicParsing="false" text="Search" />
+                                          <Button fx:id="searchButton" mnemonicParsing="false" text="Search" />
                                        </children>
                                     </HBox>
                                  </children>
                               </HBox>
                               <HBox alignment="CENTER" prefHeight="100.0" prefWidth="200.0">
                                  <children>
-                                    <Button mnemonicParsing="false" text="Print" />
+                                    <Button fx:id="printButton" mnemonicParsing="false" text="Print" />
                                  </children>
                               </HBox>
                            </children>
@@ -58,7 +58,7 @@
                   </VBox>
                   <VBox prefHeight="269.0" prefWidth="600.0">
                      <children>
-                        <TableView prefHeight="275.0" prefWidth="600.0">
+                        <TableView fx:id="tableView" prefHeight="275.0" prefWidth="600.0">
                            <VBox.margin>
                               <Insets bottom="5.0" top="5.0" />
                            </VBox.margin>
@@ -73,21 +73,21 @@
                      <children>
                         <HBox alignment="CENTER_LEFT" prefHeight="39.0" prefWidth="367.0">
                            <children>
-                              <Button mnemonicParsing="false" text="Back to main" />
+                              <Button fx:id="backToMainButton" mnemonicParsing="false" text="Back to main" />
                            </children>
                         </HBox>
                         <HBox alignment="CENTER" prefHeight="39.0" prefWidth="97.0">
                            <children>
-                              <Button mnemonicParsing="false" text="Add" />
+                              <Button fx:id="addButton" mnemonicParsing="false" text="Add" />
                            </children>
                         </HBox>
                         <HBox alignment="CENTER" prefHeight="39.0" prefWidth="82.0">
                            <children>
-                              <Button mnemonicParsing="false" text="Delete" />
+                              <Button fx:id="deleteButton" mnemonicParsing="false" text="Delete" />
                            </children></HBox>
                         <HBox alignment="CENTER" prefHeight="39.0" prefWidth="137.0">
                            <children>
-                              <Button mnemonicParsing="false" text="Update data" />
+                              <Button fx:id="updateButton" mnemonicParsing="false" text="Update data" />
                            </children>
                         </HBox>
                      </children>

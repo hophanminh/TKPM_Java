@@ -7,14 +7,13 @@
         <!-- Database connection settings -->
         <property name = "connection.driver_class">com.mysql.jdbc.Driver</property>
 
-        <!-- Phan Minh
-        <property name = "connection.url">jdbc:mysql://localhost:3012/tkpm_quanlynhasach?autoReconnect=true&amp;useUnicode=true&amp;createDatabaseIfNotExist=true&amp;characterEncoding=utf-8</property>
--->
+        <!-- Phan Minh -->
+        <property name = "connection.url">jdbc:mysql://localhost:3012/bookstore?autoReconnect=true&amp;useUnicode=true&amp;createDatabaseIfNotExist=true&amp;characterEncoding=utf-8</property>
         <!-- Phần sau ? trên mục connection.url là tự tạo database khi không có db và tự xài utf-8
         -->
 
         <!-- Quang Minh -->
-        <property name = "connection.url">jdbc:mysql://localhost:3306/bookstore?autoReconnect=true&amp;useUnicode=true&amp;createDatabaseIfNotExist=true&amp;characterEncoding=utf-8</property>
+<!--        <property name = "connection.url">jdbc:mysql://localhost:3306/bookstore?autoReconnect=true&amp;useUnicode=true&amp;createDatabaseIfNotExist=true&amp;characterEncoding=utf-8</property>-->
 
 
         <property name = "connection.username">root</property>
