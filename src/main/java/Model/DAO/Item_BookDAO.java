@@ -15,6 +15,30 @@ public class Item_BookDAO {
     public Item_BookDAO(){
     }
 
+    public void insertItem(String name, int quantity, float price, float cost, Store store, Storage storage) {
+        Session session = Main.getSession();
+        try{
+            session.getTransaction().begin();
+
+            Item item = new Item(name, quantity, price, cost);
+            // set store, storage for book
+            if (store != null) {
+                store.getItemList().add(item);
+                item.getStoreList().add(store);
+            }
+            else {
+                storage.getItemList().add(item);
+                item.getStoreList().add(store);
+            }
+
+            session.save(item);
+            session.getTransaction().commit();
+        } catch (Exception exception) {
+            exception.printStackTrace();
+            session.getTransaction().rollback();
+        }
+    }
+
     public void insertBook(String name, int quantity, float price, float cost, String author,
                            String publisher, int year, String des, Store store, Storage storage, HashSet<Genre> genreList) {
         Session session = Main.getSession();
