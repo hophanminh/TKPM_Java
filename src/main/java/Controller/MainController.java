@@ -180,7 +180,7 @@ public class MainController implements Controller {
 
         // Get list employees of store
         employeeList.setOnAction(actionEvent -> {
-            Management management = new Management(thisStage);
+            Management management = new Management(thisStage, this);
             management.showStage();
         });
     }
