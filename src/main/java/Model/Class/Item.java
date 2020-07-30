@@ -10,7 +10,7 @@ import java.util.Set;
 public class Item {
     @Id
     @Column(name = "idItem")
-    @GeneratedValue(strategy = GenerationType.AUTO)
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     protected int idItem;
 
     @Column(name = "nameItem")
@@ -46,15 +46,15 @@ public class Item {
 //        this.priceItem = priceItem;
 //    }
 //
-//    public Item(){
-//
-//    }
+    public Item(){
 
-    public Item(String nameItem, float costItem, float priceItem, int quantityItem){
+    }
+
+    public Item(String nameItem, int quantityItem, float priceItem, float costItem) {
         this.nameItem = nameItem;
-        this.costItem = costItem;
-        this.priceItem = priceItem;
         this.quantityItem = quantityItem;
+        this.priceItem = priceItem;
+        this.costItem = costItem;
     }
 
     public int getIdItem() {
@@ -79,6 +79,30 @@ public class Item {
 
     public void setPriceItem(float priceItem) {
         this.priceItem = priceItem;
+    }
+
+    public float getCostItem() {
+        return costItem;
+    }
+
+    public void setCostItem(float costItem) {
+        this.costItem = costItem;
+    }
+
+    public Set<Store> getStoreList() {
+        return storeList;
+    }
+
+    public void setStoreList(Set<Store> storeList) {
+        this.storeList = storeList;
+    }
+
+    public Set<Storage> getStorageList() {
+        return storageList;
+    }
+
+    public void setStorageList(Set<Storage> storageList) {
+        this.storageList = storageList;
     }
 
     public int getQuantityItem() {

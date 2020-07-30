@@ -10,7 +10,7 @@ import java.util.Set;
 public class Customer {
     @Id
     @Column(name = "idCustomer")
-    @GeneratedValue(strategy = GenerationType.AUTO)
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private int idCustomer;
 
     @Column(name = "nameCustomer")
@@ -31,6 +31,10 @@ public class Customer {
     @ManyToOne
     @JoinColumn(name = "idStore", nullable = false)
     private Store store;
+
+    public Customer(){
+
+    }
 
     public int getIdCustomer() {
         return idCustomer;

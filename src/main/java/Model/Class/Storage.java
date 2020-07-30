@@ -9,7 +9,7 @@ import java.util.Set;
 public class Storage {
     @Id
     @Column(name = "idStorage")
-    @GeneratedValue(strategy = GenerationType.AUTO)
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private int idStorage;
 
     @Column(name = "nameStorage")
@@ -30,6 +30,15 @@ public class Storage {
     @ManyToOne
     @JoinColumn(name = "idCompany", nullable = false)
     private Company company;
+
+    public Storage(){
+
+    }
+
+    public Storage(String nameStorage, String addressStorage) {
+        this.nameStorage = nameStorage;
+        this.addressStorage = addressStorage;
+    }
 
     public int getIdStorage() {
         return idStorage;

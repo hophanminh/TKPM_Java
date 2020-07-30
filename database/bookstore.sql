@@ -1,3 +1,5 @@
+CREATE DATABASE  IF NOT EXISTS `bookstore` /*!40100 DEFAULT CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci */ /*!80016 DEFAULT ENCRYPTION='N' */;
+USE `bookstore`;
 -- MySQL dump 10.13  Distrib 8.0.20, for Win64 (x86_64)
 --
 -- Host: localhost    Database: bookstore
@@ -68,7 +70,7 @@ CREATE TABLE `book` (
 
 LOCK TABLES `book` WRITE;
 /*!40000 ALTER TABLE `book` DISABLE KEYS */;
-INSERT INTO `book` VALUES ('author1','des1','pub1',2001,2),('author2','des2','pub2',2002,3);
+INSERT INTO `book` VALUES ('1','','',0,1),('2','','',0,2),('1','','',0,3),('2','','',0,4),('5','','',0,5),('7','','',0,6),('8','','',0,7),('9','','',0,8),('9','','',0,9);
 /*!40000 ALTER TABLE `book` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -80,12 +82,12 @@ DROP TABLE IF EXISTS `book_has_genre`;
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
 /*!50503 SET character_set_client = utf8mb4 */;
 CREATE TABLE `book_has_genre` (
-  `book_idBook` int NOT NULL,
+  `book_idItem` int NOT NULL,
   `genre_idGenre` int NOT NULL,
-  PRIMARY KEY (`book_idBook`,`genre_idGenre`),
+  PRIMARY KEY (`book_idItem`,`genre_idGenre`),
   KEY `FK4m717uics1h8x06apch3yyk17` (`genre_idGenre`),
   CONSTRAINT `FK4m717uics1h8x06apch3yyk17` FOREIGN KEY (`genre_idGenre`) REFERENCES `genre` (`idGenre`),
-  CONSTRAINT `FKit3twbkc7ei6resui1xd4s6ik` FOREIGN KEY (`book_idBook`) REFERENCES `book` (`idItem`)
+  CONSTRAINT `FKb6wr0bhtuosjrkegrb46213vn` FOREIGN KEY (`book_idItem`) REFERENCES `book` (`idItem`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
@@ -95,6 +97,7 @@ CREATE TABLE `book_has_genre` (
 
 LOCK TABLES `book_has_genre` WRITE;
 /*!40000 ALTER TABLE `book_has_genre` DISABLE KEYS */;
+INSERT INTO `book_has_genre` VALUES (7,1),(9,3),(8,4),(8,5),(8,6),(9,6),(9,7),(7,8);
 /*!40000 ALTER TABLE `book_has_genre` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -203,7 +206,7 @@ CREATE TABLE `employee` (
   KEY `FKeuw8bt43qrdcltudeggey9riv` (`idStore`),
   CONSTRAINT `FKeuw8bt43qrdcltudeggey9riv` FOREIGN KEY (`idStore`) REFERENCES `store` (`idStore`),
   CONSTRAINT `FKhyl3a2dj2m2v2bxwoilgnk45f` FOREIGN KEY (`idStorage`) REFERENCES `storage` (`idStorage`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=2 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -212,7 +215,7 @@ CREATE TABLE `employee` (
 
 LOCK TABLES `employee` WRITE;
 /*!40000 ALTER TABLE `employee` DISABLE KEYS */;
-INSERT INTO `employee` VALUES (1,'address','admin1','admin','123',1,123,'2001-01-01 00:00:00.000000',1,'admin',NULL,NULL),(2,'address','admin2','admin','123',2,123,'2001-01-01 00:00:00.000000',1,'admin2',NULL,NULL);
+INSERT INTO `employee` VALUES (1,'abc','minh','admin','100',1,100,'2001-01-01 00:00:00.000000',1,'admin',NULL,NULL);
 /*!40000 ALTER TABLE `employee` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -227,7 +230,7 @@ CREATE TABLE `genre` (
   `idGenre` int NOT NULL AUTO_INCREMENT,
   `nameGenre` varchar(255) DEFAULT NULL,
   PRIMARY KEY (`idGenre`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=9 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -236,29 +239,8 @@ CREATE TABLE `genre` (
 
 LOCK TABLES `genre` WRITE;
 /*!40000 ALTER TABLE `genre` DISABLE KEYS */;
+INSERT INTO `genre` VALUES (1,'Kinh dị'),(2,'Trinh thám'),(3,'Hài kịch'),(4,'Ngụ ngôn'),(5,'Viễn tưởng'),(6,'Tình cảm'),(7,'Châm biếm'),(8,'Khoa học');
 /*!40000 ALTER TABLE `genre` ENABLE KEYS */;
-UNLOCK TABLES;
-
---
--- Table structure for table `hibernate_sequence`
---
-
-DROP TABLE IF EXISTS `hibernate_sequence`;
-/*!40101 SET @saved_cs_client     = @@character_set_client */;
-/*!50503 SET character_set_client = utf8mb4 */;
-CREATE TABLE `hibernate_sequence` (
-  `next_val` bigint DEFAULT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
-/*!40101 SET character_set_client = @saved_cs_client */;
-
---
--- Dumping data for table `hibernate_sequence`
---
-
-LOCK TABLES `hibernate_sequence` WRITE;
-/*!40000 ALTER TABLE `hibernate_sequence` DISABLE KEYS */;
-INSERT INTO `hibernate_sequence` VALUES (4),(4),(4),(4),(4),(4),(4),(4),(4);
-/*!40000 ALTER TABLE `hibernate_sequence` ENABLE KEYS */;
 UNLOCK TABLES;
 
 --
@@ -270,11 +252,12 @@ DROP TABLE IF EXISTS `item`;
 /*!50503 SET character_set_client = utf8mb4 */;
 CREATE TABLE `item` (
   `idItem` int NOT NULL AUTO_INCREMENT,
+  `costItem` float DEFAULT NULL,
   `nameItem` varchar(255) DEFAULT NULL,
   `priceItem` float DEFAULT NULL,
   `quantityItem` int DEFAULT NULL,
   PRIMARY KEY (`idItem`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=10 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -283,7 +266,7 @@ CREATE TABLE `item` (
 
 LOCK TABLES `item` WRITE;
 /*!40000 ALTER TABLE `item` DISABLE KEYS */;
-INSERT INTO `item` VALUES (1,'pen',100,10),(2,'book1',1000,100),(3,'book2',200,200),(4,'snack',300,300);
+INSERT INTO `item` VALUES (1,0,'1',0,1),(2,0,'2',0,1),(3,0,'1',0,1),(4,0,'2',0,1),(5,0,'5',0,1),(6,0,'7',0,1),(7,0,'8',0,1),(8,0,'9',0,1),(9,0,'9',0,1);
 /*!40000 ALTER TABLE `item` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -357,7 +340,7 @@ CREATE TABLE `store` (
   PRIMARY KEY (`idStore`),
   KEY `FKb9s2x22rcoag9h75tiasn9i3g` (`idCompany`),
   CONSTRAINT `FKb9s2x22rcoag9h75tiasn9i3g` FOREIGN KEY (`idCompany`) REFERENCES `company` (`idCompany`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=3 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -366,7 +349,7 @@ CREATE TABLE `store` (
 
 LOCK TABLES `store` WRITE;
 /*!40000 ALTER TABLE `store` DISABLE KEYS */;
-INSERT INTO `store` VALUES (2,'address1','store1',0,0,NULL),(3,'ddd','sadw',0,0,NULL);
+INSERT INTO `store` VALUES (1,'address1','store1',0,0,NULL),(2,'address2','store2',0,0,NULL);
 /*!40000 ALTER TABLE `store` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -393,7 +376,7 @@ CREATE TABLE `store_has_item` (
 
 LOCK TABLES `store_has_item` WRITE;
 /*!40000 ALTER TABLE `store_has_item` DISABLE KEYS */;
-INSERT INTO `store_has_item` VALUES (3,2),(1,3),(2,3),(4,3);
+INSERT INTO `store_has_item` VALUES (1,1),(2,1),(7,1),(8,1),(9,1),(3,2),(4,2),(5,2),(6,2);
 /*!40000 ALTER TABLE `store_has_item` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -432,4 +415,4 @@ UNLOCK TABLES;
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
--- Dump completed on 2020-07-27  0:44:02
+-- Dump completed on 2020-07-30  8:28:35

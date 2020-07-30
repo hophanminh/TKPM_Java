@@ -13,12 +13,14 @@ import javafx.collections.ListChangeListener;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.geometry.Pos;
+import javafx.geometry.Rectangle2D;
 import javafx.scene.Scene;
 import javafx.scene.control.*;
 import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.Priority;
+import javafx.stage.Screen;
 import javafx.stage.Stage;
 import javafx.util.Callback;
 import javafx.util.Duration;
@@ -62,6 +64,10 @@ public class MainController implements Controller {
 
     @FXML
     private Button addItem;
+
+    @FXML
+    private Button addGenreButton;
+
     @FXML
     private Button employeeList;
 
@@ -74,10 +80,18 @@ public class MainController implements Controller {
 
             FXMLLoader loader = new FXMLLoader(getClass().getResource("/fxml/main.fxml"));
             loader.setController(this);
-            thisStage.setScene(new Scene(loader.load(), 668, 592));
+            thisStage.setScene(new Scene(loader.load(), 1200, 1000));
             thisStage.setTitle("Quản lý nhà sách");
-            thisStage.setResizable(false);
+            thisStage.setResizable(true);
+            thisStage.setMaximized(true);
 
+            // maximize window
+            Screen screen = Screen.getPrimary();
+            Rectangle2D bounds = screen.getVisualBounds();
+            thisStage.setX(bounds.getMinX());
+            thisStage.setY(bounds.getMinY());
+            thisStage.setWidth(bounds.getWidth());
+            thisStage.setHeight(bounds.getHeight());
         } catch (IOException e) {
             e.printStackTrace();
         }
@@ -113,11 +127,12 @@ public class MainController implements Controller {
         if (listItem != null) {
             // create text field with clear button
             TextField searchBar = TextFields.createClearableTextField();
+            searchBar.setStyle("-fx-font-size: 15");
 
             // add autocomplete
             AutoCompletionBinding auto = TextFields.bindAutoCompletion(searchBar, listItem);
-            auto.setMinWidth(searchPane.getPrefWidth());
-            auto.setVisibleRowCount(10);
+            auto.minWidthProperty().bind(searchPane.widthProperty());
+            auto.setVisibleRowCount(10);            // only show top 10 result
 
             //add into panel
             searchPane.getChildren().add(searchBar);
@@ -155,6 +170,11 @@ public class MainController implements Controller {
 
         addItem.setOnAction(actionEvent -> {
             AddItem controller = new AddItem(thisStage, this);
+            controller.showStage();
+        });
+
+        addGenreButton.setOnAction(actionEvent -> {
+            AddGenre controller = new AddGenre(thisStage, this);
             controller.showStage();
         });
 

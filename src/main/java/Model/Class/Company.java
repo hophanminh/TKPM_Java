@@ -9,7 +9,7 @@ import java.util.Set;
 public class Company {
     @Id
     @Column(name = "idCompany")
-    @GeneratedValue(strategy = GenerationType.AUTO)
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private int idCompany;
 
     @Column(name = "nameCompany")
@@ -20,6 +20,10 @@ public class Company {
 
     @OneToMany(fetch = FetchType.EAGER, mappedBy = "company")
     private Set<Storage> storageList = new HashSet<>();
+
+    public Company(){
+
+    }
 
     public int getIdCompany() {
         return idCompany;

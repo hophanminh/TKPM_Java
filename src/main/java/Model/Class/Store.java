@@ -9,7 +9,7 @@ import java.util.Set;
 public class Store {
     @Id
     @Column(name = "idStore")
-    @GeneratedValue(strategy = GenerationType.AUTO)
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private int idStore;
 
     @Column(name = "nameStore")
@@ -147,6 +147,6 @@ public class Store {
 
     @Override
     public String toString() {
-        return idStore + " - " + addressStore;
+        return nameStore + " - " + addressStore;
     }
 }

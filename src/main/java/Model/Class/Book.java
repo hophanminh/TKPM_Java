@@ -2,6 +2,7 @@ package Model.Class;
 
 import javax.persistence.*;
 import java.util.HashSet;
+import java.util.List;
 import java.util.Set;
 
 @Entity
@@ -19,19 +20,27 @@ public class Book extends Item {
     @Column(name = "yearBook")
     private int year;
 
-    @OneToMany(fetch = FetchType.EAGER, mappedBy = "book")
-    Set<Book_has_Genre> book_has_genres = new HashSet<>();
+    @ManyToMany(cascade = {CascadeType.ALL})
+    @JoinTable(
+            name = "book_has_genre",
+            joinColumns = {@JoinColumn(name = "book_idItem")},
+            inverseJoinColumns = {@JoinColumn(name = "genre_idGenre")}
+    )
+    Set<Genre> genreList = new HashSet<>();
 
-    public Book(String nameItem, float costItem, float priceItem, int quantityItem, String authorBook, String descriptionBook, String pulisherBook, int yearBook) {
-        super(nameItem, costItem, priceItem, quantityItem);
-        this.authorBook = authorBook;
-        this.pulisherBook = pulisherBook;
-        this.year = yearBook;
+    public Book(){
+      super();
     }
 
-//    public Book(String nameBook, int priceBook){
-//        super(nameBook, priceBook);
-//    }
+    public Book(String nameItem, int quantityItem, float priceItem,
+                float costItem, String authorBook, String descriptionBook, String pulisherBook, int year, Set<Genre> genreList) {
+        super(nameItem, quantityItem, priceItem, costItem);
+        this.authorBook = authorBook;
+        this.descriptionBook = descriptionBook;
+        this.pulisherBook = pulisherBook;
+        this.year = year;
+        this.genreList = genreList;
+    }
 
     public String getAuthorBook() {
         return authorBook;

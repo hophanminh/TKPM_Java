@@ -8,7 +8,7 @@ import java.util.Date;
 public class Discount {
     @Id
     @Column(name="idDiscount")
-    @GeneratedValue(strategy = GenerationType.AUTO)
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     protected int idDiscount;
 
     @Column (name = "startDate")
@@ -23,6 +23,10 @@ public class Discount {
     @ManyToOne
     @JoinColumn(name = "idStore", nullable = false)
     private Store store;
+
+    public Discount(){
+
+    }
 
     public int getIdDiscount() {
         return idDiscount;

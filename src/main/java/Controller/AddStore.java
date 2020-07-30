@@ -17,6 +17,7 @@ import java.util.prefs.Preferences;
 
 public class AddStore implements Controller {
     private Stage thisStage;
+    private Stage parent;
     private Controller previousController;
     private StoreDAO storeDAO;
 
@@ -37,6 +38,7 @@ public class AddStore implements Controller {
         try {
             // create new stage, after finished use "Controller previous" to reload previous stage
             thisStage = new Stage();
+            parent = previousStage;
             previousController = previous;
             storeDAO = new StoreDAO();
 
@@ -47,7 +49,7 @@ public class AddStore implements Controller {
             thisStage.setResizable(false);
 
             // lock to previous stage
-            thisStage.initOwner(previousStage);
+            thisStage.initOwner(parent);
             thisStage.initModality(Modality.WINDOW_MODAL);
 
         } catch (IOException e) {
@@ -61,8 +63,9 @@ public class AddStore implements Controller {
     }
 
     public void reloadStage() {
-        AddStore reload = new AddStore(thisStage, previousController);
+        AddStore reload = new AddStore(parent, previousController);
         reload.showStage();
+        thisStage.close();
     }
 
     @FXML
