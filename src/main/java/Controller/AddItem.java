@@ -39,6 +39,9 @@ public class AddItem implements Controller {
     private HashSet<Genre> genreList;
 
     @FXML
+    public ComboBox typeField;
+
+    @FXML
     public TextField nameField;
 
     @FXML
@@ -118,6 +121,34 @@ public class AddItem implements Controller {
         storageList = storageDAO.getAllStorage();
         genreList = new HashSet<>();
 
+        // set item type
+        typeField.getItems().addAll("Thường", "Sách");
+        typeField.getSelectionModel().selectFirst();
+        authorField.setDisable(true);
+        publisherField.setDisable(true);
+        yearField.setDisable(true);
+        desField.setDisable(true);
+        genreButton.setDisable(true);
+
+        // when change type -> disable some field
+        typeField.setOnAction(actionEvent -> {
+            String selected = (String) typeField.getSelectionModel().getSelectedItem();
+            if (selected.equals("Sách")) {
+                authorField.setDisable(false);
+                publisherField.setDisable(false);
+                yearField.setDisable(false);
+                desField.setDisable(false);
+                genreButton.setDisable(false);
+            }
+            else {
+                authorField.setDisable(true);
+                publisherField.setDisable(true);
+                yearField.setDisable(true);
+                desField.setDisable(true);
+                genreButton.setDisable(true);
+            }
+        });
+
         // set location type
         locationField.getItems().addAll("Cửa hàng", "Kho");
         locationField.getSelectionModel().selectFirst();
@@ -194,7 +225,7 @@ public class AddItem implements Controller {
 
             // check blank input
             if (name.isEmpty() || quantity.isEmpty() || price.isEmpty() || cost.isEmpty() ||
-                    author.isEmpty() || locationNameField.getSelectionModel().getSelectedIndex() == -1) {
+                    locationNameField.getSelectionModel().getSelectedIndex() == -1) {
                 // Create and display AlertWindow
                 AlertDialog fail = new AlertDialog();
                 Alert failAlert = fail.createAlert(thisStage,
@@ -261,10 +292,17 @@ public class AddItem implements Controller {
                     storage = (Storage) locationNameField.getSelectionModel().getSelectedItem();
                 }
 
+                String selected = (String) typeField.getSelectionModel().getSelectedItem();
+                if (selected.equals("Sách")) {
+                    // create and insert
+                    item_bookDAO.insertBook(name, Integer.parseInt(quantity), Float.parseFloat(price), Float.parseFloat(cost),
+                            author, publisher, Integer.parseInt(year), des, store, storage, genreList);
+                }
+                else {
+                    item_bookDAO.insertItem(name, Integer.parseInt(quantity), Float.parseFloat(price),
+                            Float.parseFloat(cost), store, storage);
+                }
 
-                // create and insert
-                item_bookDAO.insertBook(name, Integer.parseInt(quantity), Float.parseFloat(price), Float.parseFloat(cost),
-                        author, publisher, Integer.parseInt(year), des, store, storage, genreList);
 
 
                 // Create and display AlertWindow
@@ -272,7 +310,7 @@ public class AddItem implements Controller {
                 Alert successAlert = success.createAlert(thisStage,
                         "INFORMATION",
                         "Hoàn tất",
-                        "Thêm sách thành công");
+                        "Thêm sản phẩm thành công");
                 successAlert.showAndWait();
 
 
