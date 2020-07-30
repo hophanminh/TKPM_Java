@@ -33,7 +33,7 @@ public class StoreDAO {
 
             // get all Item and book from database
             Query<Store> query = session.createQuery(
-                    "from Store " , Store.class
+                    "SELECT DISTINCT s FROM Store as s LEFT JOIN FETCH s.itemList" , Store.class
             );
             resultList = query.list();
 

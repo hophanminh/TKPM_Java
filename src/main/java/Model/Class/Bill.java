@@ -8,7 +8,7 @@ import java.util.Date;
 public class Bill {
     @Id
     @Column(name = "idBill")
-    @GeneratedValue(strategy = GenerationType.AUTO)
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private int idBill;
 
     @Column(name = "totalBill")
@@ -27,6 +27,9 @@ public class Bill {
     @JoinColumn(name = "idCustomer", nullable = true)
     private Customer customer;
 
+    public Bill(){
+
+    }
 
     public int getIdBill() {
         return idBill;

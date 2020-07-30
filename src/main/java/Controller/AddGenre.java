@@ -18,28 +18,36 @@ import java.util.prefs.Preferences;
 
 public class AddGenre {
     private Stage thisStage;
+    private Stage parent;
     private Controller previousController;
     private Preferences pref;
+    private GenreDAO genreDAO;
 
     @FXML
-    public TextField textGenre;
+    private TextField nameField;
+
     @FXML
-    public Button submitButton;
+    private Button acceptButton;
+
+    @FXML
+    private Button closeButton;
 
     public AddGenre(Stage previousStage, Controller previous) {
         try {
             thisStage = new Stage();
+            parent = previousStage;
             previousController = previous;
             pref = Preferences.userNodeForPackage(Employee.class);
+            genreDAO = new GenreDAO();
 
             FXMLLoader loader = new FXMLLoader(getClass().getResource("/fxml/addGenre.fxml"));
             loader.setController(this);
-            thisStage.setScene(new Scene(loader.load(), 668, 592));
-            thisStage.setTitle("Thêm loại sách");
+            thisStage.setScene(new Scene(loader.load(), 541, 271));
+            thisStage.setTitle("Thêm thể loại sách");
             thisStage.setResizable(false);
 
             // lock to previous stage
-            thisStage.initOwner(previousStage);
+            thisStage.initOwner(parent);
             thisStage.initModality(Modality.WINDOW_MODAL);
 
         } catch (IOException e) {
@@ -53,44 +61,58 @@ public class AddGenre {
     }
 
     public void reloadStage() {
-        AddItem reload = new AddItem(thisStage, previousController);
+        AddGenre reload = new AddGenre(parent, previousController);
         reload.showStage();
+        thisStage.close();
     }
 
     @FXML
     private void initialize() {
-        submitButton.setOnAction(actionEvent -> {
-            System.out.println("Add Genre");
+        acceptButton.setOnAction(actionEvent -> {
+            // get all input
+            String name = nameField.getText().trim();
 
-            String genreName = textGenre.getText().trim();
-
-            // Kiem tra dieu kien
-            String error = "";
-            if (textGenre == null)
-                error += "Phải nhập tên loại sách\n";
-
-            if (error.equals("")) {
-                GenreDAO genreDAO = new GenreDAO();
-                Genre genre = new Genre(genreName);
-                genreDAO.addGenre(genre);
-                AlertDialog success = new AlertDialog();
-                Alert successAlert = success.createAlert(thisStage,
-                        "INFORMATION",
-                        "Success",
-                        "Add new genre successfully");
-                successAlert.showAndWait();
-                System.out.println("Success");
-            } else {
+            // check blank input
+            if (name.isEmpty()) {
                 // Create and display AlertWindow
                 AlertDialog fail = new AlertDialog();
                 Alert failAlert = fail.createAlert(thisStage,
                         "WARNING",
-                        "Sai cú pháp", error);
+                        "Thêm thất bại",
+                        "Vui lòng nhập đầy đủ thông tin.");
                 failAlert.showAndWait();
+            }
+            // check length
+            else if (name.length() > 255) {
+                // Create and display AlertWindow
+                AlertDialog fail = new AlertDialog();
+                Alert failAlert = fail.createAlert(thisStage,
+                        "WARNING",
+                        "Thêm thất bại",
+                        "Tên thể loại không được vượt quá 255 kí tự.");
+                failAlert.showAndWait();
+            }
+            else {
+                // create and insert
+                genreDAO.insert(name);
+                // Create and display AlertWindow
+                AlertDialog success = new AlertDialog();
+                Alert successAlert = success.createAlert(thisStage,
+                        "INFORMATION",
+                        "Hoàn tất",
+                        "Thêm thể loại thành công");
+                successAlert.showAndWait();
 
-                textGenre.clear();
+                // reload previous stage
+                previousController.reloadStage();
+
+                // close login window
+                thisStage.close();
             }
         });
 
+        closeButton.setOnAction(actionEvent -> {
+            thisStage.close();
+        });
     }
 }

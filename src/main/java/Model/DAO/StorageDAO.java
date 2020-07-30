@@ -1,24 +1,22 @@
 package Model.DAO;
 
 import Main.Main;
-import Model.Class.Employee;
-import Model.Class.Genre;
-import Model.Class.Item;
+import Model.Class.Storage;
 import org.hibernate.Session;
 import org.hibernate.query.Query;
 
 import java.util.List;
-import java.util.prefs.Preferences;
 
-public class GenreDAO {
-    public GenreDAO(){}
+public class StorageDAO {
+    public StorageDAO(){
+    }
 
-    public void insert(String name) {
+    public void insert(String name, String address) {
         Session session = Main.getSession();
         try{
             session.getTransaction().begin();
-            Genre genre = new Genre(name);
-            session.save(genre);
+            Storage storage = new Storage(name, address);
+            session.save(storage);
             session.getTransaction().commit();
         } catch (Exception exception) {
             exception.printStackTrace();
@@ -26,16 +24,16 @@ public class GenreDAO {
         }
     }
 
-    public List<Genre> getAllGenre() {
+    public List<Storage> getAllStorage(){
         Session session = Main.getSession();
-        List<Genre> resultList = null;
+        List<Storage> resultList = null;
 
         try{
             session.getTransaction().begin();
 
             // get all Item and book from database
-            Query<Genre> query = session.createQuery(
-                    "SELECT DISTINCT g FROM Genre as g LEFT JOIN FETCH g.bookList " , Genre.class
+            Query<Storage> query = session.createQuery(
+                    "from Storage as s JOIN FETCH s.itemList " , Storage.class
             );
             resultList = query.list();
 
@@ -45,6 +43,6 @@ public class GenreDAO {
             session.getTransaction().rollback();
         }
         return resultList;
-
     }
+
 }

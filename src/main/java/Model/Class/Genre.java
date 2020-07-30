@@ -9,18 +9,23 @@ import java.util.Set;
 public class Genre {
     @Id
     @Column(name = "idGenre")
-    @GeneratedValue(strategy = GenerationType.AUTO)
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private int idGenre;
 
     @Column(name = "nameGenre")
     private String nameGenre;
 
-    @OneToMany(fetch = FetchType.EAGER, mappedBy = "genre")
-    private Set<Book_has_Genre> book_has_genres = new HashSet<>();
+    @ManyToMany(mappedBy = "genreList")
+    private Set<Book> bookList = new HashSet<>();
+
+    public Genre(){
+
+    }
 
     public Genre(String nameGenre){
         this.nameGenre = nameGenre;
     }
+
     public int getIdGenre() {
         return idGenre;
     }
@@ -35,5 +40,13 @@ public class Genre {
 
     public void setNameGenre(String nameGenre) {
         this.nameGenre = nameGenre;
+    }
+
+    public Set<Book> getBookList() {
+        return bookList;
+    }
+
+    public void setBookList(Set<Book> bookList) {
+        this.bookList = bookList;
     }
 }

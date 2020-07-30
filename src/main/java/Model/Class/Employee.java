@@ -8,7 +8,7 @@ import java.util.Date;
 public class Employee {
     @Id
     @Column(name = "id")
-    @GeneratedValue(strategy = GenerationType.AUTO)
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     protected int id;
 
     @Column(name = "username")
@@ -45,6 +45,10 @@ public class Employee {
     @ManyToOne
     @JoinColumn(name = "idStorage", nullable = true)
     protected Storage storage;
+
+    public Employee(){
+
+    }
 
     public int getId() {
         return id;
