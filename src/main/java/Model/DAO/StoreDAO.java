@@ -1,6 +1,6 @@
 package Model.DAO;
 
-import Main.Main;
+import Main.App;
 import Model.Class.Store;
 import org.hibernate.Session;
 import org.hibernate.query.Query;
@@ -12,7 +12,7 @@ public class StoreDAO {
     }
 
     public void insert(String name, String address) {
-        Session session = Main.getSession();
+        Session session = App.getSession();
         try{
             session.getTransaction().begin();
             Store location = new Store(name, address);
@@ -25,7 +25,7 @@ public class StoreDAO {
     }
 
     public List<Store> getAllStore(){
-        Session session = Main.getSession();
+        Session session = App.getSession();
         List<Store> resultList = null;
 
         try{

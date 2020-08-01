@@ -1,6 +1,6 @@
 package Model.DAO;
 
-import Main.Main;
+import Main.App;
 import Model.Class.Storage;
 import org.hibernate.Session;
 import org.hibernate.query.Query;
@@ -12,7 +12,7 @@ public class StorageDAO {
     }
 
     public void insert(String name, String address) {
-        Session session = Main.getSession();
+        Session session = App.getSession();
         try{
             session.getTransaction().begin();
             Storage storage = new Storage(name, address);
@@ -25,7 +25,7 @@ public class StorageDAO {
     }
 
     public List<Storage> getAllStorage(){
-        Session session = Main.getSession();
+        Session session = App.getSession();
         List<Storage> resultList = null;
 
         try{

@@ -1,10 +1,9 @@
 package Model.DAO;
 import Model.Class.*;
-import Main.Main;
+import Main.App;
 import org.hibernate.Session;
 import org.hibernate.query.Query;
 
-import java.time.LocalDateTime;
 import java.util.HashSet;
 import java.util.List;
 import java.util.prefs.Preferences;
@@ -16,7 +15,7 @@ public class Item_BookDAO {
     }
 
     public void insertItem(String name, int quantity, float price, float cost, Store store, Storage storage) {
-        Session session = Main.getSession();
+        Session session = App.getSession();
         try{
             session.getTransaction().begin();
 
@@ -41,7 +40,7 @@ public class Item_BookDAO {
 
     public void insertBook(String name, int quantity, float price, float cost, String author,
                            String publisher, int year, String des, Store store, Storage storage, HashSet<Genre> genreList) {
-        Session session = Main.getSession();
+        Session session = App.getSession();
         try{
             session.getTransaction().begin();
 
@@ -69,7 +68,7 @@ public class Item_BookDAO {
     }
 
     public List<Item> getAllItem(){
-        Session session = Main.getSession();
+        Session session = App.getSession();
         List<Item> resultList = null;
 
         // only get item from store where app is used
@@ -96,7 +95,7 @@ public class Item_BookDAO {
     }
 
     public Item getItemById(int id) {
-        Session session = Main.getSession();
+        Session session = App.getSession();
         List<Item> resultList = null;
 
         try {
@@ -119,7 +118,7 @@ public class Item_BookDAO {
     }
 
     public void addItem(Item item){
-        Session session = Main.getSession();
+        Session session = App.getSession();
         try {
             session.getTransaction().begin();
             session.save(item);

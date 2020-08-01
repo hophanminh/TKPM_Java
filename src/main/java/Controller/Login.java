@@ -37,10 +37,13 @@ public class Login implements Controller {
 
             FXMLLoader loader = new FXMLLoader(getClass().getResource("/fxml/login.fxml"));
             loader.setController(this);
-            thisStage.setScene(new Scene(loader.load(), 400, 200));
+            thisStage.setScene(new Scene(loader.load(), 380, 212));
             thisStage.setTitle("Đăng nhập");
             thisStage.setResizable(false);
+            thisStage.setMaximized(false);
 
+            thisStage.setWidth(380);
+            thisStage.setHeight(212);
         } catch (IOException e) {
             e.printStackTrace();
         }

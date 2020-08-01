@@ -11,7 +11,7 @@ public class EmployeeDAO {
     }
 
     public Employee getEmployeeByUsername(String username){
-        Session session = Main.getSession();
+        Session session = App.getSession();
         List<Employee> resultList = null;
         Employee result = null;
         try{
@@ -39,7 +39,7 @@ public class EmployeeDAO {
     public Boolean checkLogin(String name, String pass){
 
         // get global session
-        Session session = Main.getSession();
+        Session session = App.getSession();
 
         try{
             session.getTransaction().begin();

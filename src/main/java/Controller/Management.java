@@ -24,7 +24,7 @@ import java.io.IOException;
 import java.util.List;
 import java.util.prefs.Preferences;
 
-public class Management {
+public class Management implements Controller {
     private Stage thisStage;
     private Stage parent;
     private Controller previousController;

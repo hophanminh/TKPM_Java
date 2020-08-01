@@ -1,20 +1,17 @@
 package Model.DAO;
 
-import Main.Main;
-import Model.Class.Employee;
+import Main.App;
 import Model.Class.Genre;
-import Model.Class.Item;
 import org.hibernate.Session;
 import org.hibernate.query.Query;
 
 import java.util.List;
-import java.util.prefs.Preferences;
 
 public class GenreDAO {
     public GenreDAO(){}
 
     public void insert(String name) {
-        Session session = Main.getSession();
+        Session session = App.getSession();
         try{
             session.getTransaction().begin();
             Genre genre = new Genre(name);
@@ -27,7 +24,7 @@ public class GenreDAO {
     }
 
     public List<Genre> getAllGenre() {
-        Session session = Main.getSession();
+        Session session = App.getSession();
         List<Genre> resultList = null;
 
         try{

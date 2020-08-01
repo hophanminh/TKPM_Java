@@ -4,6 +4,7 @@ import Model.Class.Book;
 import Model.Class.Employee;
 import Model.Class.Item;
 import Model.DAO.Item_BookDAO;
+import View.MyMenuView;
 import javafx.animation.Animation;
 import javafx.animation.KeyFrame;
 import javafx.animation.Timeline;
@@ -18,6 +19,7 @@ import javafx.scene.Scene;
 import javafx.scene.control.*;
 import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.layout.BorderPane;
+import javafx.scene.layout.GridPane;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.Priority;
 import javafx.stage.Screen;
@@ -41,15 +43,23 @@ public class MainController implements Controller {
     private final Duration duration = new Duration(1000); // 1000ms = 1s
 
     @FXML
+    private MenuBar menuBar;
+
+    @FXML
     private Label totalCost;
+
     @FXML
     private Label summary;
+
     @FXML
     private Label tax;
+
     @FXML
     private Label discount; // Change to Choice Box or automatic
+
     @FXML
     private Label dateMakeBill;
+
     @FXML
     private Label nameSaleMan;
 
@@ -86,12 +96,14 @@ public class MainController implements Controller {
             thisStage.setMaximized(true);
 
             // maximize window
-            Screen screen = Screen.getPrimary();
+            /*Screen screen = Screen.getPrimary();
             Rectangle2D bounds = screen.getVisualBounds();
             thisStage.setX(bounds.getMinX());
             thisStage.setY(bounds.getMinY());
             thisStage.setWidth(bounds.getWidth());
             thisStage.setHeight(bounds.getHeight());
+
+             */
         } catch (IOException e) {
             e.printStackTrace();
         }
@@ -108,6 +120,11 @@ public class MainController implements Controller {
 
     @FXML
     private void initialize() {
+        // create menu bar
+        MyMenuView menuView = new MyMenuView();
+        menuView.createMenu(menuBar, thisStage, this);
+
+
         // Set name of seller
         nameSaleMan.setText(pref.get("name", "NULL"));
 
@@ -166,7 +183,6 @@ public class MainController implements Controller {
         scroll.setFitToWidth(true);
         borderPane.setCenter(null);
         borderPane.setCenter(scroll);
-
 
         addItem.setOnAction(actionEvent -> {
             AddItem controller = new AddItem(thisStage, this);
