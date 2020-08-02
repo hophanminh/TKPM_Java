@@ -45,4 +45,25 @@ public class StorageDAO {
         return resultList;
     }
 
+    public List<Storage> getAllStorages(){
+        Session session = App.getSession();
+        List<Storage> resultList = null;
+
+        try{
+            session.getTransaction().begin();
+
+            // get all Item and book from database
+            Query<Storage> query = session.createQuery(
+                    "from Storage " , Storage.class
+            );
+            resultList = query.list();
+
+            session.getTransaction().commit();
+        } catch (Exception exception) {
+            exception.printStackTrace();
+            session.getTransaction().rollback();
+        }
+        return resultList;
+    }
+
 }

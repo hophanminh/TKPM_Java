@@ -34,6 +34,14 @@ public class Management implements Controller {
     private StorageDAO storageDAO;
     private StoreDAO storeDAO;
     private Item_BookDAO item_bookDAO;
+    private String selectionIE;
+    private int selectionSS;
+
+    private List<Employee> employeeList;
+    private List<Item> itemList;
+    private Store store = new Store();
+    private Storage storage = new Storage();
+    private ObservableList observableList;
 
     @FXML
     public TableView tableView;
@@ -73,7 +81,7 @@ public class Management implements Controller {
 
             FXMLLoader loader = new FXMLLoader(getClass().getResource("/fxml/Management.fxml"));
             loader.setController(this);
-            thisStage.setScene(new Scene(loader.load(), 600, 400));
+            thisStage.setScene(new Scene(loader.load()));
             thisStage.setTitle("Management");
             thisStage.setResizable(false);
 //            thisStage.setMaximized(true);
@@ -103,30 +111,39 @@ public class Management implements Controller {
 
     @FXML
     public void initialize(){
-        List<Store> storeList = storeDAO.getAllStore();
-        List<Storage> storageList = storageDAO.getAllStorage();
-        List<Item> itemList = item_bookDAO.getAllItem();
+        this.selectionIE = "Items";
+
+        List<Store> storeList = storeDAO.getAllStores();
+        List<Storage> storageList = storageDAO.getAllStorages();
         for (Store store: storeList){
-            ssChoiceBox.getItems().add(store.getNameStore());
+            ssChoiceBox.getItems().add(store);
         }
         for(Storage storage: storageList){
-            ssChoiceBox.getItems().add(storage.getNameStorage());
+            ssChoiceBox.getItems().add(storage);
         }
-
-        ssChoiceBox.getSelectionModel().selectedItemProperty().addListener((v, oldValue, newValue)->{
-            System.out.println(newValue);
+        ssChoiceBox.getSelectionModel().selectFirst();
+        ssChoiceBox.setOnAction(actionEvent -> {
+            if(ssChoiceBox.getSelectionModel().getSelectedItem().getClass() == Store.class){
+                this.store = (Store) ssChoiceBox.getSelectionModel().getSelectedItem();
+                System.out.println(store);
+                this.storage = null;
+            } else {
+                this.storage = (Storage) ssChoiceBox.getSelectionModel().getSelectedItem();
+                System.out.println(storage);
+                this.store = null;
+            }
+            generateData();
         });
 
         String[] ieChoiceList = {"Items", "Employees"};
         ieChoiceBox.getItems().addAll(ieChoiceList);
-        ieChoiceBox.getSelectionModel().selectedItemProperty().addListener((v, oldValue, newVlue)->{
-            System.out.println(newVlue);
+        ieChoiceBox.getSelectionModel().selectFirst();
+        ieChoiceBox.setOnAction(actionEvent -> {
+            if(ieChoiceBox.getSelectionModel().getSelectedItem().equals("Items")){
+                this.selectionIE = "Items";
+            } else this.selectionIE = "Employees";
+            generateData();
         });
-
-        createTableView();
-        ObservableList observableList = FXCollections.observableList(itemList);
-        System.out.println(itemList);
-        tableView.setItems(observableList);
 
         backToMainButton.setOnAction(actionEvent -> {
             MainController mainController = new MainController(thisStage);
@@ -146,8 +163,9 @@ public class Management implements Controller {
         });
     }
 
-    private void createTableView(){
-
+    private void createTableViewItem(){
+        tableView.getItems().clear();
+        tableView.getColumns().clear();
         // Add column to Tableview
         TableColumn<Item, Integer> idColumn = new TableColumn("ID");
         idColumn.setCellValueFactory(new PropertyValueFactory<>("idItem"));
@@ -256,7 +274,6 @@ public class Management implements Controller {
                                 final Button btn = new Button("Details");
                                 {
                                     btn.setOnAction(event -> {
-
                                         //tableView.getItems().remove(getIndex());
                                     });
                                 }
@@ -295,5 +312,170 @@ public class Management implements Controller {
         tableView.setColumnResizePolicy(TableView.CONSTRAINED_RESIZE_POLICY);
     }
 
+    private void createTableViewEmployee(){
+        tableView.getItems().clear();
+        tableView.getColumns().clear();
+        // Add column to Tableview
+        TableColumn<Item, Integer> idColumn = new TableColumn("ID");
+        idColumn.setCellValueFactory(new PropertyValueFactory<>("id"));
+        idColumn.setStyle( "-fx-alignment: CENTER;");
 
+        TableColumn<Item, String> nameColumn = new TableColumn("Name");
+        nameColumn.setCellValueFactory(new PropertyValueFactory<>("name"));
+        nameColumn.setStyle( "-fx-alignment: CENTER;");
+
+        TableColumn<Item, Integer> salaryColumn = new TableColumn("Salary");
+        salaryColumn.setCellValueFactory(new PropertyValueFactory<>("salary"));
+        salaryColumn.setStyle( "-fx-alignment: CENTER;");
+
+        TableColumn<Item, String> phoneColumn = new TableColumn("Phone");
+        phoneColumn.setCellValueFactory(new PropertyValueFactory<>("phone"));
+        phoneColumn.setStyle( "-fx-alignment: CENTER;");
+
+//        TableColumn<Item, String> authorColumn = new TableColumn("Author");
+//        Callback<TableColumn<Item, String>, TableCell<Item, String>> cellFactory
+//                = //
+//                new Callback<TableColumn<Item, String>, TableCell<Item, String>>()
+//                {
+//                    @Override
+//                    public TableCell call(final TableColumn<Item, String> param)
+//                    {
+//                        final TableCell<Item, String> cell = new TableCell<Item, String>()
+//                        {
+//                            @Override
+//                            public void updateItem(String item, boolean empty)
+//                            {
+//                                super.updateItem(item, empty);
+//                                if (empty) {
+//                                    setGraphic(null);
+//                                    setText(null);
+//                                }
+//                                else {
+//                                    setGraphic(null);
+//
+//                                    Item selected = (Item) tableView.getItems().get(getIndex());
+//                                    if (selected instanceof Book) {
+//                                        setText(((Book) selected).getAuthorBook());
+//                                    }
+//                                    setText(null);
+//                                }
+//                            }
+//                        };
+//                        return cell;
+//                    }
+//                };
+//        authorColumn.setCellFactory(cellFactory);
+//        authorColumn.setStyle( "-fx-alignment: CENTER;");
+
+        // Create column with quantity textfield
+//        TableColumn<Item, Integer> quantityColumn = new TableColumn("Quantity");
+//        quantityColumn.setCellValueFactory(new PropertyValueFactory<Item, Integer>("quantityItem"));
+//        quantityColumn.setStyle( "-fx-alignment: CENTER;");
+//
+//        TableColumn<Item, Float> profitColumn = new TableColumn("Profit");
+//        Callback<TableColumn<Item, Float>, TableCell<Item, Float>> cellFactory
+//                = //
+//                new Callback<TableColumn<Item, Float>, TableCell<Item, Float>>()
+//                {
+//                    @Override
+//                    public TableCell call(final TableColumn<Item, Float> param)
+//                    {
+//                        final TableCell<Item, Float> cell = new TableCell<Item, Float>()
+//                        {
+//                            @Override
+//                            public void updateItem(Float item, boolean empty)
+//                            {
+//                                super.updateItem(item, empty);
+//                                if (empty) {
+//                                    setGraphic(null);
+//                                    setText(null);
+//                                }
+//                                else {
+//                                    Item temp = (Item) tableView.getItems().get(getIndex());
+//                                    float profit = (temp.getPriceItem() - temp.getCostItem())*temp.getQuantityItem();
+//                                    setText(Float.toString(profit));
+//                                }
+//                            }
+//                        };
+//                        return cell;
+//                    }
+//                };
+//        profitColumn.setCellFactory(cellFactory);
+//        profitColumn.setStyle( "-fx-alignment: CENTER;");
+//
+//        // Create column with clear button
+//        TableColumn detail = new TableColumn("Detail");
+//        detail.setStyle( "-fx-alignment: CENTER;");
+//        Callback<TableColumn<Item, String>, TableCell<Item, String>> cellFactory3
+//                = //
+//                new Callback<TableColumn<Item, String>, TableCell<Item, String>>()
+//                {
+//                    @Override
+//                    public TableCell call(final TableColumn<Item, String> param)
+//                    {
+//                        final TableCell<Item, String> cell = new TableCell<Item, String>()
+//                        {
+//
+//                            @Override
+//                            public void updateItem(String item, boolean empty)
+//                            {
+//                                super.updateItem(item, empty);
+//                                final Button btn = new Button("Details");
+//                                {
+//                                    btn.setOnAction(event -> {
+//                                        //tableView.getItems().remove(getIndex());
+//                                    });
+//                                }
+//
+//                                if (empty) {
+//                                    setGraphic(null);
+//                                    setText(null);
+//                                }
+//                                else {
+//                                    setGraphic(btn);
+//                                    setText(null);
+//                                }
+//                            }
+//                        };
+//                        return cell;
+//                    }
+//                };
+//        detail.setCellFactory(cellFactory3);
+
+        TableColumn[] columns = {idColumn, nameColumn,salaryColumn, phoneColumn};//, quantityColumn,profitColumn, detail};
+        tableView.getColumns().addAll(columns);
+
+        // make column not dragable
+        tableView.getColumns().addListener(new ListChangeListener() {
+            public boolean suspended;
+            @Override
+            public void onChanged(Change change) {
+                change.next();
+                if (change.wasReplaced() && !suspended) {
+                    this.suspended = true;
+                    tableView.getColumns().setAll(columns);
+                    this.suspended = false;
+                }
+            }
+        });
+        tableView.setColumnResizePolicy(TableView.CONSTRAINED_RESIZE_POLICY);
+    }
+
+    private void generateData(){
+        if(this.selectionIE.equals("Employees")){
+            if(this.store != null){
+                employeeList = employeeDAO.getEmployeeByStore(this.store);
+            } else employeeList = employeeDAO.getEmployeeByStorage(this.storage);
+            observableList = FXCollections.observableList(this.employeeList);
+            createTableViewEmployee();
+            tableView.setItems(observableList);
+        } else {
+            if(this.store != null){
+                itemList = item_bookDAO.getItemByStore(this.store);
+            } else itemList = item_bookDAO.getItemByStorage(this.storage);
+            observableList = FXCollections.observableList(this.itemList);
+            createTableViewItem();
+            tableView.setItems(observableList);
+        }
+    }
 }

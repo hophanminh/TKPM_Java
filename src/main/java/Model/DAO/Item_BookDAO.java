@@ -94,6 +94,80 @@ public class Item_BookDAO {
         return resultList;
     }
 
+    public List<Item> getItemByStore(Store store){
+        Session session = App.getSession();
+        List<Item> resultList = null;
+
+        // only get item from store where app is used
+        pref = Preferences.userNodeForPackage(Employee.class);
+
+        try{
+            session.getTransaction().begin();
+
+            // get all Item and book from database
+            Query<Item> query = session.createQuery(
+                    "FROM Item as i JOIN FETCH i.storeList as s " +
+                            "WHERE s.idStore = :idStore " , Item.class
+            );
+            query.setParameter("idStore", store.getIdStore());
+            resultList = query.list();
+
+            session.getTransaction().commit();
+        } catch (Exception exception) {
+            exception.printStackTrace();
+            session.getTransaction().rollback();
+        }
+        return resultList;
+    }
+
+
+    public List<Item> getItemByStorage(Storage storage){
+        Session session = App.getSession();
+        List<Item> resultList = null;
+
+        // only get item from store where app is used
+        pref = Preferences.userNodeForPackage(Employee.class);
+
+        try{
+            session.getTransaction().begin();
+
+            // get all Item and book from database
+            Query<Item> query = session.createQuery(
+                    "FROM Item as i JOIN FETCH i.storageList as s " +
+                            "WHERE s.idStorage = :idStorage " , Item.class
+            );
+            query.setParameter("idStorage", storage.getIdStorage());
+            resultList = query.list();
+
+            session.getTransaction().commit();
+        } catch (Exception exception) {
+            exception.printStackTrace();
+            session.getTransaction().rollback();
+        }
+        return resultList;
+    }
+
+    public List<Item> getAllItems(){
+        Session session = App.getSession();
+        List<Item> resultList = null;
+
+        try{
+            session.getTransaction().begin();
+
+            // get all Item and book from database
+            Query<Item> query = session.createQuery(
+                    "FROM Item as i " , Item.class
+            );
+            resultList = query.list();
+
+            session.getTransaction().commit();
+        } catch (Exception exception) {
+            exception.printStackTrace();
+            session.getTransaction().rollback();
+        }
+        return resultList;
+    }
+
     public Item getItemById(int id) {
         Session session = App.getSession();
         List<Item> resultList = null;

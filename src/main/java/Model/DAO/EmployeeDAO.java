@@ -1,12 +1,17 @@
 package Model.DAO;
-import Main.*;
 
+import Main.App;
 import Model.Class.Employee;
+import Model.Class.Storage;
+import Model.Class.Store;
 import org.hibernate.Session;
 import org.hibernate.query.Query;
+
 import java.util.List;
+import java.util.prefs.Preferences;
 
 public class EmployeeDAO {
+    Preferences pref;
     public EmployeeDAO(){
     }
 
@@ -35,6 +40,76 @@ public class EmployeeDAO {
         return result;
     }
 
+    public List<Employee> getAllEmployee(){
+        Session session = App.getSession();
+        List<Employee> resultList = null;
+
+        // only get item from store where app is used
+        pref = Preferences.userNodeForPackage(Employee.class);
+        int idStore = pref.getInt("defaultStore", -1);
+
+        try{
+            session.getTransaction().begin();
+
+            // get all Item and book from database
+            Query<Employee> query = session.createQuery(
+                    "FROM Employee " , Employee.class
+            );
+            resultList = query.list();
+
+            session.getTransaction().commit();
+        } catch (Exception exception) {
+            exception.printStackTrace();
+            session.getTransaction().rollback();
+        }
+        return resultList;
+    }
+
+    public List<Employee> getEmployeeByStore(Store store){
+        Session session = App.getSession();
+        List<Employee> resultList = null;
+
+        try{
+            session.getTransaction().begin();
+
+            // get all Item and book from database
+            Query<Employee> query = session.createQuery("SELECT e "+
+                    "FROM Employee as e " +
+                            "WHERE e.store = :idStore " , Employee.class
+            );
+            query.setParameter("idStore", store);
+            resultList = query.list();
+            System.out.println(resultList);
+            session.getTransaction().commit();
+        } catch (Exception exception) {
+            exception.printStackTrace();
+            session.getTransaction().rollback();
+        }
+        return resultList;
+    }
+
+    public List<Employee> getEmployeeByStorage(Storage storage){
+        Session session = App.getSession();
+        List<Employee> resultList = null;
+
+        try{
+            session.getTransaction().begin();
+
+            // get all Item and book from database
+            Query<Employee> query = session.createQuery("SELECT e "+
+                    "FROM Employee as e " +
+                    "WHERE e.storage = :idStorage " , Employee.class
+            );
+            query.setParameter("idStorage", storage);
+            resultList = query.list();
+
+            session.getTransaction().commit();
+        } catch (Exception exception) {
+            exception.printStackTrace();
+            session.getTransaction().rollback();
+        }
+        return resultList;
+    }
 
     public Boolean checkLogin(String name, String pass){
 

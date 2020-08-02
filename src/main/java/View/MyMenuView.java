@@ -19,7 +19,7 @@ public class MyMenuView {
 
         // view menu
         Menu viewMenu = new Menu("Xem");
-                // Return to home page
+        // Return to home page
         MenuItem viewMenuItem1 = new MenuItem("Trang chủ");
         viewMenuItem1.setOnAction(e -> {
             MainController controller = new MainController(currentStage);
@@ -29,12 +29,12 @@ public class MyMenuView {
 
         // account menu
         Menu accountMenu = new Menu("Tài khoản");
-                // account's info
+        // account's info
         MenuItem accMenuItem1 = new MenuItem("Thông tin cá nhân");
         accMenuItem1.setOnAction(e -> {
 
         });
-                // sign out
+        // sign out
         MenuItem accMenuItem2 = new MenuItem("Đăng xuất");
         accMenuItem2.setOnAction(e -> {
             try {
@@ -54,7 +54,7 @@ public class MyMenuView {
 
         // management menu
         Menu manageMenu = new Menu("Quản lý");
-                // management
+        // management
         MenuItem manageMenuItem1 = new MenuItem("Quản lý chung");
         manageMenuItem1.setOnAction(e -> {
 

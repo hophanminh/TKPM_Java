@@ -45,4 +45,24 @@ public class StoreDAO {
         return resultList;
     }
 
+    public List<Store> getAllStores(){
+        Session session = App.getSession();
+        List<Store> resultList = null;
+
+        try{
+            session.getTransaction().begin();
+
+            // get all Item and book from database
+            Query<Store> query = session.createQuery(
+                    "SELECT DISTINCT s FROM Store as s " , Store.class
+            );
+            resultList = query.list();
+
+            session.getTransaction().commit();
+        } catch (Exception exception) {
+            exception.printStackTrace();
+            session.getTransaction().rollback();
+        }
+        return resultList;
+    }
 }

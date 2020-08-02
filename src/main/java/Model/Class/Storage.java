@@ -95,4 +95,9 @@ public class Storage {
     public void setAddressStorage(String addressStorage) {
         this.addressStorage = addressStorage;
     }
+
+    @Override
+    public String toString() {
+        return nameStorage + " - " + addressStorage;
+    }
 }
