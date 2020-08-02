@@ -139,11 +139,19 @@ public class Management implements Controller {
         ieChoiceBox.getItems().addAll(ieChoiceList);
         ieChoiceBox.getSelectionModel().selectFirst();
         ieChoiceBox.setOnAction(actionEvent -> {
-            if(ieChoiceBox.getSelectionModel().getSelectedItem().equals("Items")){
+            if (ieChoiceBox.getSelectionModel().getSelectedItem().equals("Items")){
                 this.selectionIE = "Items";
-            } else this.selectionIE = "Employees";
+            }
+            else {
+                this.selectionIE = "Employees";
+            }
             generateData();
         });
+
+        // set default
+        this.store = (Store) ssChoiceBox.getSelectionModel().getSelectedItem();
+        this.selectionIE = "Items";
+        generateData();
 
         backToMainButton.setOnAction(actionEvent -> {
             MainController mainController = new MainController(thisStage);

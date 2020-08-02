@@ -138,7 +138,7 @@ public class MainController implements Controller {
 
         // get all item in database
         Item_BookDAO = new Item_BookDAO();
-        List<Item> listItem = Item_BookDAO.getAllItem();
+        List<Item> listItem = Item_BookDAO.getAllItemDefault();
 
         // Create autocomplete search bar
         if (listItem != null) {

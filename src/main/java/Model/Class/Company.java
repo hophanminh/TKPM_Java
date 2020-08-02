@@ -15,10 +15,10 @@ public class Company {
     @Column(name = "nameCompany")
     private String nameCompany;
 
-    @OneToMany(fetch = FetchType.EAGER, mappedBy = "company")
+    @OneToMany(fetch = FetchType.LAZY, mappedBy = "company")
     private Set<Store> storeList = new HashSet<>();
 
-    @OneToMany(fetch = FetchType.EAGER, mappedBy = "company")
+    @OneToMany(fetch = FetchType.LAZY, mappedBy = "company")
     private Set<Storage> storageList = new HashSet<>();
 
     public Company(){

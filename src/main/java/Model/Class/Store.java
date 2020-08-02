@@ -24,19 +24,19 @@ public class Store {
     @Column(name = "outcomeStore")
     private int outcomeStore;
 
-    @OneToMany(fetch = FetchType.EAGER, mappedBy = "store")
+    @OneToMany(fetch = FetchType.LAZY, mappedBy = "store")
     private Set<Discount> discountList = new HashSet<>();
 
     @OneToMany(fetch = FetchType.LAZY, mappedBy = "store")
     private Set<Customer> customerList = new HashSet<>();
 
-    @OneToMany(fetch = FetchType.EAGER, mappedBy = "store")
+    @OneToMany(fetch = FetchType.LAZY, mappedBy = "store")
     private Set<Employee> employeeList = new HashSet<>();
 
     @ManyToMany(mappedBy = "storeList")
     private Set<Item> itemList = new HashSet<>();
 
-    @ManyToMany(cascade = {CascadeType.ALL})
+    @ManyToMany(cascade = {CascadeType.PERSIST, CascadeType.MERGE})
     @JoinTable(
             name = "store_has_storage",
             joinColumns = {@JoinColumn(name = "store_id")},

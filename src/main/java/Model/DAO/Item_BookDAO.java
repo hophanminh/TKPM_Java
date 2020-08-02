@@ -27,7 +27,7 @@ public class Item_BookDAO {
             }
             else {
                 storage.getItemList().add(item);
-                item.getStoreList().add(store);
+                item.getStorageList().add(storage);
             }
 
             session.save(item);
@@ -52,7 +52,7 @@ public class Item_BookDAO {
             }
             else {
                 storage.getItemList().add(book);
-                book.getStoreList().add(store);
+                book.getStorageList().add(storage);
             }
             // set genre for book
             for (Genre genre: genreList) {
@@ -67,7 +67,7 @@ public class Item_BookDAO {
         }
     }
 
-    public List<Item> getAllItem(){
+    public List<Item> getAllItemDefault(){
         Session session = App.getSession();
         List<Item> resultList = null;
 

@@ -18,7 +18,7 @@ public class Storage {
     @Column(name = "addressStorage")
     private String addressStorage;
 
-    @OneToMany(fetch = FetchType.EAGER, mappedBy = "storage")
+    @OneToMany(fetch = FetchType.LAZY, mappedBy = "storage")
     private Set<Employee> employeeList = new HashSet<>();
 
     @ManyToMany(mappedBy = "storageList")

@@ -62,7 +62,7 @@ public class SetDefaultStore implements Controller {
     @FXML
     private void initialize() {
         // get all store from database into combobox
-        List<Store> list = storeDAO.getAllStore();
+        List<Store> list = storeDAO.getAllStores();
         comboBox.getItems().addAll(list);
 
         // default select first option

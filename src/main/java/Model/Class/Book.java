@@ -20,7 +20,7 @@ public class Book extends Item {
     @Column(name = "yearBook")
     private int year;
 
-    @ManyToMany(cascade = {CascadeType.ALL})
+    @ManyToMany(cascade = {CascadeType.PERSIST, CascadeType.MERGE})
     @JoinTable(
             name = "book_has_genre",
             joinColumns = {@JoinColumn(name = "book_idItem")},

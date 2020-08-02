@@ -23,7 +23,7 @@ public class GenreDAO {
         }
     }
 
-    public List<Genre> getAllGenre() {
+    public List<Genre> getAllGenresInitialized() {
         Session session = App.getSession();
         List<Genre> resultList = null;
 
@@ -42,6 +42,28 @@ public class GenreDAO {
             session.getTransaction().rollback();
         }
         return resultList;
+    }
+
+    public List<Genre> getAllGenres() {
+        Session session = App.getSession();
+        List<Genre> resultList = null;
+
+        try{
+            session.getTransaction().begin();
+
+            // get all Item and book from database
+            Query<Genre> query = session.createQuery(
+                    "FROM Genre " , Genre.class
+            );
+            resultList = query.list();
+
+            session.getTransaction().commit();
+        } catch (Exception exception) {
+            exception.printStackTrace();
+            session.getTransaction().rollback();
+        }
+        return resultList;
 
     }
+
 }

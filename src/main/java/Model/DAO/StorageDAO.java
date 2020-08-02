@@ -24,7 +24,7 @@ public class StorageDAO {
         }
     }
 
-    public List<Storage> getAllStorage(){
+    public List<Storage> getAllStoragesInitialized(){
         Session session = App.getSession();
         List<Storage> resultList = null;
 
@@ -33,7 +33,7 @@ public class StorageDAO {
 
             // get all Item and book from database
             Query<Storage> query = session.createQuery(
-                    "from Storage as s JOIN FETCH s.itemList " , Storage.class
+                    "SELECT DISTINCT s FROM Storage as s LEFT JOIN FETCH s.itemList " , Storage.class
             );
             resultList = query.list();
 

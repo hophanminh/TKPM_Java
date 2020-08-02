@@ -25,7 +25,7 @@ public class Item {
     @Column(name = "costItem")
     protected float costItem;
 
-    @ManyToMany(cascade = {CascadeType.ALL})
+    @ManyToMany(cascade = {CascadeType.PERSIST, CascadeType.MERGE})
     @JoinTable(
             name = "store_has_item",
             joinColumns = {@JoinColumn(name = "item_idItem")},
@@ -33,7 +33,7 @@ public class Item {
     )
     Set<Store> storeList = new HashSet<>();
 
-    @ManyToMany(cascade = {CascadeType.ALL})
+    @ManyToMany(cascade = {CascadeType.PERSIST, CascadeType.MERGE})
     @JoinTable(
             name = "storage_has_item",
             joinColumns = {@JoinColumn(name = "item_idItem")},

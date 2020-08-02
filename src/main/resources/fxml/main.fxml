@@ -71,7 +71,7 @@
                   </Label>
                   <Label fx:id="nameSaleMan" text="Nguyễn Quang Minh" GridPane.columnIndex="1" GridPane.halignment="RIGHT" GridPane.rowIndex="1">
                      <font>
-                        <Font name="System Bold" size="20.0" />
+                        <Font name="System Bold" size="15.0" />
                      </font>
                      <GridPane.margin>
                         <Insets bottom="5.0" left="10.0" right="5.0" top="5.0" />
@@ -82,7 +82,7 @@
                         <Insets left="10.0" right="5.0" />
                      </GridPane.margin>
                      <font>
-                        <Font size="20.0" />
+                        <Font size="15.0" />
                      </font>
                   </TextField>
                </children>

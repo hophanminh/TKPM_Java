@@ -117,8 +117,8 @@ public class AddItem implements Controller {
 
     @FXML
     private void initialize() {
-        storeList = storeDAO.getAllStore();
-        storageList = storageDAO.getAllStorage();
+        storeList = storeDAO.getAllStoresInitialized();
+        storageList = storageDAO.getAllStoragesInitialized();
         genreList = new HashSet<>();
 
         // set item type

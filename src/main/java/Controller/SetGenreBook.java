@@ -83,7 +83,7 @@ public class SetGenreBook implements Controller {
     @FXML
     private void initialize() {
         // get all genre
-        List<Genre> list = genreDAO.getAllGenre();
+        List<Genre> list = genreDAO.getAllGenresInitialized();
         List<CheckBox> listCheckBox = new ArrayList<>();
 
         // create flow panel

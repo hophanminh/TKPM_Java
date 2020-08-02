@@ -24,7 +24,7 @@ public class StoreDAO {
         }
     }
 
-    public List<Store> getAllStore(){
+    public List<Store> getAllStoresInitialized(){
         Session session = App.getSession();
         List<Store> resultList = null;
 
@@ -54,7 +54,7 @@ public class StoreDAO {
 
             // get all Item and book from database
             Query<Store> query = session.createQuery(
-                    "SELECT DISTINCT s FROM Store as s " , Store.class
+                    "FROM Store " , Store.class
             );
             resultList = query.list();
 
