@@ -1,5 +1,6 @@
 package Controller;
 
+import Model.Class.Store;
 import Model.DAO.StoreDAO;
 import View.AlertDialog;
 import javafx.beans.value.ChangeListener;
@@ -106,7 +107,8 @@ public class AddStore implements Controller {
             }
             else {
                 // create and insert
-                storeDAO.insert(name, address);
+                Store store = new Store(name, address);
+                storeDAO.insert(store);
                 // Create and display AlertWindow
                 AlertDialog success = new AlertDialog();
                 Alert successAlert = success.createAlert(thisStage,

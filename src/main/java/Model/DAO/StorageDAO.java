@@ -11,11 +11,10 @@ public class StorageDAO {
     public StorageDAO(){
     }
 
-    public void insert(String name, String address) {
+    public void insert(Storage storage) {
         Session session = App.getSession();
         try{
             session.getTransaction().begin();
-            Storage storage = new Storage(name, address);
             session.save(storage);
             session.getTransaction().commit();
         } catch (Exception exception) {

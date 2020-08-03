@@ -293,14 +293,15 @@ public class AddItem implements Controller {
                 }
 
                 String selected = (String) typeField.getSelectionModel().getSelectedItem();
+                // create and insert
                 if (selected.equals("Sách")) {
-                    // create and insert
-                    item_bookDAO.insertBook(name, Integer.parseInt(quantity), Float.parseFloat(price), Float.parseFloat(cost),
-                            author, publisher, Integer.parseInt(year), des, store, storage, genreList);
+                    Book book = new Book(name, Integer.parseInt(quantity),  Float.parseFloat(price), Float.parseFloat(cost),
+                            author, des, publisher, Integer.parseInt(year), genreList);
+                    item_bookDAO.insertBook(book, store, storage, genreList);
                 }
                 else {
-                    item_bookDAO.insertItem(name, Integer.parseInt(quantity), Float.parseFloat(price),
-                            Float.parseFloat(cost), store, storage);
+                    Item item = new Item(name, Integer.parseInt(quantity), Float.parseFloat(price), Float.parseFloat(cost));
+                    item_bookDAO.insertItem(item, store, storage);
                 }
 
 

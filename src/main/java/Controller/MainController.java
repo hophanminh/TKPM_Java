@@ -81,6 +81,9 @@ public class MainController implements Controller {
     @FXML
     private Button employeeList;
 
+    @FXML
+    private Button storageButton;
+
     public MainController(Stage stage) {
         try {
             // keep stage, change scene
@@ -199,6 +202,14 @@ public class MainController implements Controller {
             Management management = new Management(thisStage, this);
             management.showStage();
         });
+
+        // Get list employees of store
+        storageButton.setOnAction(actionEvent -> {
+            int id = pref.getInt("defaultStore", -1);
+            ViewStorageOfStore management = new ViewStorageOfStore(thisStage, this, id);
+            management.showStage();
+        });
+
     }
 
     private TableView createTableView(){

@@ -42,7 +42,7 @@ public class Store {
             joinColumns = {@JoinColumn(name = "store_id")},
             inverseJoinColumns = {@JoinColumn(name = "storage_id")}
     )
-    Set<Store> storageList = new HashSet<>();
+    Set<Storage> storageList = new HashSet<>();
 
     @ManyToOne
     @JoinColumn(name = "idCompany")
@@ -129,11 +129,11 @@ public class Store {
         this.itemList = itemList;
     }
 
-    public Set<Store> getStorageList() {
+    public Set<Storage> getStorageList() {
         return storageList;
     }
 
-    public void setStorageList(Set<Store> storageList) {
+    public void setStorageList(Set<Storage> storageList) {
         this.storageList = storageList;
     }
 

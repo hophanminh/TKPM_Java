@@ -70,7 +70,7 @@ CREATE TABLE `book` (
 
 LOCK TABLES `book` WRITE;
 /*!40000 ALTER TABLE `book` DISABLE KEYS */;
-INSERT INTO `book` VALUES ('1','','',0,1),('2','','',0,2),('1','','',0,3),('2','','',0,4),('5','','',0,5),('7','','',0,6),('8','','',0,7),('9','','',0,8),('9','','',0,9);
+INSERT INTO `book` VALUES ('1','','',0,1),('2','','',0,2),('1','','',0,3),('2','','',0,4),('5','','',0,5),('7','','',0,6),('8','','',0,7),('9','','',0,8),('9','','',0,9),('','','',0,11);
 /*!40000 ALTER TABLE `book` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -97,7 +97,7 @@ CREATE TABLE `book_has_genre` (
 
 LOCK TABLES `book_has_genre` WRITE;
 /*!40000 ALTER TABLE `book_has_genre` DISABLE KEYS */;
-INSERT INTO `book_has_genre` VALUES (7,1),(9,3),(8,4),(8,5),(8,6),(9,6),(9,7),(7,8);
+INSERT INTO `book_has_genre` VALUES (7,1),(9,3),(8,4),(8,5),(11,5),(8,6),(9,6),(11,6),(9,7),(11,7),(7,8);
 /*!40000 ALTER TABLE `book_has_genre` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -112,7 +112,7 @@ CREATE TABLE `company` (
   `idCompany` int NOT NULL AUTO_INCREMENT,
   `nameCompany` varchar(255) DEFAULT NULL,
   PRIMARY KEY (`idCompany`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=2 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -121,6 +121,7 @@ CREATE TABLE `company` (
 
 LOCK TABLES `company` WRITE;
 /*!40000 ALTER TABLE `company` DISABLE KEYS */;
+INSERT INTO `company` VALUES (1,'QM');
 /*!40000 ALTER TABLE `company` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -206,7 +207,7 @@ CREATE TABLE `employee` (
   KEY `FKeuw8bt43qrdcltudeggey9riv` (`idStore`),
   CONSTRAINT `FKeuw8bt43qrdcltudeggey9riv` FOREIGN KEY (`idStore`) REFERENCES `store` (`idStore`),
   CONSTRAINT `FKhyl3a2dj2m2v2bxwoilgnk45f` FOREIGN KEY (`idStorage`) REFERENCES `storage` (`idStorage`)
-) ENGINE=InnoDB AUTO_INCREMENT=2 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=12 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -215,7 +216,7 @@ CREATE TABLE `employee` (
 
 LOCK TABLES `employee` WRITE;
 /*!40000 ALTER TABLE `employee` DISABLE KEYS */;
-INSERT INTO `employee` VALUES (1,'abc','minh','admin','100',1,100,'2001-01-01 00:00:00.000000',1,'admin',NULL,NULL);
+INSERT INTO `employee` VALUES (1,'abc','minh','admin','100',1,100,'2001-01-01 00:00:00.000000',1,'admin',NULL,NULL),(9,'bcd','huong','user','101',3,100,'2001-01-01 00:00:00.000000',1,'user1',1,1),(10,'cde','quynh','user','102',1,100,'2001-01-01 00:00:00.000000',1,'user2',NULL,2),(11,'def','diep','user','103',1,100,'2001-01-01 00:00:00.000000',1,'user3',1,NULL);
 /*!40000 ALTER TABLE `employee` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -257,7 +258,7 @@ CREATE TABLE `item` (
   `priceItem` float DEFAULT NULL,
   `quantityItem` int DEFAULT NULL,
   PRIMARY KEY (`idItem`)
-) ENGINE=InnoDB AUTO_INCREMENT=10 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=12 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -266,7 +267,7 @@ CREATE TABLE `item` (
 
 LOCK TABLES `item` WRITE;
 /*!40000 ALTER TABLE `item` DISABLE KEYS */;
-INSERT INTO `item` VALUES (1,0,'1',0,1),(2,0,'2',0,1),(3,0,'1',0,1),(4,0,'2',0,1),(5,0,'5',0,1),(6,0,'7',0,1),(7,0,'8',0,1),(8,0,'9',0,1),(9,0,'9',0,1);
+INSERT INTO `item` VALUES (1,3,'1',5,1),(2,2,'2',4,1),(3,5,'1',6,1),(4,1,'2',2,1),(5,3,'5',5,1),(6,5,'7',7,1),(7,6,'8',8,1),(8,8,'9',9,1),(9,3,'9',4,1),(10,0,'normal',10,1),(11,0,'book123',0,1);
 /*!40000 ALTER TABLE `item` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -281,11 +282,11 @@ CREATE TABLE `storage` (
   `idStorage` int NOT NULL AUTO_INCREMENT,
   `addressStorage` varchar(255) DEFAULT NULL,
   `nameStorage` varchar(255) DEFAULT NULL,
-  `idCompany` int NOT NULL,
+  `idCompany` int DEFAULT NULL,
   PRIMARY KEY (`idStorage`),
   KEY `FK5rl56air366vk8dn1yf70gve9` (`idCompany`),
   CONSTRAINT `FK5rl56air366vk8dn1yf70gve9` FOREIGN KEY (`idCompany`) REFERENCES `company` (`idCompany`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=5 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -294,6 +295,7 @@ CREATE TABLE `storage` (
 
 LOCK TABLES `storage` WRITE;
 /*!40000 ALTER TABLE `storage` DISABLE KEYS */;
+INSERT INTO `storage` VALUES (1,'storage 1 Stress','Storage 1',1),(2,'2','2',NULL),(3,'3','3',NULL),(4,'4','4',NULL);
 /*!40000 ALTER TABLE `storage` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -376,7 +378,7 @@ CREATE TABLE `store_has_item` (
 
 LOCK TABLES `store_has_item` WRITE;
 /*!40000 ALTER TABLE `store_has_item` DISABLE KEYS */;
-INSERT INTO `store_has_item` VALUES (1,1),(2,1),(7,1),(8,1),(9,1),(3,2),(4,2),(5,2),(6,2);
+INSERT INTO `store_has_item` VALUES (1,1),(2,1),(7,1),(8,1),(9,1),(11,1),(3,2),(4,2),(5,2),(6,2),(10,2);
 /*!40000 ALTER TABLE `store_has_item` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -391,9 +393,9 @@ CREATE TABLE `store_has_storage` (
   `store_id` int NOT NULL,
   `storage_id` int NOT NULL,
   PRIMARY KEY (`store_id`,`storage_id`),
-  KEY `FK49wibsf8v7jyl6q6bow6393x0` (`storage_id`),
-  CONSTRAINT `FK49wibsf8v7jyl6q6bow6393x0` FOREIGN KEY (`storage_id`) REFERENCES `store` (`idStore`),
-  CONSTRAINT `FKf16t9p7sn93pc0es40i4fvg8j` FOREIGN KEY (`store_id`) REFERENCES `store` (`idStore`)
+  KEY `FKg6m1xxnbu8ljhhi31k63qc1gh` (`storage_id`),
+  CONSTRAINT `FKf16t9p7sn93pc0es40i4fvg8j` FOREIGN KEY (`store_id`) REFERENCES `store` (`idStore`),
+  CONSTRAINT `FKg6m1xxnbu8ljhhi31k63qc1gh` FOREIGN KEY (`storage_id`) REFERENCES `storage` (`idStorage`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
@@ -403,6 +405,7 @@ CREATE TABLE `store_has_storage` (
 
 LOCK TABLES `store_has_storage` WRITE;
 /*!40000 ALTER TABLE `store_has_storage` DISABLE KEYS */;
+INSERT INTO `store_has_storage` VALUES (1,1),(2,1),(2,2),(1,3);
 /*!40000 ALTER TABLE `store_has_storage` ENABLE KEYS */;
 UNLOCK TABLES;
 /*!40103 SET TIME_ZONE=@OLD_TIME_ZONE */;
@@ -415,4 +418,4 @@ UNLOCK TABLES;
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
--- Dump completed on 2020-07-30  8:28:35
+-- Dump completed on 2020-08-03 16:02:46

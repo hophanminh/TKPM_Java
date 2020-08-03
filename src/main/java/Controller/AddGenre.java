@@ -94,7 +94,8 @@ public class AddGenre {
             }
             else {
                 // create and insert
-                genreDAO.insert(name);
+                Genre genre = new Genre(name);
+                genreDAO.insert(genre);
                 // Create and display AlertWindow
                 AlertDialog success = new AlertDialog();
                 Alert successAlert = success.createAlert(thisStage,

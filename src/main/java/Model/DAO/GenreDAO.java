@@ -10,11 +10,10 @@ import java.util.List;
 public class GenreDAO {
     public GenreDAO(){}
 
-    public void insert(String name) {
+    public void insert(Genre genre) {
         Session session = App.getSession();
         try{
             session.getTransaction().begin();
-            Genre genre = new Genre(name);
             session.save(genre);
             session.getTransaction().commit();
         } catch (Exception exception) {

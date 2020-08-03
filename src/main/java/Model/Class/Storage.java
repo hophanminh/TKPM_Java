@@ -28,7 +28,7 @@ public class Storage {
     private Set<Item> itemList = new HashSet<>();
 
     @ManyToOne
-    @JoinColumn(name = "idCompany", nullable = false)
+    @JoinColumn(name = "idCompany")
     private Company company;
 
     public Storage(){
@@ -99,5 +99,34 @@ public class Storage {
     @Override
     public String toString() {
         return nameStorage + " - " + addressStorage;
+    }
+
+    @Override
+    public boolean equals(Object other){
+        if (this == other) {
+            return true;
+        }
+
+        if ( !(other instanceof Storage) ) {
+            return false;
+        }
+
+        final Storage storage = (Storage) other;
+        if (this.idStorage != storage.getIdStorage() ||
+            !storage.getNameStorage().equals(this.nameStorage) ||
+            !storage.getAddressStorage().equals(this.addressStorage)) {
+            return false;
+        }
+
+        return true;
+    }
+
+    @Override
+    public int hashCode() {
+        int result = 17;
+        result = 31 * result + this.idStorage;
+        result = 31 * result + this.nameStorage.hashCode();
+        result = 31 * result + this.addressStorage.hashCode();
+        return result;
     }
 }

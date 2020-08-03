@@ -14,12 +14,11 @@ public class Item_BookDAO {
     public Item_BookDAO(){
     }
 
-    public void insertItem(String name, int quantity, float price, float cost, Store store, Storage storage) {
+    public void insertItem(Item item, Store store, Storage storage) {
         Session session = App.getSession();
         try{
             session.getTransaction().begin();
 
-            Item item = new Item(name, quantity, price, cost);
             // set store, storage for book
             if (store != null) {
                 store.getItemList().add(item);
@@ -38,13 +37,11 @@ public class Item_BookDAO {
         }
     }
 
-    public void insertBook(String name, int quantity, float price, float cost, String author,
-                           String publisher, int year, String des, Store store, Storage storage, HashSet<Genre> genreList) {
+    public void insertBook(Book book, Store store, Storage storage, HashSet<Genre> genreList) {
         Session session = App.getSession();
         try{
             session.getTransaction().begin();
 
-            Book book = new Book(name, quantity, price, cost, author, des, publisher, year, genreList);
             // set store, storage for book
             if (store != null) {
                 store.getItemList().add(book);
