@@ -16,43 +16,33 @@ public class Item {
     @Column(name = "nameItem")
     protected String nameItem;
 
-    @Column(name = "quantityItem")
-    protected int quantityItem;
-
     @Column(name = "priceItem")
     protected float priceItem;
 
     @Column(name = "costItem")
     protected float costItem;
 
-    @ManyToMany(cascade = {CascadeType.PERSIST, CascadeType.MERGE})
-    @JoinTable(
-            name = "store_has_item",
-            joinColumns = {@JoinColumn(name = "item_idItem")},
-            inverseJoinColumns = {@JoinColumn(name = "store_idStore")}
-    )
-    Set<Store> storeList = new HashSet<>();
+    @OneToMany(fetch = FetchType.LAZY, mappedBy = "item", cascade = CascadeType.ALL)
+    private Set<Item_Store> itemStoreList = new HashSet<>();
 
-    @ManyToMany(cascade = {CascadeType.PERSIST, CascadeType.MERGE})
-    @JoinTable(
-            name = "storage_has_item",
-            joinColumns = {@JoinColumn(name = "item_idItem")},
-            inverseJoinColumns = {@JoinColumn(name = "storage_idStore")}
-    )
-    Set<Storage> storageList = new HashSet<>();
+    @OneToMany(fetch = FetchType.LAZY, mappedBy = "item", cascade = CascadeType.ALL)
+    private Set<Item_Storage> itemStorageList = new HashSet<>();
 
 //    public Item(String nameItem, int priceItem){
 //        this.nameItem = nameItem;
 //        this.priceItem = priceItem;
 //    }
 //
+
+    @Transient                          // temperary count
+    private int quantityItem = 0;
+
     public Item(){
 
     }
 
-    public Item(String nameItem, int quantityItem, float priceItem, float costItem) {
+    public Item(String nameItem, float priceItem, float costItem) {
         this.nameItem = nameItem;
-        this.quantityItem = quantityItem;
         this.priceItem = priceItem;
         this.costItem = costItem;
     }
@@ -89,20 +79,20 @@ public class Item {
         this.costItem = costItem;
     }
 
-    public Set<Store> getStoreList() {
-        return storeList;
+    public Set<Item_Store> getItemStoreList() {
+        return itemStoreList;
     }
 
-    public void setStoreList(Set<Store> storeList) {
-        this.storeList = storeList;
+    public void setItemStoreList(Set<Item_Store> itemStoreList) {
+        this.itemStoreList = itemStoreList;
     }
 
-    public Set<Storage> getStorageList() {
-        return storageList;
+    public Set<Item_Storage> getItemStorageList() {
+        return itemStorageList;
     }
 
-    public void setStorageList(Set<Storage> storageList) {
-        this.storageList = storageList;
+    public void setItemStorageList(Set<Item_Storage> itemStorageList) {
+        this.itemStorageList = itemStorageList;
     }
 
     public int getQuantityItem() {

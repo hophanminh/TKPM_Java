@@ -24,8 +24,8 @@ public class Storage {
     @ManyToMany(mappedBy = "storageList")
     private Set<Store> storeList = new HashSet<>();
 
-    @ManyToMany(mappedBy = "storageList")
-    private Set<Item> itemList = new HashSet<>();
+    @OneToMany(fetch = FetchType.LAZY, mappedBy = "storage", cascade = CascadeType.ALL)
+    protected Set<Item_Storage> itemStorageList = new HashSet<>();
 
     @ManyToOne
     @JoinColumn(name = "idCompany")
@@ -72,12 +72,12 @@ public class Storage {
         this.storeList = storeList;
     }
 
-    public Set<Item> getItemList() {
-        return itemList;
+    public Set<Item_Storage> getItemStorageList() {
+        return itemStorageList;
     }
 
-    public void setItemList(Set<Item> itemList) {
-        this.itemList = itemList;
+    public void setItemStorageList(Set<Item_Storage> itemStorageList) {
+        this.itemStorageList = itemStorageList;
     }
 
     public Company getCompany() {

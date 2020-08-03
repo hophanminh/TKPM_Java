@@ -40,7 +40,7 @@ public class SetDefaultStore implements Controller {
 
             FXMLLoader loader = new FXMLLoader(getClass().getResource("/fxml/setDefaultStore.fxml"));
             loader.setController(this);
-            thisStage.setScene(new Scene(loader.load(), 392, 184));
+            thisStage.setScene(new Scene(loader.load()));
             thisStage.setTitle("Cài đặt cửa hàng");
             thisStage.setResizable(false);
 

@@ -82,6 +82,9 @@ public class MainController implements Controller {
     private Button employeeList;
 
     @FXML
+    private Button addStorageButton;
+
+    @FXML
     private Button storageButton;
 
     public MainController(Stage stage) {
@@ -194,6 +197,11 @@ public class MainController implements Controller {
 
         addGenreButton.setOnAction(actionEvent -> {
             AddGenre controller = new AddGenre(thisStage, this);
+            controller.showStage();
+        });
+
+        addStorageButton.setOnAction(actionEvent -> {
+            AddStorage controller = new AddStorage(thisStage, this);
             controller.showStage();
         });
 

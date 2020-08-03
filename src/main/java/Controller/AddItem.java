@@ -117,8 +117,8 @@ public class AddItem implements Controller {
 
     @FXML
     private void initialize() {
-        storeList = storeDAO.getAllStoresInitialized();
-        storageList = storageDAO.getAllStoragesInitialized();
+        storeList = storeDAO.getAllStores();
+        storageList = storageDAO.getAllStorages();
         genreList = new HashSet<>();
 
         // set item type
@@ -295,13 +295,18 @@ public class AddItem implements Controller {
                 String selected = (String) typeField.getSelectionModel().getSelectedItem();
                 // create and insert
                 if (selected.equals("Sách")) {
-                    Book book = new Book(name, Integer.parseInt(quantity),  Float.parseFloat(price), Float.parseFloat(cost),
-                            author, des, publisher, Integer.parseInt(year), genreList);
-                    item_bookDAO.insertBook(book, store, storage, genreList);
+                    // check year empty
+                    int yearInt = 0;
+                    if (!year.isEmpty()) {
+                        yearInt = Integer.parseInt(year);
+                    }
+                    Book book = new Book(name,  Float.parseFloat(price), Float.parseFloat(cost),
+                            author, des, publisher, yearInt, genreList);
+                    item_bookDAO.insertBook(book, Integer.parseInt(quantity), store, storage, genreList);
                 }
                 else {
-                    Item item = new Item(name, Integer.parseInt(quantity), Float.parseFloat(price), Float.parseFloat(cost));
-                    item_bookDAO.insertItem(item, store, storage);
+                    Item item = new Item(name, Float.parseFloat(price), Float.parseFloat(cost));
+                    item_bookDAO.insertItem(item, Integer.parseInt(quantity), store, storage);
                 }
 
 
@@ -314,12 +319,17 @@ public class AddItem implements Controller {
                         "Thêm sản phẩm thành công");
                 successAlert.showAndWait();
 
-
-                // reload previous stage
-                previousController.reloadStage();
-
-                // close login window
-                thisStage.close();
+                // clear form
+                genreList.clear();
+                nameField.clear();
+                quantityField.clear();;
+                priceField.clear();;
+                costField.clear();;
+                authorField.clear();;
+                publisherField.clear();;
+                yearField.clear();;
+                desField.clear();;
+                genreButton.setText("Chọn thể loại (0/3)");
             }
         });
 
@@ -331,6 +341,8 @@ public class AddItem implements Controller {
 
         // cancel
         closeButton.setOnAction(actionEvent -> {
+            // reload previous stage
+            previousController.reloadStage();
             thisStage.close();
         });
     }

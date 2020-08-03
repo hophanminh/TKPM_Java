@@ -34,14 +34,14 @@
             <Font size="15.0" />
          </font>
         </TextField>
-        <Label text="Thêm cửa hàng" GridPane.columnSpan="3" GridPane.halignment="CENTER">
+        <Label text="Thêm kho" GridPane.columnSpan="3" GridPane.halignment="CENTER">
             <font>
                 <Font size="35.0" />
             </font>
         </Label>
       <HBox alignment="CENTER_RIGHT" prefHeight="100.0" prefWidth="200.0" GridPane.rowIndex="1">
          <children>
-              <Label text="Tên cửa hàng">
+              <Label text="Tên kho">
                   <font>
                       <Font size="19.0" />
                   </font>

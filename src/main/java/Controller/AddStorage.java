@@ -1,8 +1,9 @@
 package Controller;
 
-import Model.Class.Employee;
-import Model.Class.Genre;
-import Model.DAO.GenreDAO;
+import Model.Class.Storage;
+import Model.Class.Store;
+import Model.DAO.StorageDAO;
+import Model.DAO.StoreDAO;
 import View.AlertDialog;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
@@ -14,17 +15,19 @@ import javafx.stage.Modality;
 import javafx.stage.Stage;
 
 import java.io.IOException;
-import java.util.prefs.Preferences;
 
-public class AddGenre {
+public class AddStorage implements Controller {
     private Stage thisStage;
     private Stage parent;
     private Controller previousController;
-    private Preferences pref;
-    private GenreDAO genreDAO;
+    private StorageDAO storageDAO;
+
 
     @FXML
     private TextField nameField;
+
+    @FXML
+    private TextField addressField;
 
     @FXML
     private Button acceptButton;
@@ -32,18 +35,18 @@ public class AddGenre {
     @FXML
     private Button closeButton;
 
-    public AddGenre(Stage previousStage, Controller previous) {
+    public AddStorage(Stage previousStage, Controller previous){
         try {
+            // create new stage, after finished use "Controller previous" to reload previous stage
             thisStage = new Stage();
             parent = previousStage;
             previousController = previous;
-            pref = Preferences.userNodeForPackage(Employee.class);
-            genreDAO = new GenreDAO();
+            storageDAO = new StorageDAO();
 
-            FXMLLoader loader = new FXMLLoader(getClass().getResource("/fxml/addGenre.fxml"));
+            FXMLLoader loader = new FXMLLoader(getClass().getResource("/fxml/addStorage.fxml"));
             loader.setController(this);
-            thisStage.setScene(new Scene(loader.load()));
-            thisStage.setTitle("Thêm thể loại sách");
+            thisStage.setScene(new Scene(loader.load(), 541, 263));
+            thisStage.setTitle("Thêm kho");
             thisStage.setResizable(false);
 
             // lock to previous stage
@@ -61,7 +64,7 @@ public class AddGenre {
     }
 
     public void reloadStage() {
-        AddGenre reload = new AddGenre(parent, previousController);
+        AddStorage reload = new AddStorage(parent, previousController);
         reload.showStage();
         thisStage.close();
     }
@@ -71,9 +74,10 @@ public class AddGenre {
         acceptButton.setOnAction(actionEvent -> {
             // get all input
             String name = nameField.getText().trim();
+            String address = addressField.getText().trim();
 
             // check blank input
-            if (name.isEmpty()) {
+            if (name.isEmpty() || address.isEmpty()) {
                 // Create and display AlertWindow
                 AlertDialog fail = new AlertDialog();
                 Alert failAlert = fail.createAlert(thisStage,
@@ -88,23 +92,33 @@ public class AddGenre {
                 AlertDialog fail = new AlertDialog();
                 Alert failAlert = fail.createAlert(thisStage,
                         "WARNING",
-                        "Thêm thất bại",
-                        "Tên thể loại không được vượt quá 255 kí tự.");
+                        "Tạo thất bại",
+                        "Tên kho không được vượt quá 255 kí tự.");
+                failAlert.showAndWait();
+            }
+            else if (address.length() > 255) {
+                // Create and display AlertWindow
+                AlertDialog fail = new AlertDialog();
+                Alert failAlert = fail.createAlert(thisStage,
+                        "WARNING",
+                        "Tạo thất bại",
+                        "Địa chỉ của kho không được vượt quá 255 kí tự.");
                 failAlert.showAndWait();
             }
             else {
                 // create and insert
-                Genre genre = new Genre(name);
-                genreDAO.insert(genre);
+                Storage storage = new Storage(name, address);
+                storageDAO.insert(storage);
                 // Create and display AlertWindow
                 AlertDialog success = new AlertDialog();
                 Alert successAlert = success.createAlert(thisStage,
                         "INFORMATION",
                         "Hoàn tất",
-                        "Thêm thể loại thành công");
+                        "Thêm kho thành công");
                 successAlert.showAndWait();
 
                 nameField.clear();
+                addressField.clear();
             }
         });
 

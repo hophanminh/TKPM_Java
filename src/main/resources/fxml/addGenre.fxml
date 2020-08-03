@@ -5,7 +5,7 @@
 <?import javafx.scene.layout.*?>
 <?import javafx.scene.text.*?>
 
-<GridPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="217.0" prefWidth="541.0" xmlns="http://javafx.com/javafx/10.0.2-internal" xmlns:fx="http://javafx.com/fxml/1">
+<GridPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="217.0" prefWidth="488.0" xmlns="http://javafx.com/javafx/10.0.2-internal" xmlns:fx="http://javafx.com/fxml/1">
     <columnConstraints>
         <ColumnConstraints hgrow="SOMETIMES" maxWidth="187.0" minWidth="10.0" prefWidth="187.0" />
         <ColumnConstraints hgrow="SOMETIMES" maxWidth="383.0" minWidth="10.0" prefWidth="376.0" />
@@ -36,7 +36,7 @@
                     </font>
                 </Button>
 
-                <Button fx:id="closeButton" minWidth="150.0" mnemonicParsing="false" prefHeight="30.0" prefWidth="100.0" text="Hủy bỏ">
+                <Button fx:id="closeButton" minWidth="150.0" mnemonicParsing="false" prefHeight="30.0" prefWidth="100.0" text="Thoát">
                     <HBox.margin>
                         <Insets />
                     </HBox.margin>

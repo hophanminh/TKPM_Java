@@ -1,13 +1,7 @@
 package Controller;
 
-import Model.Class.Employee;
-import Model.Class.Item;
-import Model.Class.Storage;
-import Model.Class.Store;
-import Model.DAO.EmployeeDAO;
-import Model.DAO.Item_BookDAO;
-import Model.DAO.StorageDAO;
-import Model.DAO.StoreDAO;
+import Model.Class.*;
+import Model.DAO.*;
 import javafx.beans.property.SimpleStringProperty;
 import javafx.collections.FXCollections;
 import javafx.collections.ListChangeListener;
@@ -22,6 +16,7 @@ import javafx.stage.Stage;
 import javafx.util.Callback;
 
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 import java.util.prefs.Preferences;
@@ -36,6 +31,9 @@ public class Management implements Controller {
     private StorageDAO storageDAO;
     private StoreDAO storeDAO;
     private Item_BookDAO item_bookDAO;
+    private ItemStoreDAO itemStoreDAO;
+    private ItemStorageDAO itemStorageDAO;
+
     private String selectionIE;
     private int selectionSS;
 
@@ -80,6 +78,8 @@ public class Management implements Controller {
             storageDAO = new StorageDAO();
             storeDAO = new StoreDAO();
             item_bookDAO = new Item_BookDAO();
+            itemStoreDAO = new ItemStoreDAO();
+            itemStorageDAO = new ItemStorageDAO();
 
             FXMLLoader loader = new FXMLLoader(getClass().getResource("/fxml/Management.fxml"));
             loader.setController(this);
@@ -115,6 +115,7 @@ public class Management implements Controller {
     public void initialize(){
         this.selectionIE = "Items";
 
+        itemList = new ArrayList<>();
         List<Store> storeList = storeDAO.getAllStores();
         List<Storage> storageList = storageDAO.getAllStorages();
         for (Store store: storeList){
@@ -415,11 +416,25 @@ public class Management implements Controller {
             observableList = FXCollections.observableList(this.employeeList);
             createTableViewEmployee();
         } else {
-            if(this.store != null){
-                itemList = item_bookDAO.getItemByStore(this.store);
-            } else itemList = item_bookDAO.getItemByStorage(this.storage);
-            observableList = FXCollections.observableList(this.itemList);
             createTableViewItem();
+            // convert List<Item_Store>, List<Item_Storage> to List<Item>
+            if (this.store != null) {
+                List<Item_Store> tempList = itemStoreDAO.getItemByStore(this.store);
+                for (Item_Store o : tempList) {
+                    Item item = o.getItem();
+                    item.setQuantityItem(o.getCount());
+                    itemList.add(item);
+                }
+            }
+            else {
+                List<Item_Storage> tempList = itemStorageDAO.getItemByStorage(this.storage);
+                for (Item_Storage o : tempList) {
+                    Item item = o.getItem();
+                    item.setQuantityItem(o.getCount());
+                    itemList.add(item);
+                }
+            }
+            observableList = FXCollections.observableList(this.itemList);
         }
         tableView.setItems(observableList);
     }

@@ -32,9 +32,9 @@ public class Book extends Item {
       super();
     }
 
-    public Book(String nameItem, int quantityItem, float priceItem,
+    public Book(String nameItem, float priceItem,
                 float costItem, String authorBook, String descriptionBook, String pulisherBook, int year, Set<Genre> genreList) {
-        super(nameItem, quantityItem, priceItem, costItem);
+        super(nameItem, priceItem, costItem);
         this.authorBook = authorBook;
         this.descriptionBook = descriptionBook;
         this.pulisherBook = pulisherBook;

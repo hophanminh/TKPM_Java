@@ -117,15 +117,14 @@ public class AddStore implements Controller {
                         "Thêm cửa hàng thành công");
                 successAlert.showAndWait();
 
-                // reload previous stage
-                previousController.reloadStage();
-
-                // close login window
-                thisStage.close();
+                nameField.clear();
+                addressField.clear();
             }
         });
 
         closeButton.setOnAction(actionEvent -> {
+            // reload previous stage
+            previousController.reloadStage();
             thisStage.close();
         });
     }

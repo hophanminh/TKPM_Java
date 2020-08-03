@@ -36,26 +36,6 @@ public class StoreDAO {
         }
     }
 
-    public List<Store> getAllStoresInitialized(){
-        Session session = App.getSession();
-        List<Store> resultList = null;
-
-        try{
-            session.getTransaction().begin();
-
-            Query<Store> query = session.createQuery(
-                    "SELECT DISTINCT s FROM Store as s LEFT JOIN FETCH s.itemList" , Store.class
-            );
-            resultList = query.list();
-
-            session.getTransaction().commit();
-        } catch (Exception exception) {
-            exception.printStackTrace();
-            session.getTransaction().rollback();
-        }
-        return resultList;
-    }
-
     public List<Store> getAllStores(){
         Session session = App.getSession();
         List<Store> resultList = null;

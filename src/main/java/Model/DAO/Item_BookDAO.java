@@ -14,19 +14,20 @@ public class Item_BookDAO {
     public Item_BookDAO(){
     }
 
-    public void insertItem(Item item, Store store, Storage storage) {
+    public void insertItem(Item item, int quantity, Store store, Storage storage) {
         Session session = App.getSession();
         try{
             session.getTransaction().begin();
-
             // set store, storage for book
             if (store != null) {
-                store.getItemList().add(item);
-                item.getStoreList().add(store);
+                Item_StoreID id = new Item_StoreID(item.getIdItem(), store.getIdStore());
+                Item_Store itemStore = new Item_Store(id, item, store, quantity);
+                session.save(itemStore);
             }
             else {
-                storage.getItemList().add(item);
-                item.getStorageList().add(storage);
+                Item_StorageID id = new Item_StorageID(item.getIdItem(), storage.getIdStorage());
+                Item_Storage itemStorage = new Item_Storage(id, item, storage, quantity);
+                session.save(itemStorage);
             }
 
             session.save(item);
@@ -37,20 +38,23 @@ public class Item_BookDAO {
         }
     }
 
-    public void insertBook(Book book, Store store, Storage storage, HashSet<Genre> genreList) {
+    public void insertBook(Book book, int quantity, Store store, Storage storage, HashSet<Genre> genreList) {
         Session session = App.getSession();
         try{
             session.getTransaction().begin();
 
             // set store, storage for book
             if (store != null) {
-                store.getItemList().add(book);
-                book.getStoreList().add(store);
+                Item_StoreID id = new Item_StoreID(book.getIdItem(), store.getIdStore());
+                Item_Store itemStore = new Item_Store(id, book, store, quantity);
+                session.save(itemStore);
             }
             else {
-                storage.getItemList().add(book);
-                book.getStorageList().add(storage);
+                Item_StorageID id = new Item_StorageID(book.getIdItem(), storage.getIdStorage());
+                Item_Storage itemStorage = new Item_Storage(id, book, storage, quantity);
+                session.save(itemStorage);
             }
+
             // set genre for book
             for (Genre genre: genreList) {
                 genre.getBookList().add(book);
@@ -77,8 +81,8 @@ public class Item_BookDAO {
 
             // get all Item and book from database
             Query<Item> query = session.createQuery(
-                    "FROM Item as i JOIN FETCH i.storeList as s " +
-                    "WHERE s.idStore = :idStore " , Item.class
+                    "FROM Item as i JOIN FETCH i.itemStoreList as s " +
+                    "WHERE store_ID = :idStore " , Item.class
             );
             query.setParameter("idStore", idStore);
             resultList = query.list();
@@ -103,8 +107,8 @@ public class Item_BookDAO {
 
             // get all Item and book from database
             Query<Item> query = session.createQuery(
-                    "FROM Item as i JOIN FETCH i.storeList as s " +
-                            "WHERE s.idStore = :idStore " , Item.class
+                    "FROM Item as i JOIN FETCH i.itemStoreList as s " +
+                            "WHERE store_ID = :idStore " , Item.class
             );
             query.setParameter("idStore", store.getIdStore());
             resultList = query.list();
@@ -130,8 +134,8 @@ public class Item_BookDAO {
 
             // get all Item and book from database
             Query<Item> query = session.createQuery(
-                    "FROM Item as i JOIN FETCH i.storageList as s " +
-                            "WHERE s.idStorage = :idStorage " , Item.class
+                    "FROM Item as i JOIN FETCH i.itemStorageList as s " +
+                            "WHERE storage_ID = :idStorage " , Item.class
             );
             query.setParameter("idStorage", storage.getIdStorage());
             resultList = query.list();
@@ -186,17 +190,5 @@ public class Item_BookDAO {
             session.getTransaction().rollback();
         }
         return resultList.get(0);
-    }
-
-    public void addItem(Item item){
-        Session session = App.getSession();
-        try {
-            session.getTransaction().begin();
-            session.save(item);
-            session.getTransaction().commit();
-        } catch(Exception exception) {
-            exception.printStackTrace();
-            session.getTransaction().rollback();
-        }
     }
 }

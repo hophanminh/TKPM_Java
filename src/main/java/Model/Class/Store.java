@@ -33,8 +33,8 @@ public class Store {
     @OneToMany(fetch = FetchType.LAZY, mappedBy = "store")
     private Set<Employee> employeeList = new HashSet<>();
 
-    @ManyToMany(mappedBy = "storeList")
-    private Set<Item> itemList = new HashSet<>();
+    @OneToMany(fetch = FetchType.LAZY, mappedBy = "store", cascade = CascadeType.ALL)
+    protected Set<Item_Store> itemStoreList = new HashSet<>();
 
     @ManyToMany(cascade = {CascadeType.PERSIST, CascadeType.MERGE})
     @JoinTable(
@@ -121,12 +121,12 @@ public class Store {
         this.employeeList = employeeList;
     }
 
-    public Set<Item> getItemList() {
-        return itemList;
+    public Set<Item_Store> getItemStoreList() {
+        return itemStoreList;
     }
 
-    public void setItemList(Set<Item> itemList) {
-        this.itemList = itemList;
+    public void setItemStoreList(Set<Item_Store> itemStoreList) {
+        this.itemStoreList = itemStoreList;
     }
 
     public Set<Storage> getStorageList() {
