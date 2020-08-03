@@ -8,6 +8,7 @@ import Model.DAO.EmployeeDAO;
 import Model.DAO.Item_BookDAO;
 import Model.DAO.StorageDAO;
 import Model.DAO.StoreDAO;
+import javafx.beans.property.SimpleStringProperty;
 import javafx.collections.FXCollections;
 import javafx.collections.ListChangeListener;
 import javafx.collections.ObservableList;
@@ -21,6 +22,7 @@ import javafx.stage.Stage;
 import javafx.util.Callback;
 
 import java.io.IOException;
+import java.util.Date;
 import java.util.List;
 import java.util.prefs.Preferences;
 
@@ -121,6 +123,7 @@ public class Management implements Controller {
         for(Storage storage: storageList){
             ssChoiceBox.getItems().add(storage);
         }
+
         ssChoiceBox.getSelectionModel().selectFirst();
         ssChoiceBox.setOnAction(actionEvent -> {
             if(ssChoiceBox.getSelectionModel().getSelectedItem().getClass() == Store.class){
@@ -148,6 +151,7 @@ public class Management implements Controller {
             generateData();
         });
 
+
         // set default
         this.store = (Store) ssChoiceBox.getSelectionModel().getSelectedItem();
         this.selectionIE = "Items";
@@ -168,6 +172,14 @@ public class Management implements Controller {
 
         updateButton.setOnAction(actionEvent -> {
             System.out.println("Updating...");
+        });
+
+        searchButton.setOnAction(actionEvent -> {
+            searchAction();
+        });
+
+        searchText.setOnAction(actionEvent -> {
+            searchButton.fire();
         });
     }
 
@@ -321,136 +333,62 @@ public class Management implements Controller {
     }
 
     private void createTableViewEmployee(){
+        // Clear table view
         tableView.getItems().clear();
         tableView.getColumns().clear();
-        // Add column to Tableview
-        TableColumn<Item, Integer> idColumn = new TableColumn("ID");
-        idColumn.setCellValueFactory(new PropertyValueFactory<>("id"));
-        idColumn.setStyle( "-fx-alignment: CENTER;");
 
-        TableColumn<Item, String> nameColumn = new TableColumn("Name");
+        // Add columns to Table view
+        TableColumn<Employee, String> nameColumn = new TableColumn("Name");
         nameColumn.setCellValueFactory(new PropertyValueFactory<>("name"));
         nameColumn.setStyle( "-fx-alignment: CENTER;");
 
-        TableColumn<Item, Integer> salaryColumn = new TableColumn("Salary");
-        salaryColumn.setCellValueFactory(new PropertyValueFactory<>("salary"));
-        salaryColumn.setStyle( "-fx-alignment: CENTER;");
-
-        TableColumn<Item, String> phoneColumn = new TableColumn("Phone");
+        TableColumn<Employee, String> phoneColumn = new TableColumn("Phone");
         phoneColumn.setCellValueFactory(new PropertyValueFactory<>("phone"));
         phoneColumn.setStyle( "-fx-alignment: CENTER;");
 
-//        TableColumn<Item, String> authorColumn = new TableColumn("Author");
-//        Callback<TableColumn<Item, String>, TableCell<Item, String>> cellFactory
-//                = //
-//                new Callback<TableColumn<Item, String>, TableCell<Item, String>>()
-//                {
-//                    @Override
-//                    public TableCell call(final TableColumn<Item, String> param)
-//                    {
-//                        final TableCell<Item, String> cell = new TableCell<Item, String>()
-//                        {
-//                            @Override
-//                            public void updateItem(String item, boolean empty)
-//                            {
-//                                super.updateItem(item, empty);
-//                                if (empty) {
-//                                    setGraphic(null);
-//                                    setText(null);
-//                                }
-//                                else {
-//                                    setGraphic(null);
-//
-//                                    Item selected = (Item) tableView.getItems().get(getIndex());
-//                                    if (selected instanceof Book) {
-//                                        setText(((Book) selected).getAuthorBook());
-//                                    }
-//                                    setText(null);
-//                                }
-//                            }
-//                        };
-//                        return cell;
-//                    }
-//                };
-//        authorColumn.setCellFactory(cellFactory);
-//        authorColumn.setStyle( "-fx-alignment: CENTER;");
+        TableColumn<Employee, Integer> salaryColumn = new TableColumn("Salary");
+        salaryColumn.setCellValueFactory(new PropertyValueFactory<>("salary"));
+        salaryColumn.setStyle( "-fx-alignment: CENTER;");
 
-        // Create column with quantity textfield
-//        TableColumn<Item, Integer> quantityColumn = new TableColumn("Quantity");
-//        quantityColumn.setCellValueFactory(new PropertyValueFactory<Item, Integer>("quantityItem"));
-//        quantityColumn.setStyle( "-fx-alignment: CENTER;");
-//
-//        TableColumn<Item, Float> profitColumn = new TableColumn("Profit");
-//        Callback<TableColumn<Item, Float>, TableCell<Item, Float>> cellFactory
-//                = //
-//                new Callback<TableColumn<Item, Float>, TableCell<Item, Float>>()
-//                {
-//                    @Override
-//                    public TableCell call(final TableColumn<Item, Float> param)
-//                    {
-//                        final TableCell<Item, Float> cell = new TableCell<Item, Float>()
-//                        {
-//                            @Override
-//                            public void updateItem(Float item, boolean empty)
-//                            {
-//                                super.updateItem(item, empty);
-//                                if (empty) {
-//                                    setGraphic(null);
-//                                    setText(null);
-//                                }
-//                                else {
-//                                    Item temp = (Item) tableView.getItems().get(getIndex());
-//                                    float profit = (temp.getPriceItem() - temp.getCostItem())*temp.getQuantityItem();
-//                                    setText(Float.toString(profit));
-//                                }
-//                            }
-//                        };
-//                        return cell;
-//                    }
-//                };
-//        profitColumn.setCellFactory(cellFactory);
-//        profitColumn.setStyle( "-fx-alignment: CENTER;");
-//
-//        // Create column with clear button
-//        TableColumn detail = new TableColumn("Detail");
-//        detail.setStyle( "-fx-alignment: CENTER;");
-//        Callback<TableColumn<Item, String>, TableCell<Item, String>> cellFactory3
-//                = //
-//                new Callback<TableColumn<Item, String>, TableCell<Item, String>>()
-//                {
-//                    @Override
-//                    public TableCell call(final TableColumn<Item, String> param)
-//                    {
-//                        final TableCell<Item, String> cell = new TableCell<Item, String>()
-//                        {
-//
-//                            @Override
-//                            public void updateItem(String item, boolean empty)
-//                            {
-//                                super.updateItem(item, empty);
-//                                final Button btn = new Button("Details");
-//                                {
-//                                    btn.setOnAction(event -> {
-//                                        //tableView.getItems().remove(getIndex());
-//                                    });
-//                                }
-//
-//                                if (empty) {
-//                                    setGraphic(null);
-//                                    setText(null);
-//                                }
-//                                else {
-//                                    setGraphic(btn);
-//                                    setText(null);
-//                                }
-//                            }
-//                        };
-//                        return cell;
-//                    }
-//                };
-//        detail.setCellFactory(cellFactory3);
+        TableColumn<Employee, Date> startDateColumn = new TableColumn<Employee, Date>("Start Date");
+        startDateColumn.setCellValueFactory(new PropertyValueFactory<>("startDate"));
 
-        TableColumn[] columns = {idColumn, nameColumn,salaryColumn, phoneColumn};//, quantityColumn,profitColumn, detail};
+        TableColumn<Employee, String> positionColumn = new TableColumn("Position");
+        positionColumn.setCellValueFactory(cell -> new SimpleStringProperty(((cell.getValue().getPosition()==0) ? "Employee":"Manager")));
+        positionColumn.setStyle( "-fx-alignment: CENTER;");
+
+        TableColumn<Employee, String> statusColumn = new TableColumn("Status");
+        statusColumn.setCellValueFactory(cell -> new SimpleStringProperty(((cell.getValue().getStatus()==0) ? "Not working":"Working")));
+        statusColumn.setStyle( "-fx-alignment: CENTER;");
+
+        TableColumn<Employee, Void> detailColumn = new TableColumn("More Details");
+        Callback<TableColumn<Employee, Void>, TableCell<Employee, Void>> cellFactory =
+                new Callback<TableColumn<Employee, Void>, TableCell<Employee, Void>>() {
+                    @Override
+                    public TableCell<Employee, Void> call(final TableColumn<Employee, Void> param){
+                        final TableCell<Employee, Void> cell = new TableCell<Employee, Void>() {
+                            final Button detailButton = new Button("Details");
+                            {
+                                detailButton.setOnAction(actionEvent -> {
+                                    goToEmployeeDetail((Employee) tableView.getItems().get(getIndex()));
+                                });
+                            }
+
+                            @Override
+                            public void updateItem(Void item, boolean empty) {
+                                super.updateItem(item, empty);
+                                if (empty) {
+                                    setGraphic(null);
+                                } else {
+                                    setGraphic(detailButton);
+                                }
+                            }
+                        };
+                        return cell;
+                    }
+                };
+        detailColumn.setCellFactory(cellFactory);
+        TableColumn[] columns = {nameColumn,salaryColumn, phoneColumn, startDateColumn, positionColumn, statusColumn, detailColumn};
         tableView.getColumns().addAll(columns);
 
         // make column not dragable
@@ -476,14 +414,53 @@ public class Management implements Controller {
             } else employeeList = employeeDAO.getEmployeeByStorage(this.storage);
             observableList = FXCollections.observableList(this.employeeList);
             createTableViewEmployee();
-            tableView.setItems(observableList);
         } else {
             if(this.store != null){
                 itemList = item_bookDAO.getItemByStore(this.store);
             } else itemList = item_bookDAO.getItemByStorage(this.storage);
             observableList = FXCollections.observableList(this.itemList);
             createTableViewItem();
-            tableView.setItems(observableList);
         }
+        tableView.setItems(observableList);
     }
+
+    public void goToEmployeeDetail(Employee employee){
+        EmployeeProfile employeeProfile = new EmployeeProfile(thisStage, this, employee);
+        employeeProfile.showStage();
+    }
+
+    public void searchAction(){
+        String searchSQL = searchText.getText().trim();
+        if(this.selectionIE.equals("Employees")){
+            List<Object[]> resultList = employeeDAO.getSearchEmployeeList(searchSQL);
+            this.employeeList.clear();
+            for(Object[] ob: resultList){
+                Employee temp = new Employee();
+                temp.setId((int)ob[0]);
+                temp.setAddress((String)ob[1]);
+                temp.setName((String)ob[2]);
+                temp.setPassword((String)ob[3]);
+                temp.setPhone((String)ob[4]);
+                temp.setPosition((int)ob[5]);
+                temp.setSalary((int)ob[6]);
+                temp.setStartDate((Date)ob[7]);
+                temp.setStatus((int)ob[8]);
+                temp.setUsername((String)ob[9]);
+                Store store = storeDAO.getStoreById((int)ob[10]);
+                temp.setStore(store);
+                Storage storage = storageDAO.getStorageById((int)ob[11]);
+                temp.setStorage(storage);
+                employeeList.add(temp);
+            }
+            System.out.println(this.employeeList);
+            createTableViewEmployee();
+            observableList = FXCollections.observableList(this.employeeList);
+        } else {
+
+        }
+        tableView.setItems(observableList);
+
+    }
+
+
 }

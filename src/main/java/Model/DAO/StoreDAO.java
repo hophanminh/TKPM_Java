@@ -94,13 +94,33 @@ public class StoreDAO {
             if (!resultList.isEmpty()) {
                 result = resultList.get(0);
             }
-
-            session.getTransaction().commit();
+             session.getTransaction().commit();
         } catch (Exception exception) {
             exception.printStackTrace();
             session.getTransaction().rollback();
         }
         return result;
     }
+    
+    public Store getStoreById(int idStore) {
+        Session session = App.getSession();
+        Store resultList = null;
 
+        try{
+            session.getTransaction().begin();
+
+            // get all Item and book from database
+            Query<Store> query = session.createQuery(
+                    "FROM Store s WHERE s.idStore = :idStore" , Store.class
+            );
+            query.setParameter("idStore", idStore);
+            resultList = query.getSingleResult();
+
+            session.getTransaction().commit();
+        } catch (Exception exception) {
+            exception.printStackTrace();
+            session.getTransaction().rollback();
+        }
+        return resultList;
+    }
 }

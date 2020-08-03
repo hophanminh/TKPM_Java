@@ -141,4 +141,39 @@ public class EmployeeDAO {
         }
         return false;
     }
+
+    public void updateEmployee(Employee temp) {
+        Session session = App.getSession();
+        try{
+            session.getTransaction().begin();
+            session.saveOrUpdate(temp);
+            session.getTransaction().commit();
+        } catch (Exception exception) {
+            exception.printStackTrace();
+            session.getTransaction().rollback();
+        }
+    }
+
+    public List<Object[]> getSearchEmployeeList(String searchText){
+        Session session = App.getSession();
+        List<Object[]> resultList = null;
+        try{
+            session.getTransaction().begin();
+            String query = "SELECT e.* " +
+                    "FROM employee e " +
+                    "WHERE MATCH(e.name, e.phone) " +
+                    "AGAINST('" + searchText.trim() + "' IN BOOLEAN MODE)";
+
+            resultList = session.createNativeQuery(query)
+                    .list();
+            session.getTransaction().commit();
+        } catch (Exception ex){
+            ex.printStackTrace();
+            session.getTransaction().rollback();
+        } finally{
+            session.close();
+        }
+        return resultList;
+
+    }
 }

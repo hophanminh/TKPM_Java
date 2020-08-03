@@ -65,4 +65,25 @@ public class StorageDAO {
         return resultList;
     }
 
+    public Storage getStorageById(int idStorage) {
+        Session session = App.getSession();
+        Storage resultList = null;
+
+        try{
+            session.getTransaction().begin();
+
+            // get all Item and book from database
+            Query<Storage> query = session.createQuery(
+                    "from Storage s WHERE s.idStorage = :idStorage" , Storage.class
+            );
+            query.setParameter("idStorage", idStorage);
+            resultList = query.getSingleResult();
+
+            session.getTransaction().commit();
+        } catch (Exception exception) {
+            exception.printStackTrace();
+            session.getTransaction().rollback();
+        }
+        return resultList;
+    }
 }
