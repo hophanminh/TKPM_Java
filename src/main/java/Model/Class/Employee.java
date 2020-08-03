@@ -35,7 +35,7 @@ public class Employee {
     @Column(name = "status")                       // 1: active, 0: nonactive
     protected int status;
 
-    @Column(name = "position")                     // 1: boss, 2: manager, 3: employee
+    @Column(name = "position")                     // 0: Employee, 1: manager, 2: boss
     protected int position;
 
     @ManyToOne
@@ -47,7 +47,6 @@ public class Employee {
     protected Storage storage;
 
     public Employee(){
-
     }
 
     public int getId() {
@@ -144,5 +143,23 @@ public class Employee {
 
     public void setStorage(Storage storage) {
         this.storage = storage;
+    }
+
+    @Override
+    public String toString() {
+        return "Employee{" +
+                "id=" + id +
+                ", username='" + username + '\'' +
+                ", password='" + password + '\'' +
+                ", name='" + name + '\'' +
+                ", phone='" + phone + '\'' +
+                ", address='" + address + '\'' +
+                ", startDate=" + startDate +
+                ", salary=" + salary +
+                ", status=" + status +
+                ", position=" + position +
+                ", store=" + store +
+                ", storage=" + storage +
+                '}';
     }
 }
