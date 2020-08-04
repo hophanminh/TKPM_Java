@@ -47,9 +47,9 @@ public class Management implements Controller {
     public TableView tableView;
 
     @FXML
-    public ChoiceBox ssChoiceBox;
+    public ComboBox ssComboBox;
     @FXML
-    public ChoiceBox ieChoiceBox;
+    public ComboBox ieComboBox;
 
     @FXML
     public TextField searchText;
@@ -108,31 +108,27 @@ public class Management implements Controller {
     public void reloadStage(){
         Management reloadManagement = new Management(thisStage, this.previousController);
         reloadManagement.showStage();
-        thisStage.close();
     }
 
     @FXML
     public void initialize(){
-        this.selectionIE = "Items";
-
         itemList = new ArrayList<>();
         List<Store> storeList = storeDAO.getAllStores();
         List<Storage> storageList = storageDAO.getAllStorages();
         for (Store store: storeList){
-            ssChoiceBox.getItems().add(store);
+            ssComboBox.getItems().add(store);
         }
         for(Storage storage: storageList){
-            ssChoiceBox.getItems().add(storage);
+            ssComboBox.getItems().add(storage);
         }
-
-        ssChoiceBox.getSelectionModel().selectFirst();
-        ssChoiceBox.setOnAction(actionEvent -> {
-            if(ssChoiceBox.getSelectionModel().getSelectedItem().getClass() == Store.class){
-                this.store = (Store) ssChoiceBox.getSelectionModel().getSelectedItem();
+        ssComboBox.getSelectionModel().selectFirst();
+        ssComboBox.setOnAction(actionEvent -> {
+            if(ssComboBox.getSelectionModel().getSelectedItem().getClass() == Store.class){
+                this.store = (Store) ssComboBox.getSelectionModel().getSelectedItem();
                 System.out.println(store);
                 this.storage = null;
             } else {
-                this.storage = (Storage) ssChoiceBox.getSelectionModel().getSelectedItem();
+                this.storage = (Storage) ssComboBox.getSelectionModel().getSelectedItem();
                 System.out.println(storage);
                 this.store = null;
             }
@@ -140,22 +136,25 @@ public class Management implements Controller {
         });
 
         String[] ieChoiceList = {"Items", "Employees"};
-        ieChoiceBox.getItems().addAll(ieChoiceList);
-        ieChoiceBox.getSelectionModel().selectFirst();
-        ieChoiceBox.setOnAction(actionEvent -> {
-            if (ieChoiceBox.getSelectionModel().getSelectedItem().equals("Items")){
+        ieComboBox.getItems().addAll(ieChoiceList);
+        ieComboBox.getSelectionModel().selectFirst();
+        ieComboBox.setOnAction(actionEvent -> {
+            if (ieComboBox.getSelectionModel().getSelectedItem().equals("Items")){
                 this.selectionIE = "Items";
+                addButton.setText("Add Items");
             }
             else {
                 this.selectionIE = "Employees";
+                addButton.setText("Add Employee");
             }
             generateData();
         });
 
 
         // set default
-        this.store = (Store) ssChoiceBox.getSelectionModel().getSelectedItem();
+        this.store = (Store) ssComboBox.getSelectionModel().getSelectedItem();
         this.selectionIE = "Items";
+        this.addButton.setText("Add Items");
         generateData();
 
         backToMainButton.setOnAction(actionEvent -> {
@@ -165,10 +164,23 @@ public class Management implements Controller {
 
         addButton.setOnAction(actionEvent -> {
             System.out.println("Adding...");
+            if(this.selectionIE.equals("Items")){
+                AddItem controller = new AddItem(thisStage, this);
+                controller.showStage();
+            } else {
+                AddEmployee addEmployee = new AddEmployee(thisStage, this);
+                addEmployee.showStage();
+
+            }
         });
 
         deleteButton.setOnAction(actionEvent -> {
-            System.out.println("Deleting...");
+            if(this.selectionIE.equals("Items")){
+            } else {
+                Employee employee = (Employee) tableView.getSelectionModel().getSelectedItem();
+                employeeDAO.deleteEmployee(employee);
+                observableList.remove(employee);
+            }
         });
 
         updateButton.setOnAction(actionEvent -> {
@@ -408,7 +420,7 @@ public class Management implements Controller {
         tableView.setColumnResizePolicy(TableView.CONSTRAINED_RESIZE_POLICY);
     }
 
-    private void generateData(){
+    public void generateData(){
         if(this.selectionIE.equals("Employees")){
             if(this.store != null){
                 employeeList = employeeDAO.getEmployeeByStore(this.store);
@@ -447,6 +459,7 @@ public class Management implements Controller {
     public void searchAction(){
         String searchSQL = searchText.getText().trim();
         if(this.selectionIE.equals("Employees")){
+//            createTableViewEmployee();
             List<Object[]> resultList = employeeDAO.getSearchEmployeeList(searchSQL);
             this.employeeList.clear();
             for(Object[] ob: resultList){
@@ -461,21 +474,25 @@ public class Management implements Controller {
                 temp.setStartDate((Date)ob[7]);
                 temp.setStatus((int)ob[8]);
                 temp.setUsername((String)ob[9]);
-                Store store = storeDAO.getStoreById((int)ob[10]);
-                temp.setStore(store);
-                Storage storage = storageDAO.getStorageById((int)ob[11]);
-                temp.setStorage(storage);
+                if(ob[10] == null){
+                    temp.setStore(null);
+                } else {
+                    Store store = storeDAO.getStoreById((int)ob[10]);
+                    temp.setStore(store);
+                }
+                if(ob[11] == null){
+                    temp.setStorage(null);
+                } else {
+                    Storage storage = storageDAO.getStorageById((int)ob[11]);
+                    temp.setStorage(storage);
+                }
                 employeeList.add(temp);
             }
             System.out.println(this.employeeList);
-            createTableViewEmployee();
             observableList = FXCollections.observableList(this.employeeList);
         } else {
 
         }
         tableView.setItems(observableList);
-
     }
-
-
 }

@@ -154,6 +154,30 @@ public class EmployeeDAO {
         }
     }
 
+    public void createEmployee(Employee temp) {
+        Session session = App.getSession();
+        try{
+            session.getTransaction().begin();
+            session.save(temp);
+            session.getTransaction().commit();
+        } catch (Exception exception) {
+            exception.printStackTrace();
+            session.getTransaction().rollback();
+        }
+    }
+
+    public void deleteEmployee(Employee temp) {
+        Session session = App.getSession();
+        try{
+            session.getTransaction().begin();
+            session.remove(temp);
+            session.getTransaction().commit();
+        } catch (Exception exception) {
+            exception.printStackTrace();
+            session.getTransaction().rollback();
+        }
+    }
+
     public List<Object[]> getSearchEmployeeList(String searchText){
         Session session = App.getSession();
         List<Object[]> resultList = null;

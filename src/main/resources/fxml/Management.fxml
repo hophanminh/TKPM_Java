@@ -18,14 +18,14 @@
                <children>
                   <HBox alignment="CENTER_LEFT">
                      <children>
-                        <HBox alignment="CENTER">
+                        <HBox alignment="CENTER" prefHeight="48.0" prefWidth="219.0">
                            <children>
-                              <ChoiceBox fx:id="ssChoiceBox" prefWidth="150.0" />
+                              <ComboBox fx:id="ssComboBox" prefWidth="150.0" />
                            </children>
                         </HBox>
                         <HBox alignment="CENTER" prefHeight="100.0" prefWidth="200.0">
                            <children>
-                              <ChoiceBox fx:id="ieChoiceBox" prefWidth="150.0" />
+                              <ComboBox fx:id="ieComboBox" prefWidth="150.0" />
                            </children>
                         </HBox>
                      </children>
@@ -76,14 +76,14 @@
                <children>
                   <HBox prefHeight="0.0" prefWidth="600.0">
                      <children>
-                        <HBox alignment="CENTER_LEFT" prefHeight="26.0" prefWidth="361.0">
+                        <HBox alignment="CENTER_LEFT" prefHeight="26.0" prefWidth="295.0">
                            <children>
                               <Button fx:id="backToMainButton" mnemonicParsing="false" text="Back to main" />
                            </children>
                         </HBox>
-                        <HBox alignment="CENTER" prefHeight="26.0" prefWidth="70.0">
+                        <HBox alignment="CENTER_RIGHT" prefHeight="26.0" prefWidth="157.0">
                            <children>
-                              <Button fx:id="addButton" mnemonicParsing="false" prefHeight="26.0" prefWidth="45.0" text="Add" />
+                              <Button fx:id="addButton" mnemonicParsing="false" prefHeight="26.0" prefWidth="111.0" text="Add" />
                            </children>
                         </HBox>
                         <HBox alignment="CENTER" prefHeight="39.0" prefWidth="82.0">

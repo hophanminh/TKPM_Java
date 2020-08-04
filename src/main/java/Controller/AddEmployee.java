@@ -15,11 +15,10 @@ import javafx.stage.Modality;
 import javafx.stage.Stage;
 
 import java.io.IOException;
-import java.time.ZoneId;
 import java.util.List;
 import java.util.prefs.Preferences;
 
-public class EmployeeProfile {
+public class AddEmployee {
     private Stage thisStage;
     private Stage parent;
     private Controller previousController;
@@ -27,7 +26,6 @@ public class EmployeeProfile {
     private EmployeeDAO employeeDAO;
     private StorageDAO storageDAO;
     private StoreDAO storeDAO;
-    private Employee employee;
     @FXML
     public TextField nameEmployeeText;
     @FXML
@@ -36,6 +34,10 @@ public class EmployeeProfile {
     public TextField phoneEmployeeText;
     @FXML
     public TextField salaryEmployeeText;
+    @FXML
+    public TextField usernameText;
+    @FXML
+    public TextField passwordText;
 
     @FXML
     public DatePicker startDatePicker;
@@ -52,23 +54,22 @@ public class EmployeeProfile {
     @FXML
     public Button closeButton;
     @FXML
-    public Button updateButton;
+    public Button saveButton;
 
-    public EmployeeProfile(Stage previousStage, Controller previousController, Employee employee){
+    public AddEmployee(Stage previousStage, Controller previousController){
         try {
             thisStage = new Stage();
             parent = previousStage;
             this.previousController = previousController;
-            this.employee = employee;
 
             storeDAO = new StoreDAO();
             storageDAO = new StorageDAO();
             employeeDAO = new EmployeeDAO();
 
-            FXMLLoader loader = new FXMLLoader(getClass().getResource("/fxml/EmployeeProfile.fxml"));
+            FXMLLoader loader = new FXMLLoader(getClass().getResource("/fxml/AddEmployee.fxml"));
             loader.setController(this);
             thisStage.setScene(new Scene(loader.load()));
-            thisStage.setTitle("Hồ sơ nhân viên");
+            thisStage.setTitle("Thêm nhân viên");
             thisStage.setResizable(false);
 
             // lock to previous stage
@@ -86,7 +87,7 @@ public class EmployeeProfile {
     }
 
     public void reloadStage() {
-        EmployeeProfile reload = new EmployeeProfile(parent, previousController, this.employee);
+        AddEmployee reload = new AddEmployee(parent, previousController);
         reload.showStage();
         thisStage.close();
     }
@@ -106,25 +107,11 @@ public class EmployeeProfile {
         storageWorkingComboBox.getItems().add("Null");
         storageWorkingComboBox.getItems().addAll(storages);
 
-        nameEmployeeText.setText(this.employee.getName());
-        addressEmployeeText.setText(this.employee.getAddress());
-        phoneEmployeeText.setText(this.employee.getPhone());
-        salaryEmployeeText.setText(Integer.toString(this.employee.getSalary()));
-        startDatePicker.setValue(this.employee.getStartDate().toInstant().atZone(ZoneId.systemDefault()).toLocalDate());
-        statusComboBox.setValue((this.employee.getStatus()==1)?"Working":"Not working");
-        if(this.employee.getPosition() == 0)
-            positionComboBox.setValue("Employee");
-        else if(this.employee.getPosition() == 1)
-            positionComboBox.setValue("Manager");
-        else positionComboBox.setValue("Boss");
-        storeWorkingComboBox.setValue((this.employee.getStore()!=null)?this.employee.getStore():"Null");
-        storageWorkingComboBox.setValue((this.employee.getStorage()!=null)?this.employee.getStorage():"Null");
-
         closeButton.setOnAction(actionEvent -> {
             thisStage.close();
         });
 
-        updateButton.setOnAction(actionEvent -> {
+        saveButton.setOnAction(actionEvent -> {
             updateData();
         });
 
@@ -133,10 +120,8 @@ public class EmployeeProfile {
     public void updateData(){
         int position;
         Employee temp = new Employee();
-        temp.setId(this.employee.getId());
-        temp.setPassword(this.employee.getPassword());
-        temp.setUsername(this.employee.getUsername());
-
+        temp.setPassword(usernameText.getText().trim());
+        temp.setUsername(passwordText.getText().trim());
         temp.setName(nameEmployeeText.getText().trim());
         temp.setAddress(addressEmployeeText.getText().trim());
         temp.setPhone(phoneEmployeeText.getText().trim());
@@ -149,17 +134,16 @@ public class EmployeeProfile {
             position = 1;
         else position = 2;
         temp.setPosition(position);
-
         if(!storeWorkingComboBox.getSelectionModel().getSelectedItem().equals("Null")){
             Store store = (Store) storeWorkingComboBox.getSelectionModel().getSelectedItem();
             temp.setStore(store);
         } else temp.setStore(null);
 
+
         if(!storageWorkingComboBox.getSelectionModel().getSelectedItem().equals("Null")){
             Storage storage = (Storage) storageWorkingComboBox.getSelectionModel().getSelectedItem();
             temp.setStorage(storage);
         } else temp.setStorage(null);
-
         System.out.println(temp);
 
         if(nameEmployeeText.getText().trim().equals("")
@@ -174,15 +158,16 @@ public class EmployeeProfile {
             failAlert.showAndWait();
             return;
         } else {
-            employeeDAO.updateEmployee(temp);
+            employeeDAO.createEmployee(temp);
 
             AlertDialog success = new AlertDialog();
             Alert successAlert = success.createAlert(thisStage,
                     "INFORMATION",
-                    "Update Success",
-                    "Update employee success");
+                    "Create Successfully",
+                    "Create employee success");
             successAlert.showAndWait();
             thisStage.close();
         }
     }
 }
+

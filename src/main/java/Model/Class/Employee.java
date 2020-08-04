@@ -32,7 +32,7 @@ public class Employee {
     @Column(name="salary")
     protected int salary;
 
-    @Column(name = "status")                       // 1: active, 0: nonactive
+    @Column(name = "status")                       // 0: nonactive, 1: active
     protected int status;
 
     @Column(name = "position")                     // 0: Employee, 1: manager, 2: boss

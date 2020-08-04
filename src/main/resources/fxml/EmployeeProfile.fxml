@@ -63,26 +63,26 @@
                               <Insets left="100.0" />
                            </GridPane.margin>
                         </DatePicker>
-                        <ChoiceBox fx:id="statusChoiceBox" prefHeight="26.0" prefWidth="220.0" GridPane.rowIndex="6">
+                        <ComboBox fx:id="statusComboBox" prefHeight="26.0" prefWidth="220.0" GridPane.rowIndex="6">
                            <GridPane.margin>
                               <Insets left="100.0" />
                            </GridPane.margin>
-                        </ChoiceBox>
-                        <ChoiceBox fx:id="positionChoiceBox" prefWidth="220.0" GridPane.columnIndex="1" GridPane.rowIndex="6">
+                        </ComboBox>
+                        <ComboBox fx:id="positionComboBox" prefWidth="220.0" GridPane.columnIndex="1" GridPane.rowIndex="6">
                            <GridPane.margin>
                               <Insets left="100.0" />
                            </GridPane.margin>
-                        </ChoiceBox>
-                        <ChoiceBox fx:id="storeWorkingChoiceBox" prefHeight="26.0" prefWidth="220.0" GridPane.rowIndex="7">
+                        </ComboBox>
+                        <ComboBox fx:id="storeWorkingComboBox" prefHeight="26.0" prefWidth="220.0" GridPane.rowIndex="7">
                            <GridPane.margin>
                               <Insets left="100.0" />
                            </GridPane.margin>
-                        </ChoiceBox>
-                        <ChoiceBox fx:id="storageWorkingChoiceBox" prefWidth="220.0" GridPane.columnIndex="1" GridPane.rowIndex="7">
+                        </ComboBox>
+                        <ComboBox fx:id="storageWorkingComboBox" prefWidth="220.0" GridPane.columnIndex="1" GridPane.rowIndex="7">
                            <GridPane.margin>
                               <Insets left="100.0" />
                            </GridPane.margin>
-                        </ChoiceBox>
+                        </ComboBox>
                         <TextField fx:id="salaryEmployeeText" prefHeight="26.0" prefWidth="220.0" GridPane.rowIndex="5">
                            <GridPane.margin>
                               <Insets left="100.0" />

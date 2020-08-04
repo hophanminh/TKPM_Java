@@ -29,7 +29,7 @@ public class App extends Application {
         pref = Preferences.userNodeForPackage(Employee.class);
         int store = pref.getInt("defaultStore", -1);
         pref.clear();
-        //pref.putInt("defaultStore", store);
+        pref.putInt("defaultStore", store);
 
         Login controller1 = new Login(primaryStage);
         controller1.showStage();

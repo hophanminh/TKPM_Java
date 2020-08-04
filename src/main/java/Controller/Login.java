@@ -99,7 +99,7 @@ public class Login implements Controller {
                 passwordField.clear();
             }
             // check default store and boss account
-            else if (pref.getInt("defaultStore", -1) == -1 && loginUser.getPosition() != 1) {
+            else if (pref.getInt("defaultStore", -1) == -1 && loginUser.getPosition() != 2) {
                 // Create and display AlertWindow
                 AlertDialog fail = new AlertDialog();
                 Alert failAlert = fail.createAlert(thisStage,
