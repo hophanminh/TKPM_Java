@@ -134,15 +134,16 @@ DROP TABLE IF EXISTS `customer`;
 /*!50503 SET character_set_client = utf8mb4 */;
 CREATE TABLE `customer` (
   `idCustomer` int(11) NOT NULL AUTO_INCREMENT,
-  `dobCustomer` datetime(6) DEFAULT NULL,
+  `dobCustomer` datetime DEFAULT NULL,
   `emailCustomer` varchar(255) DEFAULT NULL,
   `identifyIDCustomer` varchar(255) DEFAULT NULL,
   `nameCustomer` varchar(255) DEFAULT NULL,
   `idStore` int(11) NOT NULL,
   PRIMARY KEY (`idCustomer`),
   KEY `FKp853lk617jabiajx5v92p6dk` (`idStore`),
+  FULLTEXT KEY `emailCustomer` (`emailCustomer`,`nameCustomer`,`identifyIDCustomer`),
   CONSTRAINT `FKp853lk617jabiajx5v92p6dk` FOREIGN KEY (`idStore`) REFERENCES `store` (`idStore`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=3 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -151,6 +152,7 @@ CREATE TABLE `customer` (
 
 LOCK TABLES `customer` WRITE;
 /*!40000 ALTER TABLE `customer` DISABLE KEYS */;
+INSERT INTO `customer` VALUES (2,'2020-08-05 00:00:00','minhphanho','123456789','hophanminh',1);
 /*!40000 ALTER TABLE `customer` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -496,4 +498,4 @@ UNLOCK TABLES;
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
--- Dump completed on 2020-08-04 11:11:44
+-- Dump completed on 2020-08-05 10:25:07

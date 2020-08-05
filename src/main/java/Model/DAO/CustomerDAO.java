@@ -62,4 +62,27 @@ public class CustomerDAO {
         }
         return resultList;
     }
+
+    public List<Object[]> getSearchCustomerList(String searchText){
+        Session session = App.getSession();
+        List<Object[]> resultList = null;
+        try{
+            session.getTransaction().begin();
+            String query = "SELECT c.* " +
+                    "FROM customer c " +
+                    "WHERE MATCH(c.emailCustomer, c.nameCustomer, c.identifyIDCustomer) " +
+                    "AGAINST('" + searchText.trim() + "' IN BOOLEAN MODE)";
+
+            resultList = session.createNativeQuery(query)
+                    .list();
+            session.getTransaction().commit();
+        } catch (Exception ex){
+            ex.printStackTrace();
+            session.getTransaction().rollback();
+        } finally{
+            session.close();
+        }
+        return resultList;
+
+    }
 }

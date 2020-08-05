@@ -204,7 +204,7 @@ public class Management implements Controller {
             } else if (this.selectionIE.equals("Employees")) {
                 searchEmployee();
             } else {
-
+                searchCustomer();
             }
         });
 
@@ -591,4 +591,33 @@ public class Management implements Controller {
         observableList = FXCollections.observableList(this.employeeList);
         tableView.setItems(observableList);
     }
+
+    public void searchCustomer(){
+        this.customerList.clear();
+        String searchSQL = searchText.getText().trim();
+        if(searchSQL.equals("")){
+            if(this.store != null)
+                this.customerList = customerDAO.getCustomerByStore(this.store);
+        } else {
+            List<Object[]> resultList = customerDAO.getSearchCustomerList(searchSQL);
+            for(Object[] ob: resultList){
+                Customer temp = new Customer();
+                temp.setIdCustomer((int)ob[0]);
+                temp.setDobCustomer((Date) ob[1]);
+                temp.setEmailCustomer((String)ob[2]);
+                temp.setIdentifyIDCustomer((String)ob[3]);
+                temp.setNameCustomer((String)ob[4]);
+                if(ob[5] == null){
+                    temp.setStore(null);
+                } else {
+                    Store store = storeDAO.getStoreById((int)ob[5]);
+                    temp.setStore(store);
+                }
+                customerList.add(temp);
+            }
+        }
+        observableList = FXCollections.observableList(this.customerList);
+        tableView.setItems(observableList);
+    }
+
 }
