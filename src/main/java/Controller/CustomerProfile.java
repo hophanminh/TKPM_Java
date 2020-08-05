@@ -52,7 +52,7 @@ public class CustomerProfile {
             customerDAO = new CustomerDAO();
             storeDAO = new StoreDAO();
 
-            FXMLLoader loader = new FXMLLoader(getClass().getResource("/fxml/AddCustomer.fxml"));
+            FXMLLoader loader = new FXMLLoader(getClass().getResource("/fxml/CustomerView.fxml"));
             loader.setController(this);
             thisStage.setScene(new Scene(loader.load()));
             thisStage.setTitle("Hồ sơ khách hàng");
@@ -117,7 +117,7 @@ public class CustomerProfile {
             AlertDialog fail = new AlertDialog();
             Alert failAlert = fail.createAlert(thisStage,
                     "WARNING",
-                    "FAIL",
+                    "FAIL TO UPDATE",
                     error);
             failAlert.showAndWait();
             return;

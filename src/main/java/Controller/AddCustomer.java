@@ -47,7 +47,7 @@ public class AddCustomer {
             storeDAO = new StoreDAO();
             customerDAO = new CustomerDAO();
 
-            FXMLLoader loader = new FXMLLoader(getClass().getResource("/fxml/AddCustomer.fxml"));
+            FXMLLoader loader = new FXMLLoader(getClass().getResource("/fxml/CustomerView.fxml"));
             loader.setController(this);
             thisStage.setScene(new Scene(loader.load()));
             thisStage.setTitle("Thêm khách hàng");
@@ -110,7 +110,7 @@ public class AddCustomer {
             AlertDialog fail = new AlertDialog();
             Alert failAlert = fail.createAlert(thisStage,
                     "WARNING",
-                    "FAIL",
+                    "FAIL TO CREATE",
                     error);
             failAlert.showAndWait();
             return;

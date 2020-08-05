@@ -153,7 +153,7 @@ public class EmployeeProfile {
             AlertDialog fail = new AlertDialog();
             Alert failAlert = fail.createAlert(thisStage,
                     "WARNING",
-                    "FAIL",
+                    "FAIL TO UPDATE",
                     error);
             failAlert.showAndWait();
             return;

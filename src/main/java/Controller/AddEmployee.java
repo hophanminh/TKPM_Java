@@ -141,7 +141,7 @@ public class AddEmployee {
             AlertDialog fail = new AlertDialog();
             Alert failAlert = fail.createAlert(thisStage,
                     "WARNING",
-                    "FAIL",
+                    "FAIL TO CREATE",
                     error);
             failAlert.showAndWait();
             return;

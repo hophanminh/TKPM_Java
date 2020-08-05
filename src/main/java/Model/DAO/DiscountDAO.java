@@ -1,15 +1,15 @@
 package Model.DAO;
 
 import Main.App;
-import Model.Class.Bill;
+import Model.Class.Discount;
 import Model.Class.Store;
 import org.hibernate.Session;
 import org.hibernate.query.Query;
 
 import java.util.List;
 
-public class BillDAO {
-    public void createBll(Bill temp) {
+public class DiscountDAO {
+    public void createDiscount(Discount temp) {
         Session session = App.getSession();
         try{
             session.getTransaction().begin();
@@ -21,7 +21,7 @@ public class BillDAO {
         }
     }
 
-    public void deleteBill(Bill customer){
+    public void deleteDiscount(Discount customer){
         Session session = App.getSession();
         try{
             session.getTransaction().begin();
@@ -33,7 +33,7 @@ public class BillDAO {
         }
     }
 
-    public void updateBill(Bill customer){
+    public void updateDiscount(Discount customer){
         Session session = App.getSession();
         try {
             session.getTransaction().begin();
@@ -45,14 +45,14 @@ public class BillDAO {
         }
     }
 
-    public List<Bill> getBillByStore(Store store){
+    public List<Discount> getDiscountByStore(Store store){
         Session session = App.getSession();
-        List<Bill> resultList = null;
+        List<Discount> resultList = null;
         try {
             session.getTransaction().begin();
-            Query<Bill> query = session.createQuery("SELECT b " +
-                    "FROM Bill as b " +
-                    "WHERE b.store = :store ", Bill.class);
+            Query<Discount> query = session.createQuery("SELECT d " +
+                    "FROM Discount as d " +
+                    "WHERE d.store = :store ", Discount.class);
             query.setParameter("store", store);
             resultList = query.list();
             session.getTransaction().commit();
