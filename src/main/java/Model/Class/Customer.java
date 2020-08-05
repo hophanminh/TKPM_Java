@@ -36,6 +36,14 @@ public class Customer {
 
     }
 
+    public Store getStore() {
+        return store;
+    }
+
+    public void setStore(Store store) {
+        this.store = store;
+    }
+
     public int getIdCustomer() {
         return idCustomer;
     }

@@ -112,12 +112,12 @@ public class AddEmployee {
         });
 
         saveButton.setOnAction(actionEvent -> {
-            updateData();
+            createEmployee();
         });
 
     }
 
-    public void updateData(){
+    public void createEmployee(){
         int position;
         Employee temp = new Employee();
         temp.setPassword(usernameText.getText().trim());

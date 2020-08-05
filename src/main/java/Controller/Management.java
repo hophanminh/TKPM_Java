@@ -28,6 +28,7 @@ public class Management implements Controller {
     private Preferences pref;
 
     private EmployeeDAO employeeDAO;
+    private CustomerDAO customerDAO;
     private StorageDAO storageDAO;
     private StoreDAO storeDAO;
     private Item_BookDAO item_bookDAO;
@@ -35,10 +36,10 @@ public class Management implements Controller {
     private ItemStorageDAO itemStorageDAO;
 
     private String selectionIE;
-    private int selectionSS;
 
     private List<Employee> employeeList;
     private List<Item> itemList;
+    private List<Customer> customerList;
     private Store store = new Store();
     private Storage storage = new Storage();
     private ObservableList observableList;
@@ -75,6 +76,7 @@ public class Management implements Controller {
             pref = Preferences.userNodeForPackage(Employee.class);
 
             employeeDAO = new EmployeeDAO();
+            customerDAO = new CustomerDAO();
             storageDAO = new StorageDAO();
             storeDAO = new StoreDAO();
             item_bookDAO = new Item_BookDAO();
@@ -84,7 +86,7 @@ public class Management implements Controller {
             FXMLLoader loader = new FXMLLoader(getClass().getResource("/fxml/Management.fxml"));
             loader.setController(this);
             thisStage.setScene(new Scene(loader.load()));
-            thisStage.setTitle("Management");
+            thisStage.setTitle("Quản lý");
             thisStage.setResizable(false);
 //            thisStage.setMaximized(true);
 
@@ -125,17 +127,15 @@ public class Management implements Controller {
         ssComboBox.setOnAction(actionEvent -> {
             if(ssComboBox.getSelectionModel().getSelectedItem().getClass() == Store.class){
                 this.store = (Store) ssComboBox.getSelectionModel().getSelectedItem();
-                System.out.println(store);
                 this.storage = null;
             } else {
                 this.storage = (Storage) ssComboBox.getSelectionModel().getSelectedItem();
-                System.out.println(storage);
                 this.store = null;
             }
             generateData();
         });
 
-        String[] ieChoiceList = {"Items", "Employees"};
+        String[] ieChoiceList = {"Items", "Employees", "Customers"};
         ieComboBox.getItems().addAll(ieChoiceList);
         ieComboBox.getSelectionModel().selectFirst();
         ieComboBox.setOnAction(actionEvent -> {
@@ -143,9 +143,12 @@ public class Management implements Controller {
                 this.selectionIE = "Items";
                 addButton.setText("Add Items");
             }
-            else {
+            else if(ieComboBox.getSelectionModel().getSelectedItem().equals("Employees")){
                 this.selectionIE = "Employees";
                 addButton.setText("Add Employee");
+            } else {
+                this.selectionIE = "Customers";
+                addButton.setText("Add Customer");
             }
             generateData();
         });
@@ -167,19 +170,27 @@ public class Management implements Controller {
             if(this.selectionIE.equals("Items")){
                 AddItem controller = new AddItem(thisStage, this);
                 controller.showStage();
-            } else {
+            } else if (this.selectionIE.equals("Employees")){
                 AddEmployee addEmployee = new AddEmployee(thisStage, this);
                 addEmployee.showStage();
-
+            } else {
+                AddCustomer addCustomer = new AddCustomer(thisStage, this);
+                addCustomer.showStage();
             }
         });
 
         deleteButton.setOnAction(actionEvent -> {
             if(this.selectionIE.equals("Items")){
-            } else {
+
+            } else if (this.selectionIE.equals("Employees")) {
                 Employee employee = (Employee) tableView.getSelectionModel().getSelectedItem();
                 employeeDAO.deleteEmployee(employee);
                 observableList.remove(employee);
+            } else {
+                Customer customer = (Customer) tableView.getSelectionModel().getSelectedItem();
+                customerDAO.deleteCustomer(customer);
+                observableList.remove(customer);
+
             }
         });
 
@@ -188,7 +199,13 @@ public class Management implements Controller {
         });
 
         searchButton.setOnAction(actionEvent -> {
-            searchAction();
+            if(this.selectionIE.equals("Items")){
+
+            } else if (this.selectionIE.equals("Employees")) {
+                searchEmployee();
+            } else {
+
+            }
         });
 
         searchText.setOnAction(actionEvent -> {
@@ -196,7 +213,7 @@ public class Management implements Controller {
         });
     }
 
-    private void createTableViewItem(){
+    public void createTableViewItem(){
         tableView.getItems().clear();
         tableView.getColumns().clear();
         // Add column to Tableview
@@ -345,7 +362,7 @@ public class Management implements Controller {
         tableView.setColumnResizePolicy(TableView.CONSTRAINED_RESIZE_POLICY);
     }
 
-    private void createTableViewEmployee(){
+    public void createTableViewEmployee(){
         // Clear table view
         tableView.getItems().clear();
         tableView.getColumns().clear();
@@ -420,6 +437,73 @@ public class Management implements Controller {
         tableView.setColumnResizePolicy(TableView.CONSTRAINED_RESIZE_POLICY);
     }
 
+    public void createTableViewCustomer(){
+        // Clear table view
+        tableView.getItems().clear();
+        tableView.getColumns().clear();
+
+        // Add columns to Table view
+        TableColumn<Customer, String> nameColumn = new TableColumn("Name");
+        nameColumn.setCellValueFactory(new PropertyValueFactory<>("nameCustomer"));
+        nameColumn.setStyle( "-fx-alignment: CENTER;");
+
+        TableColumn<Customer, String> emailColumn = new TableColumn("Email");
+        emailColumn.setCellValueFactory(new PropertyValueFactory<>("emailCustomer"));
+        emailColumn.setStyle( "-fx-alignment: CENTER;");
+
+        TableColumn<Customer, String> identifyIDCustomer = new TableColumn("Identify ID Customer");
+        identifyIDCustomer.setCellValueFactory(new PropertyValueFactory<>("identifyIDCustomer"));
+
+        TableColumn<Customer, Date> dobColumn = new TableColumn("DoB");
+        dobColumn.setCellValueFactory(new PropertyValueFactory<>("dobCustomer"));
+        dobColumn.setStyle( "-fx-alignment: CENTER;");
+
+        TableColumn<Employee, Void> detailColumn = new TableColumn("More Details");
+        Callback<TableColumn<Employee, Void>, TableCell<Employee, Void>> cellFactory =
+                new Callback<TableColumn<Employee, Void>, TableCell<Employee, Void>>() {
+                    @Override
+                    public TableCell<Employee, Void> call(final TableColumn<Employee, Void> param){
+                        final TableCell<Employee, Void> cell = new TableCell<Employee, Void>() {
+                            final Button detailButton = new Button("Details");
+                            {
+                                detailButton.setOnAction(actionEvent -> {
+                                    goToCustomerDetail((Customer) tableView.getItems().get(getIndex()));
+                                });
+                            }
+
+                            @Override
+                            public void updateItem(Void item, boolean empty) {
+                                super.updateItem(item, empty);
+                                if (empty) {
+                                    setGraphic(null);
+                                } else {
+                                    setGraphic(detailButton);
+                                }
+                            }
+                        };
+                        return cell;
+                    }
+                };
+        detailColumn.setCellFactory(cellFactory);
+        TableColumn[] columns = {nameColumn,emailColumn, identifyIDCustomer, dobColumn, detailColumn};
+        tableView.getColumns().addAll(columns);
+
+        // make column not dragable
+        tableView.getColumns().addListener(new ListChangeListener() {
+            public boolean suspended;
+            @Override
+            public void onChanged(Change change) {
+                change.next();
+                if (change.wasReplaced() && !suspended) {
+                    this.suspended = true;
+                    tableView.getColumns().setAll(columns);
+                    this.suspended = false;
+                }
+            }
+        });
+        tableView.setColumnResizePolicy(TableView.CONSTRAINED_RESIZE_POLICY);
+    }
+
     public void generateData(){
         if(this.selectionIE.equals("Employees")){
             if(this.store != null){
@@ -427,7 +511,7 @@ public class Management implements Controller {
             } else employeeList = employeeDAO.getEmployeeByStorage(this.storage);
             observableList = FXCollections.observableList(this.employeeList);
             createTableViewEmployee();
-        } else {
+        } else if(this.selectionIE.equals("Items")) {
             createTableViewItem();
             // convert List<Item_Store>, List<Item_Storage> to List<Item>
             if (this.store != null) {
@@ -447,6 +531,13 @@ public class Management implements Controller {
                 }
             }
             observableList = FXCollections.observableList(this.itemList);
+        } else {
+            createTableViewCustomer();
+            if (this.store != null) {
+                this.customerList = customerDAO.getCustomerByStore(store);
+                observableList = FXCollections.observableArrayList(this.customerList);
+            }
+            else createTableViewCustomer();
         }
         tableView.setItems(observableList);
     }
@@ -456,12 +547,20 @@ public class Management implements Controller {
         employeeProfile.showStage();
     }
 
-    public void searchAction(){
+    public void goToCustomerDetail(Customer customer){
+        CustomerProfile customerProfile = new CustomerProfile(thisStage, this, customer);
+        customerProfile.showStage();
+    }
+
+    public void searchEmployee(){
+        this.employeeList.clear();
         String searchSQL = searchText.getText().trim();
-        if(this.selectionIE.equals("Employees")){
-//            createTableViewEmployee();
+        if(searchSQL.equals("")){
+            if(this.store != null)
+                this.employeeList = employeeDAO.getEmployeeByStore(this.store);
+            else this.employeeList = employeeDAO.getEmployeeByStorage(this.storage);
+        } else {
             List<Object[]> resultList = employeeDAO.getSearchEmployeeList(searchSQL);
-            this.employeeList.clear();
             for(Object[] ob: resultList){
                 Employee temp = new Employee();
                 temp.setId((int)ob[0]);
@@ -488,11 +587,8 @@ public class Management implements Controller {
                 }
                 employeeList.add(temp);
             }
-            System.out.println(this.employeeList);
-            observableList = FXCollections.observableList(this.employeeList);
-        } else {
-
         }
+        observableList = FXCollections.observableList(this.employeeList);
         tableView.setItems(observableList);
     }
 }
