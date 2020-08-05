@@ -98,14 +98,27 @@ public class CustomerProfile {
         storeComboBox.setValue(this.customer.getStore());
     }
     public void updateCustomer(){
+        String error = "";
         if(nameText.getText().trim().equals("")
                 || emailText.getText().trim().equals("")
-                || identifyText.getText().trim().equals("")){
+                || identifyText.getText().trim().equals(""))
+            error += "All input must have value\n";
+
+        if(!emailText.getText().trim().matches("^([a-z\\d.]+)@([a-z\\d-]+)\\.([a-z]{2,8})(\\.[a-z]{2,8})?$"))
+            error += "Wrong email\n";
+
+        if(!nameText.getText().trim().matches("^[^\\d]+$"))
+            error += "Name cannot have number\n";
+
+        if (!identifyText.getText().trim().matches("^([\\d]{10})$"))
+            error += "Identify Number must have 10 digits\n";
+
+        if(!error.trim().equals("")){
             AlertDialog fail = new AlertDialog();
             Alert failAlert = fail.createAlert(thisStage,
                     "WARNING",
                     "FAIL",
-                    "There must be value in field");
+                    error);
             failAlert.showAndWait();
             return;
         } else {
@@ -129,6 +142,5 @@ public class CustomerProfile {
             successAlert.showAndWait();
             thisStage.close();
         }
-
     }
 }

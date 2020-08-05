@@ -131,49 +131,64 @@ public class EmployeeProfile {
     }
 
     public void updateData(){
-        int position;
-        Employee temp = new Employee();
-        temp.setId(this.employee.getId());
-        temp.setPassword(this.employee.getPassword());
-        temp.setUsername(this.employee.getUsername());
 
-        temp.setName(nameEmployeeText.getText().trim());
-        temp.setAddress(addressEmployeeText.getText().trim());
-        temp.setPhone(phoneEmployeeText.getText().trim());
-        temp.setSalary(Integer.valueOf(salaryEmployeeText.getText().trim()));
-        temp.setStartDate(java.sql.Date.valueOf(startDatePicker.getValue()));
-        temp.setStatus((statusComboBox.getSelectionModel().getSelectedItem().equals("Working")?1:0));
-        if(positionComboBox.getSelectionModel().getSelectedItem().equals("Employee"))
-            position = 0;
-        else if(positionComboBox.getSelectionModel().getSelectedItem().equals("Manager"))
-            position = 1;
-        else position = 2;
-        temp.setPosition(position);
-
-        if(!storeWorkingComboBox.getSelectionModel().getSelectedItem().equals("Null")){
-            Store store = (Store) storeWorkingComboBox.getSelectionModel().getSelectedItem();
-            temp.setStore(store);
-        } else temp.setStore(null);
-
-        if(!storageWorkingComboBox.getSelectionModel().getSelectedItem().equals("Null")){
-            Storage storage = (Storage) storageWorkingComboBox.getSelectionModel().getSelectedItem();
-            temp.setStorage(storage);
-        } else temp.setStorage(null);
-
-        System.out.println(temp);
-
+        String error = "";
         if(nameEmployeeText.getText().trim().equals("")
                 || addressEmployeeText.getText().trim().equals("")
                 || phoneEmployeeText.getText().trim().equals("")
-                || salaryEmployeeText.getText().trim().equals("")) {
+                || salaryEmployeeText.getText().trim().equals("")
+        )
+            error += "All input must have value\n";
+
+        if(!nameEmployeeText.getText().trim().matches("^[^\\d]+$"))
+            error += "Name cannot have number\n";
+
+        if (!phoneEmployeeText.getText().trim().matches("^[\\d]{10}$"))
+            error += "Phone Number must have 10 digits\n";
+
+        if(!salaryEmployeeText.getText().trim().matches("^[\\d]+$"))
+            error += "Salary must be some numbers\n";
+
+        if(!error.trim().equals("")){
             AlertDialog fail = new AlertDialog();
             Alert failAlert = fail.createAlert(thisStage,
                     "WARNING",
                     "FAIL",
-                    "There must be value in field");
+                    error);
             failAlert.showAndWait();
             return;
         } else {
+            int position;
+            Employee temp = new Employee();
+            temp.setId(this.employee.getId());
+            temp.setPassword(this.employee.getPassword());
+            temp.setUsername(this.employee.getUsername());
+
+            temp.setName(nameEmployeeText.getText().trim());
+            temp.setAddress(addressEmployeeText.getText().trim());
+            temp.setPhone(phoneEmployeeText.getText().trim());
+            temp.setSalary(Integer.valueOf(salaryEmployeeText.getText().trim()));
+            temp.setStartDate(java.sql.Date.valueOf(startDatePicker.getValue()));
+            temp.setStatus((statusComboBox.getSelectionModel().getSelectedItem().equals("Working")?1:0));
+            if(positionComboBox.getSelectionModel().getSelectedItem().equals("Employee"))
+                position = 0;
+            else if(positionComboBox.getSelectionModel().getSelectedItem().equals("Manager"))
+                position = 1;
+            else position = 2;
+            temp.setPosition(position);
+
+            if(!storeWorkingComboBox.getSelectionModel().getSelectedItem().equals("Null")){
+                Store store = (Store) storeWorkingComboBox.getSelectionModel().getSelectedItem();
+                temp.setStore(store);
+            } else temp.setStore(null);
+
+            if(!storageWorkingComboBox.getSelectionModel().getSelectedItem().equals("Null")){
+                Storage storage = (Storage) storageWorkingComboBox.getSelectionModel().getSelectedItem();
+                temp.setStorage(storage);
+            } else temp.setStorage(null);
+
+            System.out.println(temp);
+
             employeeDAO.updateEmployee(temp);
 
             AlertDialog success = new AlertDialog();
