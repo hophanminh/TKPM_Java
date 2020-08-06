@@ -1,9 +1,8 @@
 package Controller;
 
-import Model.Class.Book;
-import Model.Class.Employee;
-import Model.Class.Item;
-import Model.DAO.Item_BookDAO;
+import Model.Class.*;
+import Model.DAO.*;
+import View.AlertDialog;
 import View.MyMenuView;
 import javafx.animation.Animation;
 import javafx.animation.KeyFrame;
@@ -31,7 +30,9 @@ import org.controlsfx.control.textfield.TextFields;
 import utils.DateUtil;
 
 import java.io.IOException;
+import java.text.ParseException;
 import java.time.LocalDateTime;
+import java.util.Date;
 import java.util.List;
 import java.util.prefs.Preferences;
 
@@ -39,6 +40,9 @@ public class MainController implements Controller {
     private Stage thisStage;
     private Preferences pref;
     private Item_BookDAO  Item_BookDAO;
+    private EmployeeDAO employeeDAO;
+    private StoreDAO storeDAO;
+    private BillDAO billDAO;
     private TableView tableView;
     private final Duration duration = new Duration(1000); // 1000ms = 1s
 
@@ -47,12 +51,6 @@ public class MainController implements Controller {
 
     @FXML
     private Label totalCost;
-
-    @FXML
-    private Label summary;
-
-    @FXML
-    private Label tax;
 
     @FXML
     private Label discount; // Change to Choice Box or automatic
@@ -87,16 +85,24 @@ public class MainController implements Controller {
     @FXML
     private Button storageButton;
 
+    @FXML
+    private Button createBillButton;
+
     public MainController(Stage stage) {
         try {
             // keep stage, change scene
             thisStage = stage;
             pref = Preferences.userNodeForPackage(Employee.class);
             Item_BookDAO = new Item_BookDAO();
+            employeeDAO = new EmployeeDAO();
+            storeDAO = new StoreDAO();
+            billDAO = new BillDAO();
 
             FXMLLoader loader = new FXMLLoader(getClass().getResource("/fxml/main.fxml"));
             loader.setController(this);
-            thisStage.setScene(new Scene(loader.load(), 1200, 1000));
+            Scene newScene = new Scene(loader.load(), 1200, 1000);
+            newScene.getStylesheets().add("CSS/stylesheet.css");
+            thisStage.setScene(newScene);
             thisStage.setTitle("Quản lý nhà sách");
             thisStage.setResizable(true);
             thisStage.setMaximized(true);
@@ -174,8 +180,9 @@ public class MainController implements Controller {
                     Item newItem = Item_BookDAO.getItemById(index);
                     // add to table
                     if (newItem != null) {
-                        newItem.setQuantityItem(1);             // only default 1 when sell
-                        tableView.getItems().add(newItem);
+                        Bill_Item temp = new Bill_Item(newItem, 1, 0);
+                        tableView.getItems().add(temp);
+                        updateBill();
                     }
                 } catch (NumberFormatException ex) {
                 }
@@ -218,6 +225,32 @@ public class MainController implements Controller {
             management.showStage();
         });
 
+        createBillButton.setOnAction(actionEvent -> {
+            // create bill
+            float total = Float.parseFloat(totalCost.getText());
+            float discountMoney = Float.parseFloat(discount.getText());
+            LocalDateTime time = DateUtil.stringToDateTime(dateMakeBill.getText());
+            Customer currentCustomer = null;
+            Employee currentEmployee = employeeDAO.getEmployeeByID(pref.getInt("ID",-1));
+            Store currentStore = storeDAO.getStoreById(pref.getInt("defaultStore",-1));
+            List<Bill_Item> tableList = tableView.getItems();
+
+            Bill newBill = new Bill(total, total,discountMoney, time, currentCustomer, currentEmployee, currentStore);
+            billDAO.insert(newBill, tableList);
+
+            // Create and display AlertWindow
+            AlertDialog success = new AlertDialog();
+            Alert successAlert = success.createAlert(thisStage,
+                    "INFORMATION",
+                    "Tạo thành công",
+                    "Tạo biên lai thành công");
+            successAlert.showAndWait();
+
+            // clear table and label
+            tableView.getItems().clear();
+            totalCost.setText("0.0");
+            discount.setText("-0.0");
+        });
     }
 
     private TableView createTableView(){
@@ -225,28 +258,17 @@ public class MainController implements Controller {
 
         // Add column to Tableview
         TableColumn idColumn = new TableColumn("ID");
-        idColumn.setCellValueFactory(new PropertyValueFactory<>("idItem"));
         idColumn.setStyle( "-fx-alignment: CENTER;");
         idColumn.setMinWidth(80);
         idColumn.setMaxWidth(80);
-
-        TableColumn nameColumn = new TableColumn("Name");
-        nameColumn.setCellValueFactory(new PropertyValueFactory<>("nameItem"));
-        nameColumn.setStyle( "-fx-alignment: CENTER;");
-
-        TableColumn<Item, Float> priceColumn = new TableColumn("Price");
-        priceColumn.setCellValueFactory(new PropertyValueFactory<Item, Float>("priceItem"));
-        priceColumn.setStyle( "-fx-alignment: CENTER;");
-
-        TableColumn<Item, String> authorColumn = new TableColumn("Author");
-        Callback<TableColumn<Item, String>, TableCell<Item, String>> cellFactory
+        Callback<TableColumn<Bill_Item, String>, TableCell<Bill_Item, String>> cellFactory
                 = //
-                new Callback<TableColumn<Item, String>, TableCell<Item, String>>()
+                new Callback<TableColumn<Bill_Item, String>, TableCell<Bill_Item, String>>()
                 {
                     @Override
-                    public TableCell call(final TableColumn<Item, String> param)
+                    public TableCell call(final TableColumn<Bill_Item, String> param)
                     {
-                        final TableCell<Item, String> cell = new TableCell<Item, String>()
+                        final TableCell<Bill_Item, String> cell = new TableCell<Bill_Item, String>()
                         {
                             @Override
                             public void updateItem(String item, boolean empty)
@@ -258,33 +280,96 @@ public class MainController implements Controller {
                                 }
                                 else {
                                     setGraphic(null);
-
-                                    Item selected = (Item) newTable.getItems().get(getIndex());
-                                    if (selected instanceof Book) {
-                                        setText(((Book) selected).getAuthorBook());
-                                    }
-                                    setText(null);
+                                    Bill_Item selected = (Bill_Item) newTable.getItems().get(getIndex());
+                                    String result = Integer.toString(selected.getItem().getIdItem());
+                                    setText(result);
                                 }
                             }
                         };
                         return cell;
                     }
                 };
-        authorColumn.setCellFactory(cellFactory);
-        authorColumn.setStyle( "-fx-alignment: CENTER;");
+        idColumn.setCellFactory(cellFactory);
 
-        // Create column with quantity textfield
-        TableColumn<Item, Integer> quantityColumn = new TableColumn("Quantity");
-        quantityColumn.setMinWidth(120);
-        quantityColumn.setMaxWidth(120);
-        Callback<TableColumn<Item, Integer>, TableCell<Item, Integer>> cellFactory2
+        TableColumn nameColumn = new TableColumn("Tên sản phẩm");
+        nameColumn.setStyle( "-fx-alignment: CENTER_LEFT;");
+        Callback<TableColumn<Bill_Item, String>, TableCell<Bill_Item, String>> cellFactory2
                 = //
-                new Callback<TableColumn<Item, Integer>, TableCell<Item, Integer>>()
+                new Callback<TableColumn<Bill_Item, String>, TableCell<Bill_Item, String>>()
                 {
                     @Override
-                    public TableCell call(final TableColumn<Item, Integer> param)
+                    public TableCell call(final TableColumn<Bill_Item, String> param)
                     {
-                        final TableCell<Item, Integer> cell = new TableCell<Item, Integer>()
+                        final TableCell<Bill_Item, String> cell = new TableCell<Bill_Item, String>()
+                        {
+                            @Override
+                            public void updateItem(String item, boolean empty)
+                            {
+                                super.updateItem(item, empty);
+                                if (empty) {
+                                    setGraphic(null);
+                                    setText(null);
+                                }
+                                else {
+                                    setGraphic(null);
+                                    Bill_Item selected = (Bill_Item) newTable.getItems().get(getIndex());
+                                    String result = selected.getItem().getNameItem();
+                                    setText(result);
+                                }
+                            }
+                        };
+                        return cell;
+                    }
+                };
+        nameColumn.setCellFactory(cellFactory2);
+
+        TableColumn priceColumn = new TableColumn("Đơn giá");
+        priceColumn.setStyle( "-fx-alignment: CENTER_RIGHT;");
+        priceColumn.setMinWidth(150);
+        priceColumn.setMaxWidth(150);
+        Callback<TableColumn<Bill_Item, String>, TableCell<Bill_Item, String>> cellFactory3
+                = //
+                new Callback<TableColumn<Bill_Item, String>, TableCell<Bill_Item, String>>()
+                {
+                    @Override
+                    public TableCell call(final TableColumn<Bill_Item, String> param)
+                    {
+                        final TableCell<Bill_Item, String> cell = new TableCell<Bill_Item, String>()
+                        {
+                            @Override
+                            public void updateItem(String item, boolean empty)
+                            {
+                                super.updateItem(item, empty);
+                                if (empty) {
+                                    setGraphic(null);
+                                    setText(null);
+                                }
+                                else {
+                                    setGraphic(null);
+                                    Bill_Item selected = (Bill_Item) newTable.getItems().get(getIndex());
+                                    String result = Float.toString(selected.getItem().getPriceItem());
+                                    setText(result);
+                                }
+                            }
+                        };
+                        return cell;
+                    }
+                };
+        priceColumn.setCellFactory(cellFactory3);
+
+        // Create column with quantity textfield
+        TableColumn quantityColumn = new TableColumn("Số lượng");
+        quantityColumn.setMinWidth(150);
+        quantityColumn.setMaxWidth(150);
+        quantityColumn.setStyle( "-fx-alignment: CENTER;");
+        Callback<TableColumn<Bill_Item, Integer>, TableCell<Bill_Item, Integer>> cellFactory4
+                = //
+                new Callback<TableColumn<Bill_Item, Integer>, TableCell<Bill_Item, Integer>>()
+                {
+                    @Override
+                    public TableCell call(final TableColumn<Bill_Item, Integer> param)
+                    {
+                        final TableCell<Bill_Item, Integer> cell = new TableCell<Bill_Item, Integer>()
                         {
                             // auto add to table when add new row
                             @Override
@@ -293,6 +378,7 @@ public class MainController implements Controller {
                                 super.updateItem(item, empty);
                                 final TextField quantity = new TextField();
                                 {
+                                    quantity.setAlignment(Pos.CENTER_RIGHT);
                                     // can only enter number
                                     quantity.textProperty().addListener(new ChangeListener<String>() {
                                         @Override
@@ -319,14 +405,26 @@ public class MainController implements Controller {
                                                 if (quantity.getText().matches("[^1-9]+")) {
                                                     quantity.setText("1");
                                                 }
-                                                Item selected =  (Item)tableView.getItems().get(getIndex());
-                                                selected.setQuantityItem(Integer.parseInt(quantity.getText()));
+                                                Bill_Item selected =  (Bill_Item) tableView.getItems().get(getIndex());
+
+                                                // get current value
+                                                float currentPrice = selected.getItem().getPriceItem();
+                                                float currentDiscount = selected.getDiscount();
+
+                                                // get new value
+                                                int newCount = Integer.parseInt(quantity.getText());
+                                                float newTotal = currentPrice * newCount * (100 - currentDiscount)/100;
+
+                                                // update
+                                                selected.setCount(newCount);
+                                                selected.setTempCount(newCount);
+                                                selected.setTotal(newTotal);
+                                                updateBill();
                                             }
                                         }
                                     });
                                     quantity.setAlignment(Pos.CENTER);
                                 }
-
                                 if (empty) {
                                     setGraphic(null);
                                     setText(null);
@@ -335,8 +433,8 @@ public class MainController implements Controller {
                                     setGraphic(quantity);
                                     setText(null);
 
-                                    Item selected =  (Item)tableView.getItems().get(getIndex());
-                                    int num = selected.getQuantityItem();
+                                    Bill_Item selected =  (Bill_Item)tableView.getItems().get(getIndex());
+                                    int num = selected.getCount();
                                     quantity.setText(Integer.toString(num));
                                 }
                             }
@@ -344,15 +442,141 @@ public class MainController implements Controller {
                         return cell;
                     }
                 };
-        quantityColumn.setCellFactory(cellFactory2);
-        quantityColumn.setStyle( "-fx-alignment: CENTER;");
+        quantityColumn.setCellFactory(cellFactory4);
+
+        // Create column with discount textfield
+        TableColumn discountColumn = new TableColumn("Giảm giá (%)");
+        discountColumn.setMinWidth(150);
+        discountColumn.setMaxWidth(150);
+        discountColumn.setStyle( "-fx-alignment: CENTER;");
+        Callback<TableColumn<Bill_Item, Integer>, TableCell<Bill_Item, Integer>> cellFactory5
+                = //
+                new Callback<TableColumn<Bill_Item, Integer>, TableCell<Bill_Item, Integer>>()
+                {
+                    @Override
+                    public TableCell call(final TableColumn<Bill_Item, Integer> param)
+                    {
+                        final TableCell<Bill_Item, Integer> cell = new TableCell<Bill_Item, Integer>()
+                        {
+                            // auto add to table when add new row
+                            @Override
+                            public void updateItem(Integer item, boolean empty)
+                            {
+                                super.updateItem(item, empty);
+                                final TextField discount = new TextField();
+                                {
+                                    discount.setAlignment(Pos.CENTER_RIGHT);
+                                    // can only enter number
+                                    discount.textProperty().addListener(new ChangeListener<String>() {
+                                        @Override
+                                        public void changed(ObservableValue<? extends String> observable, String oldValue,
+                                                            String newValue) {
+                                            // "\d*": only number and matches between zero and unlimited times
+                                            if (!newValue.matches("\\d*(\\.\\d*)?")) {
+                                                discount.setText(oldValue);
+                                            }
+                                        }
+                                    });
+                                    // when out of focus, prevent blank and zero
+                                    discount.focusedProperty().addListener(new ChangeListener<Boolean>() {
+                                        @Override
+                                        public void changed(ObservableValue<? extends Boolean> observable, Boolean oldValue,
+                                                            Boolean newValue)
+                                        {
+                                            if (!newValue) {
+                                                // prevent blank value
+                                                if (discount.getText().trim().isEmpty()) {
+                                                    discount.setText("0.0");
+                                                }
+                                                // only < 100
+                                                if (Float.parseFloat(discount.getText()) > 100) {
+                                                    discount.setText("100.0");
+                                                }
+                                                Bill_Item selected =  (Bill_Item) tableView.getItems().get(getIndex());
+
+                                                // get current value
+                                                float currentPrice = selected.getItem().getPriceItem();
+                                                float currentCount = selected.getCount();
+
+                                                // get new value
+                                                float newDiscount = Float.parseFloat(discount.getText());
+                                                float newTotal = currentPrice * currentCount * (100 - newDiscount)/100;
+
+                                                // update
+                                                selected.setDiscount(newDiscount);
+                                                selected.setTempDiscount(newDiscount);
+                                                selected.setTotal(newTotal);
+                                                updateBill();
+                                            }
+                                        }
+                                    });
+                                    discount.setAlignment(Pos.CENTER);
+                                }
+
+                                if (empty) {
+                                    setGraphic(null);
+                                    setText(null);
+                                }
+                                else {
+                                    setGraphic(discount);
+                                    setText(null);
+
+                                    Bill_Item selected =  (Bill_Item)tableView.getItems().get(getIndex());
+                                    String result = Float.toString(selected.getDiscount());
+                                    discount.setText(result);
+                                }
+                            }
+                        };
+                        return cell;
+                    }
+                };
+        discountColumn.setCellFactory(cellFactory5);
+
+        TableColumn<Bill_Item, Float> totalColumn = new TableColumn("Thành tiền");
+        totalColumn.setMinWidth(150);
+        totalColumn.setMaxWidth(150);
+        totalColumn.setStyle( "-fx-alignment: CENTER_RIGHT;");
+        totalColumn.setCellValueFactory(cellData -> cellData.getValue().tempTotalProperty().asObject());
+
+        /*
+        Callback<TableColumn<Bill_Item, String>, TableCell<Bill_Item, String>> cellFactory6
+                = //
+                new Callback<TableColumn<Bill_Item, String>, TableCell<Bill_Item, String>>()
+                {
+                    @Override
+                    public TableCell call(final TableColumn<Bill_Item, String> param)
+                    {
+                        final TableCell<Bill_Item, String> cell = new TableCell<Bill_Item, String>()
+                        {
+                            @Override
+                            public void updateItem(String item, boolean empty)
+                            {
+                                super.updateItem(item, empty);
+                                if (empty) {
+                                    setGraphic(null);
+                                    setText(null);
+                                }
+                                else {
+                                    setGraphic(null);
+                                    Bill_Item selected = (Bill_Item) newTable.getItems().get(getIndex());
+                                    String result = Float.toString(selected.getTempTotal());
+                                    setText(result);
+                                }
+                            }
+                        };
+                        return cell;
+                    }
+                };
+        totalColumn.setCellFactory(cellFactory6);
+
+         */
 
         // Create column with clear button
         TableColumn clearColumn = new TableColumn("Action");
-        clearColumn.setMinWidth(50);
-        clearColumn.setMaxWidth(50);
+        clearColumn.setMinWidth(80);
+        clearColumn.setMaxWidth(80);
         clearColumn.setStyle( "-fx-alignment: CENTER;");
-        Callback<TableColumn<Item, String>, TableCell<Item, String>> cellFactory3
+        Callback<TableColumn<Item, String>, TableCell<Item, String>> cellFactory7
                 = //
                 new Callback<TableColumn<Item, String>, TableCell<Item, String>>()
                 {
@@ -370,6 +594,7 @@ public class MainController implements Controller {
                                 {
                                     btn.setOnAction(event -> {
                                         tableView.getItems().remove(getIndex());
+                                        updateBill();
                                     });
                                 }
 
@@ -386,9 +611,9 @@ public class MainController implements Controller {
                         return cell;
                     }
                 };
-        clearColumn.setCellFactory(cellFactory3);
+        clearColumn.setCellFactory(cellFactory7);
 
-        TableColumn[] columns = {idColumn, nameColumn, priceColumn, authorColumn, quantityColumn, clearColumn};
+        TableColumn[] columns = {idColumn, nameColumn, priceColumn, quantityColumn, discountColumn, totalColumn, clearColumn};
         newTable.getColumns().addAll(columns);
 
         // make column not dragable
@@ -407,5 +632,20 @@ public class MainController implements Controller {
         newTable.setColumnResizePolicy(TableView.CONSTRAINED_RESIZE_POLICY);
 
         return newTable;
+    }
+
+    private void updateBill() {
+        List<Bill_Item> tableList = tableView.getItems();
+        float newDiscount = 0;
+        float newTotal = 0;
+        for (Bill_Item item: tableList) {
+            int count = item.getCount();
+            float price = item.getItem().getPriceItem();
+            float total = item.getTotal();
+            newTotal += total;
+            newDiscount += (count * price - total);
+        }
+        totalCost.setText(Float.toString(newTotal));
+        discount.setText("-" + newDiscount);
     }
 }

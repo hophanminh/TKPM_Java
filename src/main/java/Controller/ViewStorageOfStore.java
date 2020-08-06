@@ -99,7 +99,7 @@ public class ViewStorageOfStore {
         storageOfStoreList.addAll(store.getStorageList());
 
         // get all storage in system or only storage of selected store
-        if (pref.getInt("position", -1) == 1) {
+        if (pref.getInt("position", -1) == 2) {
             allStorageList = storageDAO.getAllStorages();
             tableView = createTableView(allStorageList);
         }
@@ -121,7 +121,7 @@ public class ViewStorageOfStore {
         });
 
         // disable edit if not admin
-        if (pref.getInt("position", -1) != 1) {
+        if (pref.getInt("position", -1) != 2) {
             // hide 'accept' and 'accept all' button when not admin
             acceptButton.setVisible(false);
             acceptButton.managedProperty().bind(acceptButton.visibleProperty());
@@ -316,7 +316,7 @@ public class ViewStorageOfStore {
         newTable.getColumns().addAll(columns);
 
         /// only editable when user is boss
-        if (pref.getInt("position", -1) == 1) {
+        if (pref.getInt("position", -1) == 2) {
             newTable.getColumns().add(statusColumn);
         }
 

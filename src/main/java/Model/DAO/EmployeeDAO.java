@@ -40,6 +40,31 @@ public class EmployeeDAO {
         return result;
     }
 
+    public Employee getEmployeeByID(int id){
+        Session session = App.getSession();
+        List<Employee> resultList = null;
+        Employee result = null;
+        try{
+            session.getTransaction().begin();
+
+            Query<Employee> query = session.createQuery(
+                    "from Employee " +
+                            "where id = :id", Employee.class
+            );
+            query.setParameter("id", id);
+            resultList = query.list();
+            if (!resultList.isEmpty()) {
+                result = resultList.get(0);
+            }
+
+            session.getTransaction().commit();
+        } catch (Exception exception) {
+            exception.printStackTrace();
+            session.getTransaction().rollback();
+        }
+        return result;
+    }
+
     public List<Employee> getAllEmployee(){
         Session session = App.getSession();
         List<Employee> resultList = null;

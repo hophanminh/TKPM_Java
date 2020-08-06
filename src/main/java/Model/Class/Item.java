@@ -28,6 +28,9 @@ public class Item {
     @OneToMany(fetch = FetchType.LAZY, mappedBy = "item", cascade = CascadeType.ALL)
     private Set<Item_Storage> itemStorageList = new HashSet<>();
 
+    @OneToMany(fetch = FetchType.LAZY, mappedBy = "item", cascade = CascadeType.ALL)
+    protected Set<Bill_Item> billItemList = new HashSet<>();
+
 //    public Item(String nameItem, int priceItem){
 //        this.nameItem = nameItem;
 //        this.priceItem = priceItem;

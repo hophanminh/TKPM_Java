@@ -27,14 +27,20 @@ DROP TABLE IF EXISTS `bill`;
 CREATE TABLE `bill` (
   `idBill` int NOT NULL AUTO_INCREMENT,
   `dateBill` datetime(6) DEFAULT NULL,
-  `madeBill` int DEFAULT NULL,
-  `noteBill` varchar(255) DEFAULT NULL,
-  `totalBill` int DEFAULT NULL,
+  `paidBill` float DEFAULT NULL,
+  `totalBill` float DEFAULT NULL,
+  `totalDiscountBill` float DEFAULT NULL,
   `idCustomer` int DEFAULT NULL,
+  `id` int DEFAULT NULL,
+  `idStore` int DEFAULT NULL,
   PRIMARY KEY (`idBill`),
   KEY `FK9hdkbdnw4uk3krgqdd9vgr258` (`idCustomer`),
-  CONSTRAINT `FK9hdkbdnw4uk3krgqdd9vgr258` FOREIGN KEY (`idCustomer`) REFERENCES `customer` (`idCustomer`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+  KEY `FKeu5n7rn7f1tpng0ccxjs48j7q` (`id`),
+  KEY `FKjuxnia176joyr3rmb7j0jdyvi` (`idStore`),
+  CONSTRAINT `FK9hdkbdnw4uk3krgqdd9vgr258` FOREIGN KEY (`idCustomer`) REFERENCES `customer` (`idCustomer`),
+  CONSTRAINT `FKeu5n7rn7f1tpng0ccxjs48j7q` FOREIGN KEY (`id`) REFERENCES `employee` (`id`),
+  CONSTRAINT `FKjuxnia176joyr3rmb7j0jdyvi` FOREIGN KEY (`idStore`) REFERENCES `store` (`idStore`)
+) ENGINE=InnoDB AUTO_INCREMENT=7 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -43,7 +49,40 @@ CREATE TABLE `bill` (
 
 LOCK TABLES `bill` WRITE;
 /*!40000 ALTER TABLE `bill` DISABLE KEYS */;
+INSERT INTO `bill` VALUES (6,'2020-08-06 22:33:40.000000',2005,2005,0,NULL,1,1);
 /*!40000 ALTER TABLE `bill` ENABLE KEYS */;
+UNLOCK TABLES;
+
+--
+-- Table structure for table `bill_item`
+--
+
+DROP TABLE IF EXISTS `bill_item`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!50503 SET character_set_client = utf8mb4 */;
+CREATE TABLE `bill_item` (
+  `ID` int NOT NULL AUTO_INCREMENT,
+  `count` int DEFAULT NULL,
+  `discount` float DEFAULT NULL,
+  `total` float DEFAULT NULL,
+  `bill_ID` int DEFAULT NULL,
+  `item_ID` int DEFAULT NULL,
+  PRIMARY KEY (`ID`),
+  KEY `FKq629fl2y8m275qnmwca9uo05i` (`bill_ID`),
+  KEY `FKqwjtl51kha8hk7ajmdw9q10g2` (`item_ID`),
+  CONSTRAINT `FKq629fl2y8m275qnmwca9uo05i` FOREIGN KEY (`bill_ID`) REFERENCES `bill` (`idBill`),
+  CONSTRAINT `FKqwjtl51kha8hk7ajmdw9q10g2` FOREIGN KEY (`item_ID`) REFERENCES `item` (`idItem`)
+) ENGINE=InnoDB AUTO_INCREMENT=15 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+--
+-- Dumping data for table `bill_item`
+--
+
+LOCK TABLES `bill_item` WRITE;
+/*!40000 ALTER TABLE `bill_item` DISABLE KEYS */;
+INSERT INTO `bill_item` VALUES (10,1,0,1000,6,6),(11,1,0,1000,6,6),(12,1,0,0,6,3),(13,1,0,0,6,2),(14,1,0,5,6,5);
+/*!40000 ALTER TABLE `bill_item` ENABLE KEYS */;
 UNLOCK TABLES;
 
 --
@@ -70,7 +109,7 @@ CREATE TABLE `book` (
 
 LOCK TABLES `book` WRITE;
 /*!40000 ALTER TABLE `book` DISABLE KEYS */;
-INSERT INTO `book` VALUES ('','','',0,2),('1','1','1',0,3),('4','4','4',4,4),('','','',0,5);
+INSERT INTO `book` VALUES ('','','',0,2),('1','1','1',0,3),('4','4','4',4,4),('','','',0,5),('2','2','2',0,7);
 /*!40000 ALTER TABLE `book` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -215,7 +254,7 @@ CREATE TABLE `employee` (
 
 LOCK TABLES `employee` WRITE;
 /*!40000 ALTER TABLE `employee` DISABLE KEYS */;
-INSERT INTO `employee` VALUES (1,'1','1','admin','1',1,1,'0001-01-01 00:00:00.000000',1,'admin',NULL,NULL),(2,'2','2','user','2',3,2,'0002-02-02 00:00:00.000000',1,'user',NULL,NULL);
+INSERT INTO `employee` VALUES (1,'1','1','admin','1',2,1,'0001-01-01 00:00:00.000000',1,'admin',NULL,NULL),(2,'2','2','user','2',0,2,'0002-02-02 00:00:00.000000',1,'user',NULL,NULL);
 /*!40000 ALTER TABLE `employee` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -256,7 +295,7 @@ CREATE TABLE `item` (
   `nameItem` varchar(255) DEFAULT NULL,
   `priceItem` float DEFAULT NULL,
   PRIMARY KEY (`idItem`)
-) ENGINE=InnoDB AUTO_INCREMENT=6 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=8 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -265,7 +304,7 @@ CREATE TABLE `item` (
 
 LOCK TABLES `item` WRITE;
 /*!40000 ALTER TABLE `item` DISABLE KEYS */;
-INSERT INTO `item` VALUES (1,0,'1',0),(2,0,'2',0),(3,0,'3',0),(4,4,'4',4),(5,5,'5',5);
+INSERT INTO `item` VALUES (1,0,'1',0),(2,0,'2',0),(3,0,'3',0),(4,4,'4',4),(5,5,'5',5),(6,5000,'abc',1000),(7,0,'1',0);
 /*!40000 ALTER TABLE `item` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -320,7 +359,7 @@ CREATE TABLE `item_store` (
 
 LOCK TABLES `item_store` WRITE;
 /*!40000 ALTER TABLE `item_store` DISABLE KEYS */;
-INSERT INTO `item_store` VALUES (1,2,111),(2,1,1),(3,1,1),(4,1,4),(5,1,5);
+INSERT INTO `item_store` VALUES (1,2,111),(2,1,1),(3,1,1),(4,1,4),(5,1,5),(6,1,222),(7,3,1);
 /*!40000 ALTER TABLE `item_store` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -418,4 +457,4 @@ UNLOCK TABLES;
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
--- Dump completed on 2020-08-03 23:45:29
+-- Dump completed on 2020-08-06 22:35:26

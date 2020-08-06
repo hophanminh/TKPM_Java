@@ -1,7 +1,10 @@
 package Model.Class;
 
 import javax.persistence.*;
+import java.time.LocalDateTime;
 import java.util.Date;
+import java.util.HashSet;
+import java.util.Set;
 
 @Entity
 @Table(name = "bill")
@@ -11,24 +14,57 @@ public class Bill {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private int idBill;
 
-    @Column(name = "totalBill")
-    private int totalBill;
+    @Column(name = "paidBill")          // final price
+    private float paidBill;
+
+    @Column(name = "totalBill")         // total price without discount
+    private float totalBill;
+
+    @Column(name = "totalDiscountBill")     // total discount
+    private float totalDiscountBill;
 
     @Column(name = "dateBill")
-    private Date dateBill;
-
-    @Column(name = "madeBill")
-    private int madeBill;
-
-    @Column(name ="noteBill")
-    private String noteBill;
+    private LocalDateTime dateBill;
 
     @ManyToOne
-    @JoinColumn(name = "idCustomer", nullable = true)
+    @JoinColumn(name = "idCustomer")
     private Customer customer;
+
+    @ManyToOne
+    @JoinColumn(name = "id")
+    private Employee employee;
+
+    @ManyToOne
+    @JoinColumn(name = "idStore")
+    private Store store;
+
+    @OneToMany(fetch = FetchType.LAZY, mappedBy = "bill", cascade = CascadeType.ALL)
+    protected Set<Bill_Item> billItemList = new HashSet<>();
 
     public Bill(){
 
+    }
+
+    public Bill(float paidBill, float totalBill, float totalDiscountBill, LocalDateTime dateBill, Customer customer, Employee employee, Store store, Set<Bill_Item> billItemList) {
+        this.paidBill = paidBill;
+        this.totalBill = totalBill;
+        this.totalDiscountBill = totalDiscountBill;
+        this.dateBill = dateBill;
+        this.customer = customer;
+        this.employee = employee;
+        this.store = store;
+        this.billItemList = billItemList;
+    }
+
+    public Bill(float paidBill, float totalBill, float totalDiscountBill, LocalDateTime dateBill,
+                Customer customer, Employee employee, Store store) {
+        this.paidBill = paidBill;
+        this.totalBill = totalBill;
+        this.totalDiscountBill = totalDiscountBill;
+        this.dateBill = dateBill;
+        this.customer = customer;
+        this.employee = employee;
+        this.store = store;
     }
 
     public int getIdBill() {
@@ -39,35 +75,67 @@ public class Bill {
         this.idBill = idBill;
     }
 
-    public int getTotalBill() {
+    public float getPaidBill() {
+        return paidBill;
+    }
+
+    public void setPaidBill(float paidBill) {
+        this.paidBill = paidBill;
+    }
+
+    public float getTotalBill() {
         return totalBill;
     }
 
-    public void setTotalBill(int totalBill) {
+    public void setTotalBill(float totalBill) {
         this.totalBill = totalBill;
     }
 
-    public Date getDateBill() {
+    public float getTotalDiscountBill() {
+        return totalDiscountBill;
+    }
+
+    public void setTotalDiscountBill(float totalDiscountBill) {
+        this.totalDiscountBill = totalDiscountBill;
+    }
+
+    public LocalDateTime getDateBill() {
         return dateBill;
     }
 
-    public void setDateBill(Date dateBill) {
+    public void setDateBill(LocalDateTime dateBill) {
         this.dateBill = dateBill;
     }
 
-    public int getMadeBill() {
-        return madeBill;
+    public Customer getCustomer() {
+        return customer;
     }
 
-    public void setMadeBill(int madeBill) {
-        this.madeBill = madeBill;
+    public void setCustomer(Customer customer) {
+        this.customer = customer;
     }
 
-    public String getNoteBill() {
-        return noteBill;
+    public Employee getEmployee() {
+        return employee;
     }
 
-    public void setNoteBill(String noteBill) {
-        this.noteBill = noteBill;
+    public void setEmployee(Employee employee) {
+        this.employee = employee;
+    }
+
+    public Store getStore() {
+        return store;
+    }
+
+    public void setStore(Store store) {
+        this.store = store;
+    }
+
+    public Set<Bill_Item> getBillItemList() {
+        return billItemList;
+    }
+
+    public void setBillItemList(Set<Bill_Item> billItemList) {
+        this.billItemList = billItemList;
     }
 }

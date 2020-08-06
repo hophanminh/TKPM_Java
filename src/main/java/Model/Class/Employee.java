@@ -2,6 +2,8 @@ package Model.Class;
 
 import javax.persistence.*;
 import java.util.Date;
+import java.util.HashSet;
+import java.util.Set;
 
 @Entity
 @Table (name = "employee")
@@ -45,6 +47,9 @@ public class Employee {
     @ManyToOne
     @JoinColumn(name = "idStorage", nullable = true)
     protected Storage storage;
+
+    @OneToMany(fetch = FetchType.LAZY, mappedBy = "employee")
+    private Set<Bill> billList =new HashSet<>();
 
     public Employee(){
     }

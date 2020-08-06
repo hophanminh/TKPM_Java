@@ -1,27 +1,30 @@
 package Model.DAO;
 
 import Main.App;
-import Model.Class.Bill;
-import Model.Class.Store;
+import Model.Class.*;
 import org.hibernate.Session;
 import org.hibernate.query.Query;
 
 import java.util.List;
 
 public class BillDAO {
-    public void createBll(Bill temp) {
+    public void insert(Bill bill, List<Bill_Item> list) {
         Session session = App.getSession();
         try{
             session.getTransaction().begin();
-            session.save(temp);
+            session.save(bill);
+            for (Bill_Item o : list) {
+                Bill_Item temp = new Bill_Item(o.getItem(), bill, o.getCount(), o.getDiscount(), o.getTotal());
+                session.save(temp);
+            }
             session.getTransaction().commit();
-        } catch (Exception e){
-            e.printStackTrace();
+        } catch (Exception exception) {
+            exception.printStackTrace();
             session.getTransaction().rollback();
         }
     }
 
-    public void deleteBill(Bill customer){
+    public void delete(Bill customer){
         Session session = App.getSession();
         try{
             session.getTransaction().begin();
@@ -33,7 +36,7 @@ public class BillDAO {
         }
     }
 
-    public void updateBill(Bill customer){
+    public void update(Bill customer){
         Session session = App.getSession();
         try {
             session.getTransaction().begin();

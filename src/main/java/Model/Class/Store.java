@@ -33,6 +33,9 @@ public class Store {
     @OneToMany(fetch = FetchType.LAZY, mappedBy = "store")
     private Set<Employee> employeeList = new HashSet<>();
 
+    @OneToMany(fetch = FetchType.LAZY, mappedBy = "store")
+    private Set<Bill> billList = new HashSet<>();
+
     @OneToMany(fetch = FetchType.LAZY, mappedBy = "store", cascade = CascadeType.ALL)
     protected Set<Item_Store> itemStoreList = new HashSet<>();
 

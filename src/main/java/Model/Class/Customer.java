@@ -26,7 +26,7 @@ public class Customer {
     private String identifyIDCustomer;
 
     @OneToMany(fetch = FetchType.LAZY, mappedBy = "customer")
-    private Set<Bill>billList =new HashSet<>();
+    private Set<Bill> billList =new HashSet<>();
 
     @ManyToOne
     @JoinColumn(name = "idStore", nullable = false)
