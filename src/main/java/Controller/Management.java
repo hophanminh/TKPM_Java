@@ -2,6 +2,7 @@ package Controller;
 
 import Model.Class.*;
 import Model.DAO.*;
+import com.itextpdf.text.DocumentException;
 import javafx.beans.property.SimpleStringProperty;
 import javafx.collections.FXCollections;
 import javafx.collections.ListChangeListener;
@@ -14,8 +15,10 @@ import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
 import javafx.util.Callback;
+import utils.PrinterPDF;
 
 import java.io.IOException;
+import java.net.URISyntaxException;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
@@ -220,6 +223,21 @@ public class Management implements Controller {
             SendEmail sendEmail = new SendEmail(thisStage, this, customerList);
             sendEmail.showStage();
         }));
+
+        printButton.setOnAction(actionEvent -> {
+            if(selectionIE.equals("Items")) {
+                PrinterPDF printerPDF = new PrinterPDF();
+                try {
+                    printerPDF.convertPDF(itemList);
+                } catch (IOException e) {
+                    e.printStackTrace();
+                } catch (DocumentException e) {
+                    e.printStackTrace();
+                } catch (URISyntaxException e) {
+                    e.printStackTrace();
+                }
+            }
+        });
 
 
         searchText.setOnAction(actionEvent -> {
