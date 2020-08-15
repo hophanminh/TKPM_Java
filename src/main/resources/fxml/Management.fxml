@@ -38,7 +38,7 @@
                      <children>
                         <HBox prefHeight="100.0" prefWidth="200.0">
                            <children>
-                              <HBox prefHeight="44.0" prefWidth="525.0">
+                              <HBox prefHeight="44.0" prefWidth="422.0">
                                  <children>
                                     <HBox alignment="CENTER_LEFT" prefHeight="43.0" prefWidth="364.0">
                                        <children>
@@ -50,6 +50,11 @@
                                            <Button fx:id="searchButton" mnemonicParsing="false" text="Search" />
                                        </children>
                                     </HBox>
+                                 </children>
+                              </HBox>
+                              <HBox alignment="CENTER" prefHeight="44.0" prefWidth="117.0">
+                                 <children>
+                                    <Button fx:id="sendEmailButton" mnemonicParsing="false" text="Send Email" />
                                  </children>
                               </HBox>
                               <HBox alignment="CENTER">

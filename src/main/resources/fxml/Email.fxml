@@ -1,0 +1,73 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.geometry.*?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+
+<AnchorPane prefHeight="300.0" prefWidth="600.0" xmlns="http://javafx.com/javafx/10.0.2-internal" xmlns:fx="http://javafx.com/fxml/1">
+   <children>
+      <VBox layoutY="-2.0" prefHeight="300.0" prefWidth="600.0">
+         <children>
+            <VBox prefHeight="28.0" prefWidth="579.0">
+               <children>
+                  <HBox prefHeight="100.0" prefWidth="200.0">
+                     <children>
+                        <HBox alignment="CENTER_LEFT" prefHeight="100.0" prefWidth="200.0">
+                           <children>
+                              <Label text="Title" />
+                           </children></HBox>
+                        <HBox prefHeight="54.0" prefWidth="633.0">
+                           <children>
+                              <TextField fx:id="titleText" prefHeight="26.0" prefWidth="506.0" />
+                           </children></HBox>
+                        <VBox prefHeight="200.0" prefWidth="100.0" />
+                     </children>
+                  </HBox>
+               </children>
+            </VBox>
+            <VBox prefHeight="215.0" prefWidth="600.0">
+               <children>
+                  <HBox prefHeight="245.0" prefWidth="579.0">
+                     <children>
+                        <HBox prefHeight="214.0" prefWidth="72.0">
+                           <children>
+                              <Label text="Content" />
+                           </children>
+                        </HBox>
+                        <HBox prefHeight="214.0" prefWidth="508.0">
+                           <children>
+                              <TextArea fx:id="contentText" prefHeight="214.0" prefWidth="512.0" />
+                           </children>
+                        </HBox>
+                     </children>
+                  </HBox>
+               </children>
+               <VBox.margin>
+                  <Insets bottom="10.0" top="10.0" />
+               </VBox.margin>
+            </VBox>
+            <VBox prefHeight="41.0" prefWidth="603.0">
+               <children>
+                  <HBox prefHeight="100.0" prefWidth="200.0">
+                     <children>
+                        <HBox alignment="CENTER_LEFT" prefHeight="36.0" prefWidth="410.0">
+                           <children>
+                              <Button fx:id="backButton" mnemonicParsing="false" text="Back" />
+                           </children>
+                        </HBox>
+                        <HBox alignment="CENTER_RIGHT" prefHeight="31.0" prefWidth="172.0">
+                           <children>
+                              <Button fx:id="sendButton" mnemonicParsing="false" text="Send Email" />
+                           </children>
+                        </HBox>
+                     </children>
+                  </HBox>
+               </children>
+            </VBox>
+         </children>
+         <padding>
+            <Insets bottom="10.0" left="10.0" right="10.0" top="10.0" />
+         </padding>
+      </VBox>
+   </children>
+</AnchorPane>

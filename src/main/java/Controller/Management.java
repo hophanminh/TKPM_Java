@@ -60,6 +60,9 @@ public class Management implements Controller {
     @FXML
     public Button printButton;
     @FXML
+    public Button sendEmailButton;
+
+    @FXML
     public Button backToMainButton;
     @FXML
     public Button addButton;
@@ -92,6 +95,8 @@ public class Management implements Controller {
 
             thisStage.initOwner(parent);
             thisStage.initModality(Modality.WINDOW_MODAL);
+
+            sendEmailButton.setVisible(false);
 
 //            Screen screen = Screen.getPrimary();
 //            Rectangle2D bounds = screen.getVisualBounds();
@@ -140,13 +145,16 @@ public class Management implements Controller {
         ieComboBox.getSelectionModel().selectFirst();
         ieComboBox.setOnAction(actionEvent -> {
             if (ieComboBox.getSelectionModel().getSelectedItem().equals("Items")){
+                sendEmailButton.setVisible(false);
                 this.selectionIE = "Items";
                 addButton.setText("Add Items");
             }
             else if(ieComboBox.getSelectionModel().getSelectedItem().equals("Employees")){
+                sendEmailButton.setVisible(false);
                 this.selectionIE = "Employees";
                 addButton.setText("Add Employee");
             } else {
+                sendEmailButton.setVisible(true);
                 this.selectionIE = "Customers";
                 addButton.setText("Add Customer");
             }
@@ -207,6 +215,12 @@ public class Management implements Controller {
                 searchCustomer();
             }
         });
+
+        sendEmailButton.setOnAction((actionEvent -> {
+            SendEmail sendEmail = new SendEmail(thisStage, this, customerList);
+            sendEmail.showStage();
+        }));
+
 
         searchText.setOnAction(actionEvent -> {
             searchButton.fire();
@@ -619,5 +633,7 @@ public class Management implements Controller {
         observableList = FXCollections.observableList(this.customerList);
         tableView.setItems(observableList);
     }
+
+
 
 }
