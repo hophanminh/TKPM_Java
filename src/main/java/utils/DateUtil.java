@@ -16,5 +16,4 @@ public class DateUtil {
         LocalDateTime dateTime = LocalDateTime.parse(str, formatter);
         return dateTime;
     }
-
 }

@@ -225,10 +225,21 @@ public class Management implements Controller {
         }));
 
         printButton.setOnAction(actionEvent -> {
+            PrinterPDF printerPDF = new PrinterPDF();
+
             if(selectionIE.equals("Items")) {
-                PrinterPDF printerPDF = new PrinterPDF();
                 try {
-                    printerPDF.convertPDF(itemList);
+                    printerPDF.ItemsReport(itemList);
+                } catch (IOException e) {
+                    e.printStackTrace();
+                } catch (DocumentException e) {
+                    e.printStackTrace();
+                } catch (URISyntaxException e) {
+                    e.printStackTrace();
+                }
+            }  else if (selectionIE.equals("Employees")) {
+                try {
+                    printerPDF.EmployeesReport(employeeList);
                 } catch (IOException e) {
                     e.printStackTrace();
                 } catch (DocumentException e) {

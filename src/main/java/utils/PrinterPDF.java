@@ -1,5 +1,6 @@
 package utils;
 
+import Model.Class.Employee;
 import Model.Class.Item;
 import com.itextpdf.text.*;
 import com.itextpdf.text.pdf.PdfPCell;
@@ -11,22 +12,85 @@ import java.io.IOException;
 import java.net.URISyntaxException;
 import java.nio.file.Path;
 import java.nio.file.Paths;
+import java.time.LocalDateTime;
 import java.util.List;
 import java.util.stream.Stream;
 
 public class PrinterPDF {
+    public void ItemsReport(List<Item> list) throws IOException, DocumentException, URISyntaxException {
 
+        // Name file
+        LocalDateTime now = LocalDateTime.now();
+        String[] dateString = DateUtil.formatDate(now).split(" ");
+        String[] time = dateString[1].split(":");
+        String temp = time[0]+"h"+time[1]+"m";
+        String name = temp +  "-Date-"+dateString[0] + "ItemsReport.pdf";
 
-    public void convertPDF(List<Item> list) throws IOException, DocumentException, URISyntaxException {
         Document document = new Document();
         PdfWriter pdfWriter = null;
 
-        String path = "docs/"+"test.pdf";
+        // Output
+        String path = "docs/items/"+ name;
         pdfWriter = PdfWriter.getInstance(document, new FileOutputStream(path));
 
-//   //special font sizes
-//   Font bfBold12 = new Font(Font.FontFamily.TIMES_ROMAN, 12, Font.BOLD, new BaseColor(0, 0, 0));
-//   Font bf12 = new Font(Font.FontFamily.TIMES_ROMAN, 12);
+        Font timesRoman12Bold = new Font(Font.FontFamily.TIMES_ROMAN, 12, Font.BOLD, new BaseColor(0,0,0));
+        Font timesRoman12 = new Font(Font.FontFamily.TIMES_ROMAN, 12, Font.BOLD, new BaseColor(0,0,0));
+
+        document.open();
+
+        Paragraph paragraph = new Paragraph("Summary Items Report\n");
+
+        PdfPTable table = new PdfPTable(5);
+        table.setWidthPercentage(90f);
+        insertCell(table, "Name", Element.ALIGN_CENTER, 1, timesRoman12Bold);
+        insertCell(table, "Cost", Element.ALIGN_CENTER, 1, timesRoman12Bold);
+        insertCell(table, "Price", Element.ALIGN_CENTER, 1, timesRoman12Bold);
+        insertCell(table, "Quantity", Element.ALIGN_CENTER, 1, timesRoman12Bold);
+        insertCell(table, "Profit", Element.ALIGN_CENTER, 1, timesRoman12Bold);
+        table.setHeaderRows(1);
+
+        float profit, cost, price, sumProfit = 0;
+        int quantity;
+        for (int i = 0; i < list.size(); i++) {
+
+            cost = list.get(i).getCostItem();
+            price = list.get(i).getPriceItem();
+            quantity = list.get(i).getQuantityItem();
+            profit = (price - cost)*quantity;
+            sumProfit += profit;
+            insertCell(table, list.get(i).getNameItem(), Element.ALIGN_CENTER, 1, timesRoman12);
+            insertCell(table, String.valueOf(cost), Element.ALIGN_CENTER, 1, timesRoman12);
+            insertCell(table, String.valueOf(price), Element.ALIGN_CENTER, 1, timesRoman12);
+            insertCell(table, String.valueOf(quantity), Element.ALIGN_CENTER, 1, timesRoman12);
+            insertCell(table, String.valueOf(profit), Element.ALIGN_CENTER, 1, timesRoman12);
+        };
+
+        String note = "\nStore: ABC Store"
+                + "\nSum profit: " + sumProfit
+                + "\nDate: " + DateUtil.formatDate(now) + "\n\n\n";
+
+        paragraph.add(note);
+        paragraph.add(table);
+        document.add(paragraph);
+
+        document.close();
+        pdfWriter.close();
+    }
+    public void EmployeesReport(List<Employee> list) throws IOException, DocumentException, URISyntaxException {
+
+        // Name file
+        LocalDateTime now = LocalDateTime.now();
+        String[] dateString = DateUtil.formatDate(now).split(" ");
+        String[] time = dateString[1].split(":");
+        String temp = time[0]+"h"+time[1]+"m";
+        String name = temp +  "-Date-"+dateString[0] + "EmployeesReport.pdf";
+
+        Document document = new Document();
+        PdfWriter pdfWriter = null;
+
+        // Output
+        String path = "docs/employees/"+ name;
+        pdfWriter = PdfWriter.getInstance(document, new FileOutputStream(path));
 
         Font timesRoman12Bold = new Font(Font.FontFamily.TIMES_ROMAN, 12, Font.BOLD, new BaseColor(0,0,0));
         Font timesRoman12 = new Font(Font.FontFamily.TIMES_ROMAN, 12, Font.BOLD, new BaseColor(0,0,0));
@@ -38,18 +102,18 @@ public class PrinterPDF {
         PdfPTable table = new PdfPTable(5);
         table.setWidthPercentage(90f);
         insertCell(table, "Name", Element.ALIGN_CENTER, 1, timesRoman12Bold);
-        insertCell(table, "Cost", Element.ALIGN_CENTER, 1, timesRoman12Bold);
-        insertCell(table, "Price", Element.ALIGN_CENTER, 1, timesRoman12Bold);
-        insertCell(table, "Quantity", Element.ALIGN_CENTER, 1, timesRoman12Bold);
-        insertCell(table, "Profit", Element.ALIGN_CENTER, 1, timesRoman12Bold);
+        insertCell(table, "Salary", Element.ALIGN_CENTER, 1, timesRoman12Bold);
+        insertCell(table, "Phone", Element.ALIGN_CENTER, 1, timesRoman12Bold);
+        insertCell(table, "Position", Element.ALIGN_CENTER, 1, timesRoman12Bold);
+        insertCell(table, "Start Date", Element.ALIGN_CENTER, 1, timesRoman12Bold);
         table.setHeaderRows(1);
 
         for (int i = 0; i < list.size(); i++) {
-            insertCell(table, list.get(i).getNameItem(), Element.ALIGN_CENTER, 1, timesRoman12);
-            insertCell(table, String.valueOf(list.get(i).getCostItem()), Element.ALIGN_CENTER, 1, timesRoman12);
-            insertCell(table, String.valueOf(list.get(i).getPriceItem()), Element.ALIGN_CENTER, 1, timesRoman12);
-            insertCell(table, String.valueOf(list.get(i).getQuantityItem()), Element.ALIGN_CENTER, 1, timesRoman12);
-            insertCell(table, "0", Element.ALIGN_CENTER, 1, timesRoman12);
+            insertCell(table, list.get(i).getName(), Element.ALIGN_CENTER, 1, timesRoman12);
+            insertCell(table, String.valueOf(list.get(i).getSalary()), Element.ALIGN_CENTER, 1, timesRoman12);
+            insertCell(table, String.valueOf(list.get(i).getPhone()), Element.ALIGN_CENTER, 1, timesRoman12);
+            insertCell(table, String.valueOf(list.get(i).getPosition()), Element.ALIGN_CENTER, 1, timesRoman12);
+            insertCell(table, String.valueOf(list.get(i).getStartDate()), Element.ALIGN_CENTER, 1, timesRoman12);
         };
 
         paragraph.add(table);
