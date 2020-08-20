@@ -1,9 +1,13 @@
 package Controller;
 
 import Model.Class.*;
-import Model.DAO.*;
+import Model.DAO.BillDAO;
+import Model.DAO.EmployeeDAO;
+import Model.DAO.Item_BookDAO;
+import Model.DAO.StoreDAO;
 import View.AlertDialog;
 import View.MyMenuView;
+import com.itextpdf.text.DocumentException;
 import javafx.animation.Animation;
 import javafx.animation.KeyFrame;
 import javafx.animation.Timeline;
@@ -13,26 +17,22 @@ import javafx.collections.ListChangeListener;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.geometry.Pos;
-import javafx.geometry.Rectangle2D;
 import javafx.scene.Scene;
 import javafx.scene.control.*;
-import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.layout.BorderPane;
-import javafx.scene.layout.GridPane;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.Priority;
-import javafx.stage.Screen;
 import javafx.stage.Stage;
 import javafx.util.Callback;
 import javafx.util.Duration;
 import org.controlsfx.control.textfield.AutoCompletionBinding;
 import org.controlsfx.control.textfield.TextFields;
 import utils.DateUtil;
+import utils.PrinterPDF;
 
 import java.io.IOException;
-import java.text.ParseException;
+import java.net.URISyntaxException;
 import java.time.LocalDateTime;
-import java.util.Date;
 import java.util.List;
 import java.util.prefs.Preferences;
 
@@ -246,6 +246,24 @@ public class MainController implements Controller {
 
             Bill newBill = new Bill(total, total,discountMoney, time, currentCustomer, currentEmployee, currentStore);
             billDAO.insert(newBill, tableList);
+
+            PrinterPDF printerPDF = null;
+            try {
+                printerPDF = new PrinterPDF();
+            } catch (IOException e) {
+                e.printStackTrace();
+            } catch (DocumentException e) {
+                e.printStackTrace();
+            }
+            try {
+                printerPDF.payment(tableList, nameCustomer.getText());
+            } catch (IOException e) {
+                e.printStackTrace();
+            } catch (DocumentException e) {
+                e.printStackTrace();
+            } catch (URISyntaxException e) {
+                e.printStackTrace();
+            }
 
             // Create and display AlertWindow
             AlertDialog success = new AlertDialog();
