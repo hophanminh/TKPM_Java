@@ -15,15 +15,12 @@ import javafx.stage.Modality;
 import javafx.stage.Stage;
 
 import java.io.IOException;
-import java.time.LocalDate;
-import java.time.LocalDateTime;
-import java.time.Month;
 import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
 import java.util.prefs.Preferences;
 
-public class AddItem implements Controller {
+public class ItemProfile implements Controller {
     private Stage thisStage;
     private Stage parent;
     private Controller previousController;
@@ -37,6 +34,12 @@ public class AddItem implements Controller {
     private List<Store> storeList;
     private List<Storage> storageList;
     private HashSet<Genre> genreList;
+
+    private Boolean isBook;
+    private Item currentItem;
+    private Store currentStore;
+    private Storage currentStorage;
+
 
     @FXML
     public ComboBox typeField;
@@ -79,7 +82,7 @@ public class AddItem implements Controller {
     @FXML
     private Button closeButton;
 
-    public AddItem(Stage previousStage, Controller previous){
+    public ItemProfile(Stage previousStage, Controller previous, Item item, Store store, Storage storage){
         try {
             thisStage = new Stage();
             parent = previousStage;
@@ -89,10 +92,24 @@ public class AddItem implements Controller {
             storageDAO = new StorageDAO();
             item_bookDAO = new Item_BookDAO();
 
+            // check item or book
+            int count = item.getQuantityItem();
+            isBook = true;
+            currentItem = item_bookDAO.getBookById(item.getIdItem());
+            if (currentItem == null) {      // no book found
+                currentItem = item_bookDAO.getItemById(item.getIdItem());
+                isBook = false;
+            }
+            currentItem.setQuantityItem(count);
+
+            currentStore = store;
+            currentStorage = storage;
+
             FXMLLoader loader = new FXMLLoader(getClass().getResource("/fxml/addItem.fxml"));
             loader.setController(this);
-            thisStage.setScene(new Scene(loader.load(), 800, 816));
-            thisStage.setTitle("Thêm sách");
+            Scene newScene = new Scene(loader.load(), 800, 816);
+            thisStage.setScene(newScene);
+            thisStage.setTitle("Update item");
             thisStage.setResizable(false);
 
             // lock to previous stage
@@ -110,9 +127,6 @@ public class AddItem implements Controller {
     }
 
     public void reloadStage() {
-        AddItem reload = new AddItem(parent, previousController);
-        reload.showStage();
-        thisStage.close();
     }
 
     @FXML
@@ -120,6 +134,12 @@ public class AddItem implements Controller {
         storeList = storeDAO.getAllStores();
         storageList = storageDAO.getAllStorages();
         genreList = new HashSet<>();
+
+        // can't change location or type of item
+        locationField.setDisable(true);
+        locationNameField.setDisable(true);
+        typeField.setDisable(true);
+        acceptButton.setText("Update");
 
         // set item type
         typeField.getItems().addAll("Thường", "Sách");
@@ -129,6 +149,7 @@ public class AddItem implements Controller {
         yearField.setDisable(true);
         desField.setDisable(true);
         genreButton.setDisable(true);
+
 
         // when change type -> disable some field
         typeField.setOnAction(actionEvent -> {
@@ -149,6 +170,7 @@ public class AddItem implements Controller {
             }
         });
 
+
         // set location type
         locationField.getItems().addAll("Cửa hàng", "Kho");
         locationField.getSelectionModel().selectFirst();
@@ -157,6 +179,7 @@ public class AddItem implements Controller {
         // set default location
         locationNameField.getItems().addAll(storeList);
         locationNameField.getSelectionModel().selectFirst();
+
 
         locationField.setOnAction(actionEvent -> {
             locationType = (String) locationField.getSelectionModel().getSelectedItem();
@@ -185,7 +208,7 @@ public class AddItem implements Controller {
             @Override
             public void changed(final ObservableValue<? extends String> observable, final String oldValue, final String newValue) {
                 // this will run whenever text is changed
-                if (!newValue.matches("\\d*")) {
+                if (!newValue.matches("\\d*(\\.\\d*)?")) {
                     priceField.setText(newValue.replaceAll("[^\\d]", ""));
                 }
             }
@@ -194,7 +217,7 @@ public class AddItem implements Controller {
             @Override
             public void changed(final ObservableValue<? extends String> observable, final String oldValue, final String newValue) {
                 // this will run whenever text is changed
-                if (!newValue.matches("\\d*")) {
+                if (!newValue.matches("\\d*(\\.\\d*)?")) {
                     costField.setText(newValue.replaceAll("[^\\d]", ""));
                 }
             }
@@ -224,8 +247,7 @@ public class AddItem implements Controller {
             String des = desField.getText();
 
             // check blank input
-            if (name.isEmpty() || quantity.isEmpty() || price.isEmpty() || cost.isEmpty() ||
-                    locationNameField.getSelectionModel().getSelectedIndex() == -1) {
+            if (name.isEmpty() || quantity.isEmpty() || price.isEmpty() || cost.isEmpty()) {
                 // Create and display AlertWindow
                 AlertDialog fail = new AlertDialog();
                 Alert failAlert = fail.createAlert(thisStage,
@@ -300,13 +322,26 @@ public class AddItem implements Controller {
                     if (!year.isEmpty()) {
                         yearInt = Integer.parseInt(year);
                     }
-                    Book book = new Book(name,  Float.parseFloat(price), Float.parseFloat(cost),
-                            author, des, publisher, yearInt, genreList);
-                    item_bookDAO.insertBook(book, Integer.parseInt(quantity), store, storage, genreList);
+
+                    Book currentBook = (Book) currentItem;
+                    currentBook.setNameItem(name);
+                    currentBook.setPriceItem(Float.parseFloat(price));
+                    currentBook.setCostItem(Float.parseFloat(cost));
+                    currentBook.setQuantityItem(Integer.parseInt(quantity));
+                    currentBook.setAuthorBook(author);
+                    currentBook.setDescriptionBook(des);
+                    currentBook.setPulisherBook(publisher);
+                    currentBook.setYear(yearInt);
+                    currentBook.setGenreList(genreList);
+
+                    item_bookDAO.updateBook(currentBook, currentStore, currentStorage);
                 }
                 else {
-                    Item item = new Item(name, Float.parseFloat(price), Float.parseFloat(cost));
-                    item_bookDAO.insertItem(item, Integer.parseInt(quantity), store, storage);
+                    currentItem.setNameItem(name);
+                    currentItem.setPriceItem(Float.parseFloat(price));
+                    currentItem.setCostItem(Float.parseFloat(cost));
+                    currentItem.setQuantityItem(Integer.parseInt(quantity));
+                    item_bookDAO.updateItem(currentItem, currentStore, currentStorage);
                 }
 
 
@@ -316,26 +351,17 @@ public class AddItem implements Controller {
                 Alert successAlert = success.createAlert(thisStage,
                         "INFORMATION",
                         "Hoàn tất",
-                        "Thêm sản phẩm thành công");
+                        "Cập nhập sản phẩm thành công");
                 successAlert.showAndWait();
 
-                // clear form
-                genreList.clear();
-                nameField.clear();
-                quantityField.clear();;
-                priceField.clear();;
-                costField.clear();;
-                authorField.clear();;
-                publisherField.clear();;
-                yearField.clear();;
-                desField.clear();;
-                genreButton.setText("Chọn thể loại (0/3)");
+                // reload previous stage
+                thisStage.close();
             }
         });
 
         // set genre for book
         genreButton.setOnAction(actionEvent -> {
-            SetGenreBook controller = new SetGenreBook(thisStage, this, genreList, "add");
+            SetGenreBook controller = new SetGenreBook(thisStage, this, genreList, "update");
             controller.showStage();
         });
 
@@ -344,6 +370,48 @@ public class AddItem implements Controller {
             // reload previous stage
             thisStage.close();
         });
+
+        // get all input
+        nameField.setText(currentItem.getNameItem());
+        quantityField.setText(Integer.toString(currentItem.getQuantityItem()));
+        priceField.setText(Float.toString(currentItem.getPriceItem()));
+        costField.setText(Float.toString(currentItem.getCostItem()));
+        if (currentStore != null) {
+            locationType = "Cửa hàng";
+            locationField.getSelectionModel().select(0);
+
+            locationNameField.getItems().clear();
+            locationNameField.getItems().addAll(storeList);
+            locationNameField.getSelectionModel().select(currentStore);
+        }
+        else {
+            locationType= "Kho";
+            locationField.getSelectionModel().select(1);
+
+            locationNameField.getItems().clear();
+            locationNameField.getItems().addAll(storageList);
+            locationNameField.getSelectionModel().select(currentStorage);
+        }
+
+        if (isBook) {
+            authorField.setDisable(false);
+            publisherField.setDisable(false);
+            yearField.setDisable(false);
+            desField.setDisable(false);
+            genreButton.setDisable(false);
+
+            typeField.getSelectionModel().select(1);
+            authorField.setText( ((Book)currentItem).getAuthorBook());
+            publisherField.setText( ((Book)currentItem).getPulisherBook());
+            yearField.setText( Integer.toString(
+                    ((Book)currentItem).getYear())
+            );
+            List<Genre> tempList = new ArrayList<>();
+            tempList.addAll(((Book) currentItem).getGenreList());
+            setGenre(tempList);
+            desField.setText( ((Book)currentItem).getDescriptionBook());
+        }
+
     }
 
     public void setGenre(List<Genre> list) {

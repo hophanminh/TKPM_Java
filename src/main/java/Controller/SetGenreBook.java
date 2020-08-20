@@ -34,6 +34,7 @@ public class SetGenreBook implements Controller {
     private HashSet<Genre> previousList;
 
     private FlowPane flowPane;
+    String type;
 
     @FXML
     private BorderPane borderPane;
@@ -44,7 +45,7 @@ public class SetGenreBook implements Controller {
     @FXML
     private Button closeButton;
 
-    public SetGenreBook(Stage previousStage, Controller previous, HashSet<Genre> list){
+    public SetGenreBook(Stage previousStage, Controller previous, HashSet<Genre> list, String type){
         try {
             // create new stage, after finished use "Controller previous" to reload previous stage
             thisStage = new Stage();
@@ -53,6 +54,7 @@ public class SetGenreBook implements Controller {
             genreDAO = new GenreDAO();
 
             previousList = list;
+            this.type = type;
 
             FXMLLoader loader = new FXMLLoader(getClass().getResource("/fxml/setGenreBook.fxml"));
             loader.setController(this);
@@ -75,9 +77,6 @@ public class SetGenreBook implements Controller {
     }
 
     public void reloadStage() {
-        SetGenreBook reload = new SetGenreBook(parent, previousController, previousList);
-        reload.showStage();
-        thisStage.close();
     }
 
     @FXML
@@ -120,7 +119,12 @@ public class SetGenreBook implements Controller {
             else {
 
                 // return list genre to previous stage
-                ((AddItem)previousController).setGenre(selectedGenre);
+                if (type.equals("add")) {
+                    ((AddItem)previousController).setGenre(selectedGenre);
+                }
+                else if (type.equals("update")) {
+                    ((ItemProfile)previousController).setGenre(selectedGenre);
+                }
 
                 // close login window
                 thisStage.close();

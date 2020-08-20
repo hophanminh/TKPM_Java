@@ -30,7 +30,7 @@
                   <Button fx:id="employeeList" alignment="CENTER" mnemonicParsing="false" prefHeight="78.0" prefWidth="78.0" text="Employee List" />
                   <Button fx:id="addGenreButton" alignment="CENTER" mnemonicParsing="false" prefHeight="78.0" prefWidth="78.0" text="Add Genre" />
                   <Button fx:id="addStorageButton" alignment="CENTER" mnemonicParsing="false" prefHeight="78.0" prefWidth="78.0" text="Add Storage" />
-                  <Button alignment="CENTER" mnemonicParsing="false" prefHeight="78.0" prefWidth="78.0" text="Button" />
+                  <Button fx:id="reportButton" alignment="CENTER" mnemonicParsing="false" prefHeight="78.0" prefWidth="78.0" text="Xem báo cáo" />
                   <Button alignment="CENTER" mnemonicParsing="false" prefHeight="78.0" prefWidth="78.0" text="Button" />
                   <Button fx:id="storageButton" alignment="CENTER" layoutX="92.0" layoutY="179.0" mnemonicParsing="false" prefHeight="78.0" prefWidth="78.0" text="storage" />
                </children>

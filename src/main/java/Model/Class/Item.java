@@ -106,6 +106,10 @@ public class Item {
         this.quantityItem = quantityItem;
     }
 
+    public Boolean isBook() {
+        return false;
+    }
+
     @Override
     public String toString() {
         return idItem +

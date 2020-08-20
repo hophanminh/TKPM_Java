@@ -71,8 +71,6 @@ public class Management implements Controller {
     public Button addButton;
     @FXML
     public Button deleteButton;
-    @FXML
-    public Button updateButton;
 
     public Management(Stage previousStage, Controller previous){
         try{
@@ -150,16 +148,16 @@ public class Management implements Controller {
             if (ieComboBox.getSelectionModel().getSelectedItem().equals("Items")){
                 sendEmailButton.setVisible(false);
                 this.selectionIE = "Items";
-                addButton.setText("Add Items");
+                addButton.setText("Add");
             }
             else if(ieComboBox.getSelectionModel().getSelectedItem().equals("Employees")){
                 sendEmailButton.setVisible(false);
                 this.selectionIE = "Employees";
-                addButton.setText("Add Employee");
+                addButton.setText("Add");
             } else {
                 sendEmailButton.setVisible(true);
                 this.selectionIE = "Customers";
-                addButton.setText("Add Customer");
+                addButton.setText("Add");
             }
             generateData();
         });
@@ -172,8 +170,7 @@ public class Management implements Controller {
         generateData();
 
         backToMainButton.setOnAction(actionEvent -> {
-            MainController mainController = new MainController(thisStage);
-            mainController.showStage();
+            thisStage.close();
         });
 
         addButton.setOnAction(actionEvent -> {
@@ -192,7 +189,9 @@ public class Management implements Controller {
 
         deleteButton.setOnAction(actionEvent -> {
             if(this.selectionIE.equals("Items")){
-
+                Item item = (Item) tableView.getSelectionModel().getSelectedItem();
+                item_bookDAO.delete(item);
+                observableList.remove(item);
             } else if (this.selectionIE.equals("Employees")) {
                 Employee employee = (Employee) tableView.getSelectionModel().getSelectedItem();
                 employeeDAO.deleteEmployee(employee);
@@ -203,10 +202,6 @@ public class Management implements Controller {
                 observableList.remove(customer);
 
             }
-        });
-
-        updateButton.setOnAction(actionEvent -> {
-            System.out.println("Updating...");
         });
 
         searchButton.setOnAction(actionEvent -> {
@@ -367,7 +362,15 @@ public class Management implements Controller {
                                 final Button btn = new Button("Details");
                                 {
                                     btn.setOnAction(event -> {
-                                        //tableView.getItems().remove(getIndex());
+                                        Item selected = (Item) tableView.getItems().get(getIndex());
+
+                                        if (store != null) {
+                                            goToItemDetail((Item) selected, store, null);
+
+                                        }
+                                        else {
+                                            goToItemDetail((Item) selected,null, storage);
+                                        }
                                     });
                                 }
 
@@ -583,6 +586,11 @@ public class Management implements Controller {
             else createTableViewCustomer();
         }
         tableView.setItems(observableList);
+    }
+
+    public void goToItemDetail(Item item, Store store, Storage storage){
+        ItemProfile itemProfile = new ItemProfile(thisStage, this, item, store, storage);
+        itemProfile.showStage();
     }
 
     public void goToEmployeeDetail(Employee employee){

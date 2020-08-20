@@ -68,6 +68,66 @@ public class Item_BookDAO {
         }
     }
 
+    public void updateItem(Item item, Store store, Storage storage){
+        Session session = App.getSession();
+        try{
+            session.getTransaction().begin();
+
+            if (store != null) {
+                Item_StoreID id = new Item_StoreID(item.getIdItem(), store.getIdStore());
+                Item_Store itemStore = new Item_Store(id, item, store, item.getQuantityItem());
+                session.saveOrUpdate(itemStore);
+            }
+            else {
+                Item_StorageID id = new Item_StorageID(item.getIdItem(), storage.getIdStorage());
+                Item_Storage itemStorage = new Item_Storage(id, item, storage, item.getQuantityItem());
+                session.saveOrUpdate(itemStorage);
+            }
+
+            session.saveOrUpdate(item);
+            session.getTransaction().commit();
+        } catch (Exception e){
+            e.printStackTrace();
+            session.getTransaction().rollback();
+        }
+    }
+
+    public void updateBook(Book book, Store store, Storage storage){
+        Session session = App.getSession();
+        try{
+            session.getTransaction().begin();
+
+            if (store != null) {
+                Item_StoreID id = new Item_StoreID(book.getIdItem(), store.getIdStore());
+                Item_Store itemStore = new Item_Store(id, book, store, book.getQuantityItem());
+                session.saveOrUpdate(itemStore);
+            }
+            else {
+                Item_StorageID id = new Item_StorageID(book.getIdItem(), storage.getIdStorage());
+                Item_Storage itemStorage = new Item_Storage(id, book, storage, book.getQuantityItem());
+                session.saveOrUpdate(itemStorage);
+            }
+
+            session.saveOrUpdate(book);
+            session.getTransaction().commit();
+        } catch (Exception e){
+            e.printStackTrace();
+            session.getTransaction().rollback();
+        }
+    }
+
+    public void delete(Item item){
+        Session session = App.getSession();
+        try{
+            session.getTransaction().begin();
+            session.remove(item);
+            session.getTransaction().commit();
+        } catch (Exception e){
+            e.printStackTrace();
+            session.getTransaction().rollback();
+        }
+    }
+
     public List<Item> getAllItemDefault(){
         Session session = App.getSession();
         List<Item> resultList = null;
@@ -191,4 +251,30 @@ public class Item_BookDAO {
         }
         return resultList.get(0);
     }
+
+    public Book getBookById(int id) {
+        Session session = App.getSession();
+        List<Book> resultList = null;
+        Book result = null;
+        try {
+            session.getTransaction().begin();
+
+            // get all Item and book from database
+            Query<Book> query = session.createQuery(
+                    "from Book as b JOIN FETCH b.genreList " +
+                            "where b.idItem = :id", Book.class
+            );
+            query.setParameter("id", id);
+            resultList = query.list();
+            if (!resultList.isEmpty()) {
+                result = resultList.get(0);
+            }
+            session.getTransaction().commit();
+        } catch (Exception exception) {
+            exception.printStackTrace();
+            session.getTransaction().rollback();
+        }
+        return result;
+    }
+
 }

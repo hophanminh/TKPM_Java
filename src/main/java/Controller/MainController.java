@@ -88,6 +88,9 @@ public class MainController implements Controller {
     @FXML
     private Button createBillButton;
 
+    @FXML
+    private Button reportButton;
+
     public MainController(Stage stage) {
         try {
             // keep stage, change scene
@@ -225,6 +228,12 @@ public class MainController implements Controller {
             management.showStage();
         });
 
+        reportButton.setOnAction(actionEvent -> {
+            Report report = new Report(thisStage, this);
+            report.showStage();
+        });
+
+
         createBillButton.setOnAction(actionEvent -> {
             // create bill
             float total = Float.parseFloat(totalCost.getText());
@@ -251,6 +260,7 @@ public class MainController implements Controller {
             totalCost.setText("0.0");
             discount.setText("-0.0");
         });
+
     }
 
     private TableView createTableView(){

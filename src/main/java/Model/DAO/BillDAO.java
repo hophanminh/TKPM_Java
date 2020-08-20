@@ -65,4 +65,27 @@ public class BillDAO {
         }
         return resultList;
     }
+
+    public List<Object[]> calculateSaleByYear(int year, int idStore) {
+        Session session = App.getSession();
+        List<Object[]> resultList = null;
+        try {
+            session.getTransaction().begin();
+
+            Query nativeQuery = session.createNativeQuery(
+                    "select year(dateBill),month(dateBill), sum(paidBill) " +
+                    "from bill as b " +
+                    "where year(dateBill) = :year and idStore = :idStore " +
+                    "group by year(dateBill),month(dateBill) " +
+                    "order by year(dateBill),month(dateBill); "
+            );
+            nativeQuery.setParameter("year", year).setParameter("idStore", idStore);
+            resultList = nativeQuery.list();
+            session.getTransaction().commit();
+        } catch (Exception e){
+            e.printStackTrace();
+            session.getTransaction().rollback();
+        }
+        return resultList;
+    }
 }

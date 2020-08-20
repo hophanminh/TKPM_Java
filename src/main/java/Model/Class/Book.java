@@ -74,6 +74,18 @@ public class Book extends Item {
         this.year = year;
     }
 
+    public Set<Genre> getGenreList() {
+        return genreList;
+    }
+
+    public void setGenreList(Set<Genre> genreList) {
+        this.genreList = genreList;
+    }
+
+    public Boolean isBook() {
+        return true;
+    }
+
     @Override
     public String toString() {
 
