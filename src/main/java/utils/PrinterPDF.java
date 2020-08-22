@@ -15,6 +15,7 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.net.URISyntaxException;
 import java.time.LocalDateTime;
+import java.time.ZoneId;
 import java.util.List;
 import java.util.prefs.Preferences;
 
@@ -50,10 +51,7 @@ public class PrinterPDF {
 
         // Name file
         LocalDateTime now = LocalDateTime.now();
-        String[] dateString = DateUtil.formatDate(now).split(" ");
-        String[] time = dateString[1].split(":");
-        String temp = time[0]+"h"+time[1]+"m";
-        String name = temp +  "-Date-"+dateString[0] + "ItemsReport.pdf";
+        String name = nameFile(now) + "-Items.pdf";
 
         Document document = new Document();
         PdfWriter pdfWriter = null;
@@ -63,8 +61,6 @@ public class PrinterPDF {
         pdfWriter = PdfWriter.getInstance(document, new FileOutputStream(path));
 
         document.open();
-
-        Paragraph paragraph = new Paragraph("Summary Items Report\n");
 
         PdfPTable table = new PdfPTable(5);
         table.setWidthPercentage(90f);
@@ -91,11 +87,20 @@ public class PrinterPDF {
             insertCell(table, String.valueOf(profit), Element.ALIGN_CENTER, 1, normalFont);
         };
 
-        String note = "\nCửa hàng: ABC Store"
-                + "\nTổng lợi nhuận: " + sumProfit
-                + "\nNgày: " + DateUtil.formatDate(now) + "\n\n\n";
+        String infoStore = "Tên cửa hàng: "+ this.store.getNameStore()
+                        + "\nĐịa chỉ: " + this.store.getAddressStore()
+                        + "\nTên công ty: " + this.store.getCompany().getNameCompany()
+                + "\n\n\nTổng lợi nhuận: " + sumProfit
+                + "\nNgày: " + DateUtil.formatDate(now);
 
-        paragraph.add(note);
+        String separateArea = "\n\n\n";
+
+        Paragraph paragraph = new Paragraph();
+        paragraph.setFont(boldFont);
+        paragraph.add("Thống kê hàng hóa");
+        paragraph.setFont(normalFont);
+        paragraph.add(infoStore);
+        paragraph.add(separateArea);
         paragraph.add(table);
         document.add(paragraph);
 
@@ -106,10 +111,7 @@ public class PrinterPDF {
 
         // Name file
         LocalDateTime now = LocalDateTime.now();
-        String[] dateString = DateUtil.formatDate(now).split(" ");
-        String[] time = dateString[1].split(":");
-        String temp = time[0]+"h"+time[1]+"m";
-        String name = temp +  "-Date-"+dateString[0] + "EmployeesReport.pdf";
+        String name = nameFile(now) + "-Employee.pdf";
 
         Document document = new Document();
         PdfWriter pdfWriter = null;
@@ -119,8 +121,6 @@ public class PrinterPDF {
         pdfWriter = PdfWriter.getInstance(document, new FileOutputStream(path));
 
         document.open();
-
-        Paragraph paragraph = new Paragraph("Summary Items Report");
 
         PdfPTable table = new PdfPTable(5);
         table.setWidthPercentage(90f);
@@ -135,10 +135,22 @@ public class PrinterPDF {
             insertCell(table, list.get(i).getName(), Element.ALIGN_CENTER, 1, normalFont);
             insertCell(table, String.valueOf(list.get(i).getSalary()), Element.ALIGN_CENTER, 1, normalFont);
             insertCell(table, String.valueOf(list.get(i).getPhone()), Element.ALIGN_CENTER, 1, normalFont);
-            insertCell(table, String.valueOf(list.get(i).getPosition()), Element.ALIGN_CENTER, 1, normalFont);
-            insertCell(table, String.valueOf(list.get(i).getStartDate()), Element.ALIGN_CENTER, 1, normalFont);
+            if(list.get(i).getPosition() == 0)
+                insertCell(table, "Nhân viên", Element.ALIGN_CENTER, 1, normalFont);
+            else insertCell(table, "Quản lý", Element.ALIGN_CENTER, 1, normalFont);
+            insertCell(table, DateUtil.formatDate(list.get(i).getStartDate().toInstant().atZone(ZoneId.systemDefault()).toLocalDateTime()), Element.ALIGN_CENTER, 1, normalFont);
         };
 
+        String infoStore = "Tên cửa hàng: "+ this.store.getNameStore()
+                + "\nĐịa chỉ: " + this.store.getAddressStore()
+                + "\nTên công ty: " + this.store.getCompany().getNameCompany()
+                + "\nNgày: " + DateUtil.formatDate(now) + "\n\n\n";
+
+        String separateArea = "\n\n\n";
+        Paragraph paragraph = new Paragraph();
+        paragraph.setFont(normalFont);
+        paragraph.add(infoStore);
+        paragraph.add(separateArea);
         paragraph.add(table);
         document.add(paragraph);
 
@@ -148,10 +160,7 @@ public class PrinterPDF {
     public void payment(List<Bill_Item> list, String nameCustomer) throws IOException, DocumentException, URISyntaxException {
         // Name file
         LocalDateTime now = LocalDateTime.now();
-        String[] dateString = DateUtil.formatDate(now).split(" ");
-        String[] time = dateString[1].split(":");
-        String temp = time[0]+"h"+time[1]+"m";
-        String name = temp +  "-Date-"+dateString[0] + "Bills.pdf";
+        String name = nameFile(now) + "-Bill.pdf";
 
         Document document = new Document(PageSize.A6, 10,10,10,10);
         PdfWriter pdfWriter = null;
@@ -184,7 +193,7 @@ public class PrinterPDF {
         String infoStore =
                   "Tên cửa hàng: "+ this.store.getNameStore()
                 + "\nĐịa chỉ: " + this.store.getAddressStore()
-                + "\nTên công ty" + this.store.getCompany().getNameCompany();
+                + "\nTên công ty: " + this.store.getCompany().getNameCompany();
 
         String separateArea = "\n\n\n";
 
@@ -193,7 +202,7 @@ public class PrinterPDF {
 
         String summary = "Tổng số tiền: " + sum // Thành tiền chưa tính discount
                 + "\nTổng tiền giảm: " + discount
-                + "\n Tổng cộng: " + sum; // Thành tiền sau khi tính discount
+                + "\nTổng cộng: " + sum; // Thành tiền sau khi tính discount
 
 
         Paragraph paragraph = new Paragraph();
@@ -219,5 +228,12 @@ public class PrinterPDF {
         if(text.trim().equals(""))
             cell.setMinimumHeight(10f);
         table.addCell(cell);
+    }
+
+    public String nameFile(LocalDateTime now){
+        String[] dateString = DateUtil.formatDate(now).split(" ");
+        String[] time = dateString[1].split(":");
+        String name = dateString[0]+"-"+time[0]+time[1]+time[2];
+        return name;
     }
 }
