@@ -123,7 +123,7 @@ public class ItemProfile implements Controller {
     }
 
     public void showStage() {
-        thisStage.show();
+        thisStage.showAndWait();
     }
 
     public void reloadStage() {

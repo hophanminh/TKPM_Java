@@ -27,17 +27,17 @@
                                 <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
                             </rowConstraints>
                             <children>
-                                <Label text="Name customer" GridPane.rowIndex="1">
+                                <Label text="Tên khách hàng" GridPane.rowIndex="1">
                                     <GridPane.margin>
                                         <Insets />
                                     </GridPane.margin>
                                 </Label>
-                                <Label text="Email customer" GridPane.rowIndex="2" />
-                                <Label text="Identify card" GridPane.rowIndex="3" />
+                                <Label text="Email" GridPane.rowIndex="2" />
+                                <Label text="Số CMND" GridPane.rowIndex="3" />
                                 <TextField fx:id="nameText" GridPane.columnIndex="1" GridPane.rowIndex="1" />
                                 <TextField fx:id="emailText" GridPane.columnIndex="1" GridPane.rowIndex="2" />
                                 <TextField fx:id="identifyText" GridPane.columnIndex="1" GridPane.rowIndex="3" />
-                                <Label text="BASIC INFORMATION">
+                                <Label text="Thông tin cơ bản">
                                     <font>
                                         <Font size="15.0" />
                                     </font>
@@ -45,8 +45,8 @@
                                         <Insets />
                                     </GridPane.margin>
                                 </Label>
-                                <Label text="Date of Birth" GridPane.rowIndex="4" />
-                                <Label text="Store" GridPane.rowIndex="5" />
+                                <Label text="Ngày sinh" GridPane.rowIndex="4" />
+                                <Label text="Cửa hàng" GridPane.rowIndex="5" />
                         <DatePicker fx:id="dobPicker" prefHeight="26.0" prefWidth="302.0" GridPane.columnIndex="1" GridPane.rowIndex="4" />
                         <ComboBox fx:id="storeComboBox" prefHeight="26.0" prefWidth="302.0" GridPane.columnIndex="1" GridPane.rowIndex="5" />
                             </children>
@@ -62,18 +62,24 @@
                             <children>
                                 <HBox alignment="CENTER_LEFT" prefHeight="46.0" prefWidth="422.0">
                                     <children>
-                                        <Button fx:id="closeButton" mnemonicParsing="false" text="Close">
+                                        <Button fx:id="closeButton" mnemonicParsing="false" text="Trở về">
                                             <HBox.margin>
                                                 <Insets left="10.0" />
-                                            </HBox.margin></Button>
+                                            </HBox.margin>
+                                 <font>
+                                    <Font size="15.0" />
+                                 </font></Button>
                                     </children>
                                 </HBox>
                                 <HBox alignment="CENTER_RIGHT" prefHeight="100.0" prefWidth="200.0">
                                     <children>
-                                        <Button fx:id="saveButton" mnemonicParsing="false" text="Save">
+                                        <Button fx:id="saveButton" mnemonicParsing="false" text="Xác nhận">
                                             <HBox.margin>
                                                 <Insets right="10.0" />
                                             </HBox.margin>
+                                 <font>
+                                    <Font size="15.0" />
+                                 </font>
                                         </Button>
                                     </children>
                                 </HBox>

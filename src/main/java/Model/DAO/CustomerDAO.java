@@ -2,13 +2,18 @@ package Model.DAO;
 
 import Main.App;
 import Model.Class.Customer;
+import Model.Class.Employee;
+import Model.Class.Item;
 import Model.Class.Store;
 import org.hibernate.Session;
 import org.hibernate.query.Query;
 
 import java.util.List;
+import java.util.prefs.Preferences;
 
 public class CustomerDAO {
+    Preferences pref;
+
     public void createCustomer(Customer temp) {
         Session session = App.getSession();
         try{
@@ -44,6 +49,59 @@ public class CustomerDAO {
             session.getTransaction().rollback();
         }
     }
+
+    public List<Customer> getAllCustomerDefault(){
+        Session session = App.getSession();
+        List<Customer> resultList = null;
+
+        // only get item from store where app is used
+        pref = Preferences.userNodeForPackage(Employee.class);
+        int idStore = pref.getInt("defaultStore", -1);
+
+        try{
+            session.getTransaction().begin();
+
+            // get all Item and book from database
+            Query<Customer> query = session.createQuery(
+                    "FROM Customer as c JOIN FETCH c.store as s " +
+                            "WHERE s.idStore = :idStore " , Customer.class
+            );
+            query.setParameter("idStore", idStore);
+            resultList = query.list();
+
+            session.getTransaction().commit();
+        } catch (Exception exception) {
+            exception.printStackTrace();
+            session.getTransaction().rollback();
+        }
+        return resultList;
+    }
+
+    public Customer getCustomerByID(int id){
+        Session session = App.getSession();
+        List<Customer> resultList = null;
+        Customer result = null;
+        try{
+            session.getTransaction().begin();
+
+            Query<Customer> query = session.createQuery(
+                    "from Customer " +
+                            "where idCustomer = :id", Customer.class
+            );
+            query.setParameter("id", id);
+            resultList = query.list();
+            if (!resultList.isEmpty()) {
+                result = resultList.get(0);
+            }
+
+            session.getTransaction().commit();
+        } catch (Exception exception) {
+            exception.printStackTrace();
+            session.getTransaction().rollback();
+        }
+        return result;
+    }
+
 
     public List<Customer> getCustomerByStore(Store store){
         Session session = App.getSession();

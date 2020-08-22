@@ -109,7 +109,6 @@ public class ViewStorageOfStore {
 
 
         // create table
-
         ScrollPane scroll = new ScrollPane(tableView);
         scroll.setFitToHeight(true);
         scroll.setFitToWidth(true);
@@ -139,7 +138,7 @@ public class ViewStorageOfStore {
             Alert successAlert = success.createAlert(thisStage,
                     "INFORMATION",
                     "Hoàn tất",
-                    "Thêm liên kết kho hoàn tấ");
+                    "Thêm liên kết kho hoàn tất");
             successAlert.showAndWait();
 
             // reload previous stage

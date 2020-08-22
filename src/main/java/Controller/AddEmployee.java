@@ -13,8 +13,10 @@ import javafx.scene.Scene;
 import javafx.scene.control.*;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
+import org.mindrot.jbcrypt.BCrypt;
 
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.prefs.Preferences;
 
@@ -61,6 +63,7 @@ public class AddEmployee {
             thisStage = new Stage();
             parent = previousStage;
             this.previousController = previousController;
+            pref = Preferences.userNodeForPackage(Employee.class);
 
             storeDAO = new StoreDAO();
             storageDAO = new StorageDAO();
@@ -83,7 +86,7 @@ public class AddEmployee {
     }
 
     public void showStage() {
-        thisStage.show();
+        thisStage.showAndWait();
     }
 
     public void reloadStage() {
@@ -97,8 +100,20 @@ public class AddEmployee {
         // Initial value
         String[] status = {"Working","Not working"};
         String[] position = {"Employee", "Manager", "Boss"};
-        List<Store> stores = storeDAO.getAllStores();
-        List<Storage> storages = storageDAO.getAllStorages();
+
+        List<Store> stores;
+        List<Storage> storages;
+        int loginPosition = pref.getInt("position", -1);
+        if (loginPosition != 2) {
+            Store store = storeDAO.getStoreById(pref.getInt("defaultStore", -1));
+            stores = new ArrayList<Store>();
+            stores.add(store);
+            storages = storageDAO.getStorageByStore(store.getIdStore());
+        }
+        else {
+            stores = storeDAO.getAllStores();
+            storages = storageDAO.getAllStorages();
+        }
 
         statusComboBox.getItems().addAll(status);
         positionComboBox.getItems().addAll(position);
@@ -126,30 +141,38 @@ public class AddEmployee {
                 || usernameText.getText().trim().equals("")
                 || passwordText.getText().trim().equals("")
         )
-            error += "All input must have value\n";
+            error += "Phải điền đủ mọi ô trống\n";
 
         if(!nameEmployeeText.getText().trim().matches("^[^\\d]+$"))
-            error += "Name cannot have number\n";
+            error += "Tên không được chứa số\n";
 
-        if (!phoneEmployeeText.getText().trim().matches("^[\\d]{10}$"))
-            error += "Phone Number must have 10 digits\n";
+        if (!phoneEmployeeText.getText().trim().matches("^[\\d]{10,}$"))
+            error += "Số điện thoại phải ít nhất 10 chữ số\n";
 
         if(!salaryEmployeeText.getText().trim().matches("^[\\d]+$"))
-            error += "Salary must be some numbers\n";
+            error += "Tiền lương phải là một số\n";
+
+            // check username
+        Employee checkUsername = employeeDAO.getEmployeeByUsername(usernameText.getText().trim());
+        if (checkUsername != null) {
+            // Create and display AlertWindow
+            error += "Tên tài khoản trùng\n";
+        }
 
         if(!error.trim().equals("")){
             AlertDialog fail = new AlertDialog();
             Alert failAlert = fail.createAlert(thisStage,
                     "WARNING",
-                    "FAIL TO CREATE",
+                    "Tạo thất bại",
                     error);
             failAlert.showAndWait();
             return;
         } else {
             int position;
             Employee temp = new Employee();
-            temp.setPassword(usernameText.getText().trim());
-            temp.setUsername(passwordText.getText().trim());
+            temp.setUsername(usernameText.getText().trim());
+            String hashed = BCrypt.hashpw(passwordText.getText().trim(), BCrypt.gensalt());
+            temp.setPassword(hashed);
             temp.setName(nameEmployeeText.getText().trim());
             temp.setAddress(addressEmployeeText.getText().trim());
             temp.setPhone(phoneEmployeeText.getText().trim());
@@ -179,8 +202,8 @@ public class AddEmployee {
             AlertDialog success = new AlertDialog();
             Alert successAlert = success.createAlert(thisStage,
                     "INFORMATION",
-                    "Create Successfully",
-                    "Create employee success");
+                    "Tạo thành công",
+                    "Tạo nhân viên thành công");
             successAlert.showAndWait();
             thisStage.close();
         }

@@ -116,11 +116,41 @@ public class Item_BookDAO {
         }
     }
 
-    public void delete(Item item){
+    public void delete(Item item, Store store, Storage storage){
         Session session = App.getSession();
         try{
             session.getTransaction().begin();
-            session.remove(item);
+
+            if (store == null) {
+                List<Item_Storage> resultList = null;
+                Item_Storage result = null;
+                Query<Item_Storage> query = session.createQuery(
+                        "from Item_Storage  " +
+                                "where item = :item AND storage = :storage", Item_Storage.class
+                );
+                query.setParameter("item", item).setParameter("storage", storage);
+                resultList = query.list();
+                if (!resultList.isEmpty()) {                               // find and update
+                    result = resultList.get(0);
+                    session.delete(result);
+                }
+            }
+            else {
+                List<Item_Store> resultList = null;
+                Item_Store result = null;
+                Query<Item_Store> query = session.createQuery(
+                        "from Item_Store  " +
+                                "where item = :item AND store = :store", Item_Store.class
+                );
+                query.setParameter("item", item).setParameter("store", store);
+                resultList = query.list();
+                if (!resultList.isEmpty()) {                               // find and update
+                    result = resultList.get(0);
+                    session.delete(result);
+                }
+
+            }
+
             session.getTransaction().commit();
         } catch (Exception e){
             e.printStackTrace();
@@ -275,6 +305,218 @@ public class Item_BookDAO {
             session.getTransaction().rollback();
         }
         return result;
+    }
+
+    public void transferStoreToStore(Item item, Store from, Store to, int quantity) {
+        Session session = App.getSession();
+        try{
+            session.getTransaction().begin();
+            // to
+            List<Item_Store> desList = null;
+            Item_Store des = null;
+            Query<Item_Store> query = session.createQuery(
+                    "from Item_Store  " +
+                            "where item = :item AND store = :store", Item_Store.class
+            );
+            query.setParameter("item", item).setParameter("store", to);
+            desList = query.list();
+            if (!desList.isEmpty()) {                               // find and update
+                des = desList.get(0);
+                int newQuantity = des.getCount() + quantity;
+                des.setCount(newQuantity);
+                session.save(des);
+            }
+            else {                                                  // create new
+                Item_StoreID id = new Item_StoreID(item.getIdItem(), to.getIdStore());
+                Item_Store itemStore = new Item_Store(id, item, to, quantity);
+                session.saveOrUpdate(itemStore);
+            }
+
+            // from
+            List<Item_Store> startList = null;
+            Item_Store start = null;
+            Query<Item_Store> query2 = session.createQuery(
+                    "from Item_Store  " +
+                            "where item = :item AND store = :store", Item_Store.class
+            );
+            query2.setParameter("item", item).setParameter("store", from);
+            startList = query2.list();
+            if (!startList.isEmpty()) {                               // find and update
+                start = startList.get(0);
+                int newQuantity = start.getCount() - quantity;
+                if (newQuantity == 0) {
+                    session.delete(start);
+                }
+                else {
+                    start.setCount(newQuantity);
+                    session.save(start);
+                }
+            }
+
+            session.getTransaction().commit();
+        } catch (Exception e){
+            e.printStackTrace();
+            session.getTransaction().rollback();
+        }
+    }
+
+    public void transferStoreToStorage(Item item, Store from, Storage to, int quantity) {
+        Session session = App.getSession();
+        try{
+            session.getTransaction().begin();
+            // to
+            List<Item_Storage> desList = null;
+            Item_Storage des = null;
+            Query<Item_Storage> query = session.createQuery(
+                    "from Item_Storage  " +
+                            "where item = :item AND storage = :storage", Item_Storage.class
+            );
+            query.setParameter("item", item).setParameter("storage", to);
+            desList = query.list();
+            if (!desList.isEmpty()) {                               // find and update
+                des = desList.get(0);
+                int newQuantity = des.getCount() + quantity;
+                des.setCount(newQuantity);
+                session.save(des);
+            }
+            else {                                                  // create new
+                Item_StorageID id = new Item_StorageID(item.getIdItem(), to.getIdStorage());
+                Item_Storage itemStore = new Item_Storage(id, item, to, quantity);
+                session.saveOrUpdate(itemStore);
+            }
+
+            // from
+            List<Item_Store> startList = null;
+            Item_Store start = null;
+            Query<Item_Store> query2 = session.createQuery(
+                    "from Item_Store  " +
+                            "where item = :item AND store = :store", Item_Store.class
+            );
+            query2.setParameter("item", item).setParameter("store", from);
+            startList = query2.list();
+            if (!startList.isEmpty()) {                               // find and update
+                start = startList.get(0);
+                int newQuantity = start.getCount() - quantity;
+                if (newQuantity == 0) {
+                    session.delete(start);
+                }
+                else {
+                    start.setCount(newQuantity);
+                    session.save(start);
+                }
+            }
+
+            session.getTransaction().commit();
+        } catch (Exception e){
+            e.printStackTrace();
+            session.getTransaction().rollback();
+        }
+    }
+
+    public void transferStorageToStore(Item item, Storage from, Store to, int quantity) {
+        Session session = App.getSession();
+        try{
+            session.getTransaction().begin();
+            // to
+            List<Item_Store> desList = null;
+            Item_Store des = null;
+            Query<Item_Store> query = session.createQuery(
+                    "from Item_Store  " +
+                            "where item = :item AND store = :store", Item_Store.class
+            );
+            query.setParameter("item", item).setParameter("store", to);
+            desList = query.list();
+            if (!desList.isEmpty()) {                               // find and update
+                des = desList.get(0);
+                int newQuantity = des.getCount() + quantity;
+                des.setCount(newQuantity);
+                session.save(des);
+            }
+            else {                                                  // create new
+                Item_StoreID id = new Item_StoreID(item.getIdItem(), to.getIdStore());
+                Item_Store itemStore = new Item_Store(id, item, to, quantity);
+                session.saveOrUpdate(itemStore);
+            }
+
+            // from
+            List<Item_Storage> startList = null;
+            Item_Storage start = null;
+            Query<Item_Storage> query2 = session.createQuery(
+                    "from Item_Storage  " +
+                            "where item = :item AND storage = :storage", Item_Storage.class
+            );
+            query2.setParameter("item", item).setParameter("storage", from);
+            startList = query2.list();
+            if (!startList.isEmpty()) {                               // find and update
+                start = startList.get(0);
+                int newQuantity = start.getCount() - quantity;
+                if (newQuantity == 0) {
+                    session.delete(start);
+                }
+                else {
+                    start.setCount(newQuantity);
+                    session.save(start);
+                }
+            }
+
+            session.getTransaction().commit();
+        } catch (Exception e){
+            e.printStackTrace();
+            session.getTransaction().rollback();
+        }
+    }
+
+    public void transferStorageToStorage(Item item, Storage from, Storage to, int quantity) {
+        Session session = App.getSession();
+        try{
+            session.getTransaction().begin();
+            // to
+            List<Item_Storage> desList = null;
+            Item_Storage des = null;
+            Query<Item_Storage> query = session.createQuery(
+                    "from Item_Storage  " +
+                            "where item = :item AND storage = :storage", Item_Storage.class
+            );
+            query.setParameter("item", item).setParameter("storage", to);
+            desList = query.list();
+            if (!desList.isEmpty()) {                               // find and update
+                des = desList.get(0);
+                int newQuantity = des.getCount() + quantity;
+                des.setCount(newQuantity);
+                session.save(des);
+            }
+            else {                                                  // create new
+                Item_StorageID id = new Item_StorageID(item.getIdItem(), to.getIdStorage());
+                Item_Storage itemStore = new Item_Storage(id, item, to, quantity);
+                session.saveOrUpdate(itemStore);
+            }
+
+            // from
+            List<Item_Storage> startList = null;
+            Item_Storage start = null;
+            Query<Item_Storage> query2 = session.createQuery(
+                    "from Item_Storage  " +
+                            "where item = :item AND storage = :storage", Item_Storage.class
+            );
+            query2.setParameter("item", item).setParameter("storage", from);
+            startList = query2.list();
+            if (!startList.isEmpty()) {                               // find and update
+                start = startList.get(0);
+                int newQuantity = start.getCount() - quantity;
+                if (newQuantity == 0) {
+                    session.delete(start);
+                }
+                else {
+                    start.setCount(newQuantity);
+                    session.save(start);
+                }
+            }
+
+            session.getTransaction().commit();
+        } catch (Exception e){
+            e.printStackTrace();
+            session.getTransaction().rollback();
+        }
     }
 
 }

@@ -49,17 +49,40 @@ public class MyMenuView {
                 backingStoreException.printStackTrace();
             }
         });
-        accountMenu.getItems().addAll(accMenuItem1, accMenuItem2);
+        accountMenu.getItems().addAll(accMenuItem2);
 
 
         // management menu
         Menu manageMenu = new Menu("Quản lý");
-        // management
-        MenuItem manageMenuItem1 = new MenuItem("Quản lý chung");
+        // management store/storage
+        MenuItem manageMenuItem1 = new MenuItem("Quản lý cửa hàng");
         manageMenuItem1.setOnAction(e -> {
-
+            int defaultStore = pref.getInt("defaultStore", -1);
+            StoreStorageManagement controller = new StoreStorageManagement(currentStage, currentController);
+            controller.showStage();
+            if (defaultStore != pref.getInt("defaultStore", -1)) {
+                currentController.reloadStage();
+            }
         });
-        manageMenu.getItems().addAll(manageMenuItem1);
+        // management item/customer/employee
+        MenuItem manageMenuItem2 = new MenuItem("Quản lý sản phẩm");
+        manageMenuItem2.setOnAction(e -> {
+            Management management = new Management(currentStage, currentController);
+            management.showStage();
+        });
+        // see report chart
+        MenuItem manageMenuItem3 = new MenuItem("Báo cáo doanh thu");
+        manageMenuItem3.setOnAction(e -> {
+            Report report = new Report(currentStage, currentController);
+            report.showStage();
+        });
+
+        if (pref.getInt("position", 0) != 2) {              // boss
+            manageMenu.getItems().addAll(manageMenuItem2, manageMenuItem3);
+        }
+        else {
+            manageMenu.getItems().addAll(manageMenuItem1, manageMenuItem2, manageMenuItem3);
+        }
 
 
         menuBar.getMenus().addAll(viewMenu, accountMenu, manageMenu);

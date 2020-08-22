@@ -1,10 +1,7 @@
 package Controller;
 
 import Model.Class.*;
-import Model.DAO.BillDAO;
-import Model.DAO.EmployeeDAO;
-import Model.DAO.Item_BookDAO;
-import Model.DAO.StoreDAO;
+import Model.DAO.*;
 import View.AlertDialog;
 import View.MyMenuView;
 import com.itextpdf.text.DocumentException;
@@ -33,6 +30,7 @@ import utils.PrinterPDF;
 import java.io.IOException;
 import java.net.URISyntaxException;
 import java.time.LocalDateTime;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.prefs.Preferences;
 
@@ -42,9 +40,14 @@ public class MainController implements Controller {
     private Item_BookDAO  Item_BookDAO;
     private EmployeeDAO employeeDAO;
     private StoreDAO storeDAO;
+    private ItemStoreDAO itemStoreDAO;
     private BillDAO billDAO;
+    private CustomerDAO customerDAO;
     private TableView tableView;
     private final Duration duration = new Duration(1000); // 1000ms = 1s
+
+    private TextField customerBar;
+    private Customer customer;
 
     @FXML
     private MenuBar menuBar;
@@ -62,34 +65,19 @@ public class MainController implements Controller {
     private Label nameSaleMan;
 
     @FXML
-    private TextField nameCustomer;
+    private HBox searchPane;
 
     @FXML
-    private HBox searchPane;
+    private HBox customerPane;
 
     @FXML
     private BorderPane borderPane;
 
     @FXML
-    private Button addItem;
-
-    @FXML
-    private Button addGenreButton;
-
-    @FXML
-    private Button employeeList;
-
-    @FXML
-    private Button addStorageButton;
-
-    @FXML
-    private Button storageButton;
-
-    @FXML
     private Button createBillButton;
 
     @FXML
-    private Button reportButton;
+    private Button resetButton;
 
     public MainController(Stage stage) {
         try {
@@ -100,6 +88,9 @@ public class MainController implements Controller {
             employeeDAO = new EmployeeDAO();
             storeDAO = new StoreDAO();
             billDAO = new BillDAO();
+            itemStoreDAO = new ItemStoreDAO();
+            Item_BookDAO = new Item_BookDAO();
+            customerDAO = new CustomerDAO();
 
             FXMLLoader loader = new FXMLLoader(getClass().getResource("/fxml/main.fxml"));
             loader.setController(this);
@@ -151,46 +142,74 @@ public class MainController implements Controller {
         timeline.setCycleCount(Animation.INDEFINITE);
         timeline.play();
 
-        // get all item in database
-        Item_BookDAO = new Item_BookDAO();
+        // Create autocomplete for item
         List<Item> listItem = Item_BookDAO.getAllItemDefault();
-
-        // Create autocomplete search bar
-        if (listItem != null) {
-            // create text field with clear button
-            TextField searchBar = TextFields.createClearableTextField();
-            searchBar.setStyle("-fx-font-size: 15");
-
-            // add autocomplete
-            AutoCompletionBinding auto = TextFields.bindAutoCompletion(searchBar, listItem);
-            auto.minWidthProperty().bind(searchPane.widthProperty());
-            auto.setVisibleRowCount(10);            // only show top 10 result
-
-            //add into panel
-            searchPane.getChildren().add(searchBar);
-            HBox.setHgrow(searchBar, Priority.ALWAYS);
-
-            // when press enter in searchBar
-            searchBar.setOnAction(actionEvent -> {
-                // get input text
-                String selected = searchBar.getText();
-                // find id of item (first split)
-                String[] listString = selected.split("-");
-                // get item from database
-                try
-                {
-                    int index = Integer.parseInt(listString[0].trim());
-                    Item newItem = Item_BookDAO.getItemById(index);
-                    // add to table
-                    if (newItem != null) {
-                        Bill_Item temp = new Bill_Item(newItem, 1, 0);
-                        tableView.getItems().add(temp);
-                        updateBill();
-                    }
-                } catch (NumberFormatException ex) {
-                }
-            });
+        if (listItem == null) {
+            listItem = new ArrayList<>();
         }
+        // create text field with clear button
+        TextField searchBar = TextFields.createClearableTextField();
+        searchBar.setStyle("-fx-font-size: 15");
+        // add autocomplete
+        AutoCompletionBinding auto = TextFields.bindAutoCompletion(searchBar, listItem);
+        auto.minWidthProperty().bind(searchPane.widthProperty());
+        auto.setVisibleRowCount(10);            // only show top 10 result
+        // auto add to table when selected
+        auto.setOnAutoCompleted(autoCompletionEvent -> {
+            // get input text
+            String selected = searchBar.getText();
+            // find id of item (first split)
+            String[] listString = selected.split("-");
+            // get item from database
+            try
+            {
+                int index = Integer.parseInt(listString[0].trim());
+                Item newItem = Item_BookDAO.getItemById(index);
+                // add to table
+                if (newItem != null) {
+                    Bill_Item temp = new Bill_Item(newItem, 1, 0);
+                    tableView.getItems().add(temp);
+                    updateBill();
+                }
+            } catch (NumberFormatException ex) {
+            }
+            searchBar.clear();
+        });
+        //add into panel
+        searchPane.getChildren().add(searchBar);
+        HBox.setHgrow(searchBar, Priority.ALWAYS);
+
+        // create autocomplete for customer
+        // get all customer in database
+        List<Customer> listCustomer = customerDAO.getAllCustomerDefault();
+        if (listCustomer == null) {
+            listCustomer = new ArrayList<>();
+        }
+        // create text field with clear button
+        customerBar = TextFields.createClearableTextField();
+        customerBar.setStyle("-fx-font-size: 15");
+        // add autocomplete
+        AutoCompletionBinding auto2 = TextFields.bindAutoCompletion(customerBar, listCustomer);
+        auto2.minWidthProperty().bind(customerBar.widthProperty());
+        auto2.setVisibleRowCount(10);            // only show top 10 result
+        auto2.setOnAutoCompleted(autoCompletionEvent -> {
+            // get input text
+            String selected = customerBar.getText();
+            // find id of item (first split)
+            String[] listString = selected.split("-");
+            // get item from database
+            try
+            {
+                int index = Integer.parseInt(listString[0].trim());
+                customer = customerDAO.getCustomerByID(index);
+                customerBar.setText(customer.getNameCustomer());
+            } catch (NumberFormatException ex) {
+            }
+        });
+        //add into panel
+        customerPane.getChildren().add(customerBar);
+        HBox.setHgrow(customerBar, Priority.ALWAYS);
+        customerPane.setMaxWidth(350);
 
         // create table view
         tableView = createTableView();
@@ -200,53 +219,34 @@ public class MainController implements Controller {
         borderPane.setCenter(null);
         borderPane.setCenter(scroll);
 
-        addItem.setOnAction(actionEvent -> {
-            AddItem controller = new AddItem(thisStage, this);
-            controller.showStage();
+        resetButton.setOnAction(actionEvent -> {
+            tableView.getItems().clear();
+            customer = null;
+            customerBar.clear();
+            totalCost.setText("0.0");
+            discount.setText("-0.0");
         });
-
-        addGenreButton.setOnAction(actionEvent -> {
-            AddGenre controller = new AddGenre(thisStage, this);
-            controller.showStage();
-        });
-
-        addStorageButton.setOnAction(actionEvent -> {
-            AddStorage controller = new AddStorage(thisStage, this);
-            controller.showStage();
-        });
-
-        // Get list employees of store
-        employeeList.setOnAction(actionEvent -> {
-            Management management = new Management(thisStage, this);
-            management.showStage();
-        });
-
-        // Get list employees of store
-        storageButton.setOnAction(actionEvent -> {
-            int id = pref.getInt("defaultStore", -1);
-            ViewStorageOfStore management = new ViewStorageOfStore(thisStage, this, id);
-            management.showStage();
-        });
-
-        reportButton.setOnAction(actionEvent -> {
-            Report report = new Report(thisStage, this);
-            report.showStage();
-        });
-
 
         createBillButton.setOnAction(actionEvent -> {
+            if (tableView.getItems().isEmpty()) {
+                return;
+            }
             // create bill
             float total = Float.parseFloat(totalCost.getText());
             float discountMoney = Float.parseFloat(discount.getText());
             LocalDateTime time = DateUtil.stringToDateTime(dateMakeBill.getText());
-            Customer currentCustomer = null;
             Employee currentEmployee = employeeDAO.getEmployeeByID(pref.getInt("ID",-1));
             Store currentStore = storeDAO.getStoreById(pref.getInt("defaultStore",-1));
             List<Bill_Item> tableList = tableView.getItems();
 
-            Bill newBill = new Bill(total, total,discountMoney, time, currentCustomer, currentEmployee, currentStore);
+            Bill newBill = new Bill(total, total,discountMoney, time, customer, currentEmployee, currentStore);
             billDAO.insert(newBill, tableList);
 
+            // update quantity for stored item
+            itemStoreDAO.updateQuantityItem(tableList, currentStore.getIdStore());
+
+
+            // printf
             PrinterPDF printerPDF = null;
             try {
                 printerPDF = new PrinterPDF();
@@ -256,7 +256,7 @@ public class MainController implements Controller {
                 e.printStackTrace();
             }
             try {
-                printerPDF.payment(tableList, nameCustomer.getText());
+                printerPDF.payment(tableList, customerBar.getText());
             } catch (IOException e) {
                 e.printStackTrace();
             } catch (DocumentException e) {
@@ -265,12 +265,15 @@ public class MainController implements Controller {
                 e.printStackTrace();
             }
 
+
+
+
             // Create and display AlertWindow
             AlertDialog success = new AlertDialog();
             Alert successAlert = success.createAlert(thisStage,
                     "INFORMATION",
                     "Tạo thành công",
-                    "Tạo biên lai thành công");
+                    "Tạo biên lai thành công. In biên lai thành công");
             successAlert.showAndWait();
 
             // clear table and label

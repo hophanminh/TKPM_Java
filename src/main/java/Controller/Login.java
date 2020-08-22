@@ -11,6 +11,7 @@ import javafx.scene.control.Button;
 import javafx.scene.control.PasswordField;
 import javafx.scene.control.TextField;
 import javafx.stage.Stage;
+import org.mindrot.jbcrypt.BCrypt;
 
 import java.io.IOException;
 import java.util.prefs.Preferences;
@@ -82,8 +83,8 @@ public class Login implements Controller {
             Employee loginUser = employeeDAO.getEmployeeByUsername(username);
             System.out.println(loginUser);
             // no username in database or wrong password
-            //if (loginUser == null || !BCrypt.checkpw(pass, loginUser.getPassword())) {    // when have signup -> bcrypt
-            if (loginUser == null || !loginUser.getPassword().equals(pass)) {
+            //if (loginUser == null || !loginUser.getPassword().equals(pass)) {
+            if (loginUser == null || !BCrypt.checkpw(pass, loginUser.getPassword())) {    // when have signup -> bcrypt
                 System.out.println("Wrong id or password");
 
                 // Create and display AlertWindow
@@ -135,7 +136,11 @@ public class Login implements Controller {
 
                 // check default store
                 if (pref.getInt("defaultStore", -1) == -1) {
-                    SetDefaultStore controller1 = new SetDefaultStore(thisStage);
+                    SetDefaultStore controller = new SetDefaultStore(thisStage, this);
+                    controller.showStage();
+
+                    // go to Main
+                    MainController controller1 = new MainController(thisStage);
                     controller1.showStage();
                 }
                 else {

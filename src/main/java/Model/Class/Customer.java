@@ -83,4 +83,11 @@ public class Customer {
     public void setIdentifyIDCustomer(String identifyIDCustomer) {
         this.identifyIDCustomer = identifyIDCustomer;
     }
+
+    @Override
+    public String toString() {
+        return idCustomer +
+                " - " + nameCustomer +
+                " - " + identifyIDCustomer;
+    }
 }

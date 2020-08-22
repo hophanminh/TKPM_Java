@@ -31,27 +31,27 @@
                                 <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
                             </rowConstraints>
                             <children>
-                                <Label text="Name employee" GridPane.rowIndex="1">
+                                <Label text="Tên nhân viên" GridPane.rowIndex="1">
                                     <GridPane.margin>
                                         <Insets />
                                     </GridPane.margin>
                                 </Label>
-                                <Label text="Address" GridPane.rowIndex="2" />
-                                <Label text="Phone" GridPane.rowIndex="3" />
-                                <Label text="Start" GridPane.columnIndex="1" GridPane.rowIndex="7">
+                                <Label text="Địa chỉ" GridPane.rowIndex="2" />
+                                <Label text="Điện thoại" GridPane.rowIndex="3" />
+                                <Label text="Ngày bắt đầu" GridPane.columnIndex="1" GridPane.rowIndex="7">
                                     <GridPane.margin>
                                         <Insets left="10.0" />
                                     </GridPane.margin>
                                 </Label>
-                                <Label text="Status" GridPane.rowIndex="8" />
-                                <Label text="Position" GridPane.columnIndex="1" GridPane.rowIndex="8">
+                                <Label text="Trạng thái" GridPane.rowIndex="8" />
+                                <Label text="Chức vụ" GridPane.columnIndex="1" GridPane.rowIndex="8">
                                     <GridPane.margin>
                                         <Insets left="10.0" />
                                     </GridPane.margin>
                                 </Label>
-                                <Label text="Salary" GridPane.rowIndex="7" />
-                                <Label text="Store working" GridPane.rowIndex="9" />
-                                <Label text="Storage working" GridPane.columnIndex="1" GridPane.rowIndex="9">
+                                <Label text="Lương" GridPane.rowIndex="7" />
+                                <Label text="Cửa hàng" GridPane.rowIndex="9" />
+                                <Label text="Kho" GridPane.columnIndex="1" GridPane.rowIndex="9">
                                     <GridPane.margin>
                                         <Insets left="10.0" />
                                     </GridPane.margin>
@@ -89,7 +89,7 @@
                                         <Insets left="100.0" />
                                     </GridPane.margin>
                                 </TextField>
-                                <Label text="BASIC INFORMATION">
+                                <Label text="Thông tin cơ bản">
                                     <font>
                                         <Font size="15.0" />
                                     </font>
@@ -97,13 +97,13 @@
                                         <Insets />
                                     </GridPane.margin>
                                 </Label>
-                                <Label text="EMPLOYEE'S COMPANY INFORMATION" GridPane.rowIndex="6">
+                                <Label text="Thông tin chi tiết" GridPane.rowIndex="6">
                                     <font>
                                         <Font size="15.0" />
                                     </font>
                                 </Label>
-                        <Label text="Username" GridPane.rowIndex="4" />
-                        <Label text="Password" GridPane.rowIndex="5" />
+                        <Label text="Tên đăng nhập" GridPane.rowIndex="4" />
+                        <Label text="Mật khẩu" GridPane.rowIndex="5" />
                         <TextField fx:id="usernameText" GridPane.columnIndex="1" GridPane.rowIndex="4" />
                         <TextField fx:id="passwordText" GridPane.columnIndex="1" GridPane.rowIndex="5" />
                             </children>
@@ -119,18 +119,24 @@
                             <children>
                                 <HBox alignment="CENTER_LEFT" prefHeight="46.0" prefWidth="422.0">
                                     <children>
-                                        <Button fx:id="closeButton" mnemonicParsing="false" text="Close">
+                                        <Button fx:id="closeButton" mnemonicParsing="false" text="Trở về">
                                             <HBox.margin>
                                                 <Insets left="10.0" />
-                                            </HBox.margin></Button>
+                                            </HBox.margin>
+                                 <font>
+                                    <Font size="15.0" />
+                                 </font></Button>
                                     </children>
                                 </HBox>
                                 <HBox alignment="CENTER_RIGHT" prefHeight="100.0" prefWidth="200.0">
                                     <children>
-                                        <Button fx:id="saveButton" mnemonicParsing="false" text="Save">
+                                        <Button fx:id="saveButton" mnemonicParsing="false" text="Xác nhận">
                                             <HBox.margin>
                                                 <Insets right="10.0" />
                                             </HBox.margin>
+                                 <font>
+                                    <Font size="15.0" />
+                                 </font>
                                         </Button>
                                     </children>
                                 </HBox>

@@ -121,8 +121,20 @@ public class Management implements Controller {
     @FXML
     public void initialize(){
         itemList = new ArrayList<>();
-        List<Store> storeList = storeDAO.getAllStores();
-        List<Storage> storageList = storageDAO.getAllStorages();
+        List<Store> storeList;
+        List<Storage> storageList;
+        int position = pref.getInt("position", -1);
+        if (position != 2) {
+            Store store = storeDAO.getStoreById(pref.getInt("defaultStore", -1));
+            storeList = new ArrayList<Store>();
+            storeList.add(store);
+            storageList = storageDAO.getStorageByStore(store.getIdStore());
+        }
+        else {
+            storeList = storeDAO.getAllStores();
+            storageList = storageDAO.getAllStorages();
+        }
+
         for (Store store: storeList){
             ssComboBox.getItems().add(store);
         }
@@ -141,23 +153,31 @@ public class Management implements Controller {
             generateData();
         });
 
-        String[] ieChoiceList = {"Items", "Employees", "Customers"};
+        List<String> ieChoiceList = new ArrayList<>();
+        ieChoiceList.add("Sản phẩm");
+        ieChoiceList.add("Khách hàng");
+        if (position != 0) {                // only lv1, lv2 can manage employee
+            ieChoiceList.add("Nhân viên");
+        }
+
+        if (position == 0) {
+            deleteButton.setVisible(false);                                             // hide delete button
+            deleteButton.managedProperty().bind(deleteButton.visibleProperty());
+        }
+
         ieComboBox.getItems().addAll(ieChoiceList);
         ieComboBox.getSelectionModel().selectFirst();
         ieComboBox.setOnAction(actionEvent -> {
-            if (ieComboBox.getSelectionModel().getSelectedItem().equals("Items")){
+            if (ieComboBox.getSelectionModel().getSelectedItem().equals("Sản phẩm")){
                 sendEmailButton.setVisible(false);
-                this.selectionIE = "Items";
-                addButton.setText("Add");
+                this.selectionIE = "Sản phẩm";
             }
-            else if(ieComboBox.getSelectionModel().getSelectedItem().equals("Employees")){
+            else if(ieComboBox.getSelectionModel().getSelectedItem().equals("Nhân viên")){
                 sendEmailButton.setVisible(false);
-                this.selectionIE = "Employees";
-                addButton.setText("Add");
+                this.selectionIE = "Nhân viên";
             } else {
                 sendEmailButton.setVisible(true);
-                this.selectionIE = "Customers";
-                addButton.setText("Add");
+                this.selectionIE = "Khách hàng";
             }
             generateData();
         });
@@ -165,8 +185,7 @@ public class Management implements Controller {
 
         // set default
         this.store = (Store) ssComboBox.getSelectionModel().getSelectedItem();
-        this.selectionIE = "Items";
-        this.addButton.setText("Add Items");
+        this.selectionIE = "Sản phẩm";
         generateData();
 
         backToMainButton.setOnAction(actionEvent -> {
@@ -175,39 +194,45 @@ public class Management implements Controller {
 
         addButton.setOnAction(actionEvent -> {
             System.out.println("Adding...");
-            if(this.selectionIE.equals("Items")){
+            if(this.selectionIE.equals("Sản phẩm")){
                 AddItem controller = new AddItem(thisStage, this);
                 controller.showStage();
-            } else if (this.selectionIE.equals("Employees")){
+            } else if (this.selectionIE.equals("Nhân viên")){
                 AddEmployee addEmployee = new AddEmployee(thisStage, this);
                 addEmployee.showStage();
             } else {
                 AddCustomer addCustomer = new AddCustomer(thisStage, this);
                 addCustomer.showStage();
             }
+            generateData();
         });
 
         deleteButton.setOnAction(actionEvent -> {
-            if(this.selectionIE.equals("Items")){
+            if(this.selectionIE.equals("Sản phẩm")){
                 Item item = (Item) tableView.getSelectionModel().getSelectedItem();
-                item_bookDAO.delete(item);
-                observableList.remove(item);
-            } else if (this.selectionIE.equals("Employees")) {
+                if (item != null) {
+                    item_bookDAO.delete(item, store, storage);
+                    observableList.remove(item);
+                }
+            } else if (this.selectionIE.equals("Nhân viên")) {
                 Employee employee = (Employee) tableView.getSelectionModel().getSelectedItem();
-                employeeDAO.deleteEmployee(employee);
-                observableList.remove(employee);
+                if (employee != null) {
+                    employeeDAO.deleteEmployee(employee);
+                    observableList.remove(employee);
+                }
             } else {
                 Customer customer = (Customer) tableView.getSelectionModel().getSelectedItem();
-                customerDAO.deleteCustomer(customer);
-                observableList.remove(customer);
-
+                if (customer != null) {
+                    customerDAO.deleteCustomer(customer);
+                    observableList.remove(customer);
+                }
             }
         });
 
         searchButton.setOnAction(actionEvent -> {
-            if(this.selectionIE.equals("Items")){
+            if(this.selectionIE.equals("Sản phẩm")){
 
-            } else if (this.selectionIE.equals("Employees")) {
+            } else if (this.selectionIE.equals("Nhân viên")) {
                 searchEmployee();
             } else {
                 searchCustomer();
@@ -229,7 +254,7 @@ public class Management implements Controller {
                 e.printStackTrace();
             }
 
-            if(selectionIE.equals("Items")) {
+            if(selectionIE.equals("Sản phẩm")) {
                 try {
                     printerPDF.ItemsReport(itemList);
                 } catch (IOException e) {
@@ -239,7 +264,7 @@ public class Management implements Controller {
                 } catch (URISyntaxException e) {
                     e.printStackTrace();
                 }
-            }  else if (selectionIE.equals("Employees")) {
+            }  else if (selectionIE.equals("Nhân viên")) {
                 try {
                     printerPDF.EmployeesReport(employeeList);
                 } catch (IOException e) {
@@ -266,59 +291,23 @@ public class Management implements Controller {
         idColumn.setCellValueFactory(new PropertyValueFactory<>("idItem"));
         idColumn.setStyle( "-fx-alignment: CENTER;");
 
-        TableColumn<Item, String> nameColumn = new TableColumn("Name");
+        TableColumn<Item, String> nameColumn = new TableColumn("Tên sản phẩm");
         nameColumn.setCellValueFactory(new PropertyValueFactory<>("nameItem"));
         nameColumn.setStyle( "-fx-alignment: CENTER;");
 
-        TableColumn<Item, Float> costColumn = new TableColumn("Cost");
+        TableColumn<Item, Float> costColumn = new TableColumn("Giá gốc");
         costColumn.setCellValueFactory(new PropertyValueFactory<Item, Float>("costItem"));
         costColumn.setStyle( "-fx-alignment: CENTER;");
 
-        TableColumn<Item, Float> priceColumn = new TableColumn("Price");
+        TableColumn<Item, Float> priceColumn = new TableColumn("Giá bán");
         priceColumn.setCellValueFactory(new PropertyValueFactory<Item, Float>("priceItem"));
         priceColumn.setStyle( "-fx-alignment: CENTER;");
 
-//        TableColumn<Item, String> authorColumn = new TableColumn("Author");
-//        Callback<TableColumn<Item, String>, TableCell<Item, String>> cellFactory
-//                = //
-//                new Callback<TableColumn<Item, String>, TableCell<Item, String>>()
-//                {
-//                    @Override
-//                    public TableCell call(final TableColumn<Item, String> param)
-//                    {
-//                        final TableCell<Item, String> cell = new TableCell<Item, String>()
-//                        {
-//                            @Override
-//                            public void updateItem(String item, boolean empty)
-//                            {
-//                                super.updateItem(item, empty);
-//                                if (empty) {
-//                                    setGraphic(null);
-//                                    setText(null);
-//                                }
-//                                else {
-//                                    setGraphic(null);
-//
-//                                    Item selected = (Item) tableView.getItems().get(getIndex());
-//                                    if (selected instanceof Book) {
-//                                        setText(((Book) selected).getAuthorBook());
-//                                    }
-//                                    setText(null);
-//                                }
-//                            }
-//                        };
-//                        return cell;
-//                    }
-//                };
-//        authorColumn.setCellFactory(cellFactory);
-//        authorColumn.setStyle( "-fx-alignment: CENTER;");
-
-        // Create column with quantity textfield
-        TableColumn<Item, Integer> quantityColumn = new TableColumn("Quantity");
+        TableColumn<Item, Integer> quantityColumn = new TableColumn("Số lượng");
         quantityColumn.setCellValueFactory(new PropertyValueFactory<Item, Integer>("quantityItem"));
         quantityColumn.setStyle( "-fx-alignment: CENTER;");
 
-        TableColumn<Item, Float> profitColumn = new TableColumn("Profit");
+        TableColumn<Item, Float> profitColumn = new TableColumn("Lợi nhuận");
         Callback<TableColumn<Item, Float>, TableCell<Item, Float>> cellFactory
                 = //
                 new Callback<TableColumn<Item, Float>, TableCell<Item, Float>>()
@@ -349,8 +338,53 @@ public class Management implements Controller {
         profitColumn.setCellFactory(cellFactory);
         profitColumn.setStyle( "-fx-alignment: CENTER;");
 
+        TableColumn<Item, Float> transferColumn = new TableColumn("Chuyển hàng");
+        Callback<TableColumn<Item, Float>, TableCell<Item, Float>> cellFactory5
+                = //
+                new Callback<TableColumn<Item, Float>, TableCell<Item, Float>>()
+                {
+                    @Override
+                    public TableCell call(final TableColumn<Item, Float> param)
+                    {
+                        final TableCell<Item, Float> cell = new TableCell<Item, Float>()
+                        {
+                            @Override
+                            public void updateItem(Float item, boolean empty)
+                            {
+                                super.updateItem(item, empty);
+                                final Button allowButton = new Button("Chuyển");
+                                {
+                                    allowButton.setOnAction(event -> {
+                                        Item selected = (Item) tableView.getItems().get(getIndex());
+                                        if (store != null) {
+                                            goToTransferItem(selected, store, null, selected.getQuantityItem());
+
+                                        }
+                                        else {
+                                            goToTransferItem(selected,null, storage, selected.getQuantityItem());
+                                        }
+                                        generateData();
+                                    });
+                                }
+
+                                if (empty) {
+                                    setGraphic(null);
+                                    setText(null);
+                                }
+                                else {
+                                    setGraphic(allowButton);
+                                    setText(null);
+                                }
+                            }
+                        };
+                        return cell;
+                    }
+                };
+        transferColumn.setCellFactory(cellFactory5);
+        transferColumn.setStyle( "-fx-alignment: CENTER;");
+
         // Create column with clear button
-        TableColumn detail = new TableColumn("Detail");
+        TableColumn detail = new TableColumn("Chi tiết");
         detail.setStyle( "-fx-alignment: CENTER;");
         Callback<TableColumn<Item, String>, TableCell<Item, String>> cellFactory3
                 = //
@@ -366,7 +400,7 @@ public class Management implements Controller {
                             public void updateItem(String item, boolean empty)
                             {
                                 super.updateItem(item, empty);
-                                final Button btn = new Button("Details");
+                                final Button btn = new Button("Chi tiết");
                                 {
                                     btn.setOnAction(event -> {
                                         Item selected = (Item) tableView.getItems().get(getIndex());
@@ -378,6 +412,7 @@ public class Management implements Controller {
                                         else {
                                             goToItemDetail((Item) selected,null, storage);
                                         }
+                                        generateData();
                                     });
                                 }
 
@@ -396,7 +431,7 @@ public class Management implements Controller {
                 };
         detail.setCellFactory(cellFactory3);
 
-        TableColumn[] columns = {idColumn, nameColumn,costColumn, priceColumn, quantityColumn,profitColumn, detail};
+        TableColumn[] columns = {idColumn, nameColumn,costColumn, priceColumn, quantityColumn,profitColumn, transferColumn, detail};
         tableView.getColumns().addAll(columns);
 
         // make column not dragable
@@ -421,39 +456,40 @@ public class Management implements Controller {
         tableView.getColumns().clear();
 
         // Add columns to Table view
-        TableColumn<Employee, String> nameColumn = new TableColumn("Name");
+        TableColumn<Employee, String> nameColumn = new TableColumn("Tên nhân viên");
         nameColumn.setCellValueFactory(new PropertyValueFactory<>("name"));
         nameColumn.setStyle( "-fx-alignment: CENTER;");
 
-        TableColumn<Employee, String> phoneColumn = new TableColumn("Phone");
+        TableColumn<Employee, String> phoneColumn = new TableColumn("Điện thoại");
         phoneColumn.setCellValueFactory(new PropertyValueFactory<>("phone"));
         phoneColumn.setStyle( "-fx-alignment: CENTER;");
 
-        TableColumn<Employee, Integer> salaryColumn = new TableColumn("Salary");
+        TableColumn<Employee, Integer> salaryColumn = new TableColumn("Tiền lương");
         salaryColumn.setCellValueFactory(new PropertyValueFactory<>("salary"));
         salaryColumn.setStyle( "-fx-alignment: CENTER;");
 
-        TableColumn<Employee, Date> startDateColumn = new TableColumn<Employee, Date>("Start Date");
+        TableColumn<Employee, Date> startDateColumn = new TableColumn<Employee, Date>("Ngày bắt đầu");
         startDateColumn.setCellValueFactory(new PropertyValueFactory<>("startDate"));
 
-        TableColumn<Employee, String> positionColumn = new TableColumn("Position");
+        TableColumn<Employee, String> positionColumn = new TableColumn("Chức vụ");
         positionColumn.setCellValueFactory(cell -> new SimpleStringProperty(((cell.getValue().getPosition()==0) ? "Employee":"Manager")));
         positionColumn.setStyle( "-fx-alignment: CENTER;");
 
-        TableColumn<Employee, String> statusColumn = new TableColumn("Status");
+        TableColumn<Employee, String> statusColumn = new TableColumn("Trạng thái");
         statusColumn.setCellValueFactory(cell -> new SimpleStringProperty(((cell.getValue().getStatus()==0) ? "Not working":"Working")));
         statusColumn.setStyle( "-fx-alignment: CENTER;");
 
-        TableColumn<Employee, Void> detailColumn = new TableColumn("More Details");
+        TableColumn<Employee, Void> detailColumn = new TableColumn("Chi tiết");
         Callback<TableColumn<Employee, Void>, TableCell<Employee, Void>> cellFactory =
                 new Callback<TableColumn<Employee, Void>, TableCell<Employee, Void>>() {
                     @Override
                     public TableCell<Employee, Void> call(final TableColumn<Employee, Void> param){
                         final TableCell<Employee, Void> cell = new TableCell<Employee, Void>() {
-                            final Button detailButton = new Button("Details");
+                            final Button detailButton = new Button("Chi tiết");
                             {
                                 detailButton.setOnAction(actionEvent -> {
                                     goToEmployeeDetail((Employee) tableView.getItems().get(getIndex()));
+                                    generateData();
                                 });
                             }
 
@@ -471,6 +507,7 @@ public class Management implements Controller {
                     }
                 };
         detailColumn.setCellFactory(cellFactory);
+        detailColumn.setStyle( "-fx-alignment: CENTER;");
         TableColumn[] columns = {nameColumn,salaryColumn, phoneColumn, startDateColumn, positionColumn, statusColumn, detailColumn};
         tableView.getColumns().addAll(columns);
 
@@ -496,7 +533,7 @@ public class Management implements Controller {
         tableView.getColumns().clear();
 
         // Add columns to Table view
-        TableColumn<Customer, String> nameColumn = new TableColumn("Name");
+        TableColumn<Customer, String> nameColumn = new TableColumn("Tên khách hàng");
         nameColumn.setCellValueFactory(new PropertyValueFactory<>("nameCustomer"));
         nameColumn.setStyle( "-fx-alignment: CENTER;");
 
@@ -504,23 +541,25 @@ public class Management implements Controller {
         emailColumn.setCellValueFactory(new PropertyValueFactory<>("emailCustomer"));
         emailColumn.setStyle( "-fx-alignment: CENTER;");
 
-        TableColumn<Customer, String> identifyIDCustomer = new TableColumn("Identify ID Customer");
+        TableColumn<Customer, String> identifyIDCustomer = new TableColumn("Số CMND");
         identifyIDCustomer.setCellValueFactory(new PropertyValueFactory<>("identifyIDCustomer"));
 
-        TableColumn<Customer, Date> dobColumn = new TableColumn("DoB");
+        TableColumn<Customer, Date> dobColumn = new TableColumn("Ngày sinh");
         dobColumn.setCellValueFactory(new PropertyValueFactory<>("dobCustomer"));
         dobColumn.setStyle( "-fx-alignment: CENTER;");
 
-        TableColumn<Employee, Void> detailColumn = new TableColumn("More Details");
+        TableColumn<Employee, Void> detailColumn = new TableColumn("Chi tiết");
+        detailColumn.setStyle( "-fx-alignment: CENTER;");
         Callback<TableColumn<Employee, Void>, TableCell<Employee, Void>> cellFactory =
                 new Callback<TableColumn<Employee, Void>, TableCell<Employee, Void>>() {
                     @Override
                     public TableCell<Employee, Void> call(final TableColumn<Employee, Void> param){
                         final TableCell<Employee, Void> cell = new TableCell<Employee, Void>() {
-                            final Button detailButton = new Button("Details");
+                            final Button detailButton = new Button("Chi tiết");
                             {
                                 detailButton.setOnAction(actionEvent -> {
                                     goToCustomerDetail((Customer) tableView.getItems().get(getIndex()));
+                                    generateData();
                                 });
                             }
 
@@ -558,13 +597,13 @@ public class Management implements Controller {
     }
 
     public void generateData(){
-        if(this.selectionIE.equals("Employees")){
+        if(this.selectionIE.equals("Nhân viên")){
             if(this.store != null){
                 employeeList = employeeDAO.getEmployeeByStore(this.store);
             } else employeeList = employeeDAO.getEmployeeByStorage(this.storage);
             observableList = FXCollections.observableList(this.employeeList);
             createTableViewEmployee();
-        } else if(this.selectionIE.equals("Items")) {
+        } else if(this.selectionIE.equals("Sản phẩm")) {
             createTableViewItem();
             // convert List<Item_Store>, List<Item_Storage> to List<Item>
             if (this.store != null) {
@@ -608,6 +647,11 @@ public class Management implements Controller {
     public void goToCustomerDetail(Customer customer){
         CustomerProfile customerProfile = new CustomerProfile(thisStage, this, customer);
         customerProfile.showStage();
+    }
+
+    public void goToTransferItem(Item item, Store store, Storage storage, int max){
+        TransferItem transferItem = new TransferItem(thisStage, this, item, store, storage, max);
+        transferItem.showStage();
     }
 
     public void searchEmployee(){

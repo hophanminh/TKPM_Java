@@ -50,7 +50,6 @@
         <mapping class="Model.Class.Book"/>
         <mapping class="Model.Class.Company"/>
         <mapping class="Model.Class.Customer"/>
-        <mapping class="Model.Class.Discount"/>
         <mapping class="Model.Class.Employee"/>
         <mapping class="Model.Class.Genre"/>
         <mapping class="Model.Class.Item"/>

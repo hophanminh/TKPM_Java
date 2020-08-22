@@ -106,7 +106,7 @@ public class AddItem implements Controller {
     }
 
     public void showStage() {
-        thisStage.show();
+        thisStage.showAndWait();
     }
 
     public void reloadStage() {
@@ -117,8 +117,20 @@ public class AddItem implements Controller {
 
     @FXML
     private void initialize() {
-        storeList = storeDAO.getAllStores();
-        storageList = storageDAO.getAllStorages();
+        List<Store> storeList;
+        List<Storage> storageList;
+        int position = pref.getInt("position", -1);
+        if (position != 2) {
+            Store store = storeDAO.getStoreById(pref.getInt("defaultStore", -1));
+            storeList = new ArrayList<Store>();
+            storeList.add(store);
+            storageList = storageDAO.getStorageByStore(store.getIdStore());
+        }
+        else {
+            storeList = storeDAO.getAllStores();
+            storageList = storageDAO.getAllStorages();
+        }
+
         genreList = new HashSet<>();
 
         // set item type

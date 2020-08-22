@@ -25,9 +25,6 @@ public class Store {
     private int outcomeStore;
 
     @OneToMany(fetch = FetchType.LAZY, mappedBy = "store")
-    private Set<Discount> discountList = new HashSet<>();
-
-    @OneToMany(fetch = FetchType.LAZY, mappedBy = "store")
     private Set<Customer> customerList = new HashSet<>();
 
     @OneToMany(fetch = FetchType.LAZY, mappedBy = "store")
@@ -98,14 +95,6 @@ public class Store {
 
     public void setOutcomeStore(int outcomeStore) {
         this.outcomeStore = outcomeStore;
-    }
-
-    public Set<Discount> getDiscountList() {
-        return discountList;
-    }
-
-    public void setDiscountList(Set<Discount> discountList) {
-        this.discountList = discountList;
     }
 
     public Set<Customer> getCustomerList() {

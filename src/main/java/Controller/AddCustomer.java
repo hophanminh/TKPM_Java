@@ -1,6 +1,8 @@
 package Controller;
 
 import Model.Class.Customer;
+import Model.Class.Employee;
+import Model.Class.Storage;
 import Model.Class.Store;
 import Model.DAO.CustomerDAO;
 import Model.DAO.StoreDAO;
@@ -13,7 +15,9 @@ import javafx.stage.Modality;
 import javafx.stage.Stage;
 
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.List;
+import java.util.prefs.Preferences;
 
 public class AddCustomer {
     private Stage thisStage;
@@ -21,6 +25,7 @@ public class AddCustomer {
     private Controller previousController;
     private StoreDAO storeDAO;
     private CustomerDAO customerDAO;
+    private Preferences pref;
 
     @FXML
     public TextField nameText;
@@ -43,6 +48,7 @@ public class AddCustomer {
             thisStage = new Stage();
             parent = previousStage;
             this.previousController = previousController;
+            pref = Preferences.userNodeForPackage(Employee.class);
 
             storeDAO = new StoreDAO();
             customerDAO = new CustomerDAO();
@@ -64,7 +70,7 @@ public class AddCustomer {
     }
 
     public void showStage() {
-        thisStage.show();
+        thisStage.showAndWait();
     }
 
     public void reloadStage() {
@@ -75,7 +81,17 @@ public class AddCustomer {
 
     @FXML
     public void initialize(){
-        List<Store> stores = storeDAO.getAllStores();
+        List<Store> stores;
+        int loginPosition = pref.getInt("position", -1);
+        if (loginPosition != 2) {
+            Store store = storeDAO.getStoreById(pref.getInt("defaultStore", -1));
+            stores = new ArrayList<Store>();
+            stores.add(store);
+        }
+        else {
+            stores = storeDAO.getAllStores();
+        }
+
         storeComboBox.getItems().add("Null");
         for(Store store: stores)
             storeComboBox.getItems().add(store);
@@ -94,23 +110,23 @@ public class AddCustomer {
         if(nameText.getText().trim().equals("")
                 || emailText.getText().trim().equals("")
                 || identifyText.getText().trim().equals(""))
-            error += "All input must have value\n";
+            error += "Phải điền đủ mọi ô trống\n";
 
         if(!emailText.getText().trim().matches("^([a-z\\d.]+)@([a-z\\d-]+)\\.([a-z]{2,8})(\\.[a-z]{2,8})?$"))
-            error += "Wrong email\n";
+            error += "Email không hợp lệ\n";
 
         if(!nameText.getText().trim().matches("^[^\\d]+$"))
-            error += "Name cannot have number\n";
+            error += "Tên không được chứa số\n";
 
-        if (!identifyText.getText().trim().matches("^([\\d]{10})$"))
-            error += "Identify Number must have 10 digits\n";
+        if (!identifyText.getText().trim().matches("^([0-9]{10})$"))
+            error += "Số CMND phải có đúng 10 chữ số\n";
 
 
         if(!error.trim().equals("")){
             AlertDialog fail = new AlertDialog();
             Alert failAlert = fail.createAlert(thisStage,
                     "WARNING",
-                    "FAIL TO CREATE",
+                    "Tạo thất bại",
                     error);
             failAlert.showAndWait();
             return;
@@ -130,8 +146,8 @@ public class AddCustomer {
             AlertDialog success = new AlertDialog();
             Alert successAlert = success.createAlert(thisStage,
                     "INFORMATION",
-                    "Create Successfully",
-                    "Create customer success");
+                    "Tạo thành công",
+                    "Tạo khách hàng thành công");
             successAlert.showAndWait();
             thisStage.close();
         }

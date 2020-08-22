@@ -36,7 +36,7 @@
                     </font>
                 </Button>
 
-                <Button fx:id="closeButton" minWidth="150.0" mnemonicParsing="false" prefHeight="30.0" prefWidth="100.0" text="Thoát">
+                <Button fx:id="closeButton" minWidth="150.0" mnemonicParsing="false" prefHeight="30.0" prefWidth="100.0" text="Trở về">
                     <HBox.margin>
                         <Insets />
                     </HBox.margin>

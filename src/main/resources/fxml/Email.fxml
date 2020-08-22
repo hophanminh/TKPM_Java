@@ -3,6 +3,7 @@
 <?import javafx.geometry.*?>
 <?import javafx.scene.control.*?>
 <?import javafx.scene.layout.*?>
+<?import javafx.scene.text.*?>
 
 <AnchorPane prefHeight="300.0" prefWidth="600.0" xmlns="http://javafx.com/javafx/10.0.2-internal" xmlns:fx="http://javafx.com/fxml/1">
    <children>
@@ -14,7 +15,7 @@
                      <children>
                         <HBox alignment="CENTER_LEFT" prefHeight="100.0" prefWidth="200.0">
                            <children>
-                              <Label text="Title" />
+                              <Label text="Tiêu đề" />
                            </children></HBox>
                         <HBox prefHeight="54.0" prefWidth="633.0">
                            <children>
@@ -31,7 +32,7 @@
                      <children>
                         <HBox prefHeight="214.0" prefWidth="72.0">
                            <children>
-                              <Label text="Content" />
+                              <Label text="Nội dung" />
                            </children>
                         </HBox>
                         <HBox prefHeight="214.0" prefWidth="508.0">
@@ -52,12 +53,18 @@
                      <children>
                         <HBox alignment="CENTER_LEFT" prefHeight="36.0" prefWidth="410.0">
                            <children>
-                              <Button fx:id="backButton" mnemonicParsing="false" text="Back" />
+                              <Button fx:id="backButton" mnemonicParsing="false" text="Trở về">
+                                 <font>
+                                    <Font size="15.0" />
+                                 </font></Button>
                            </children>
                         </HBox>
                         <HBox alignment="CENTER_RIGHT" prefHeight="31.0" prefWidth="172.0">
                            <children>
-                              <Button fx:id="sendButton" mnemonicParsing="false" text="Send Email" />
+                              <Button fx:id="sendButton" mnemonicParsing="false" text="Gửi Email">
+                                 <font>
+                                    <Font size="15.0" />
+                                 </font></Button>
                            </children>
                         </HBox>
                      </children>

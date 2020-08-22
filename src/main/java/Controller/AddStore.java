@@ -60,13 +60,10 @@ public class AddStore implements Controller {
     }
 
     public void showStage() {
-        thisStage.show();
+        thisStage.showAndWait();
     }
 
     public void reloadStage() {
-        AddStore reload = new AddStore(parent, previousController);
-        reload.showStage();
-        thisStage.close();
     }
 
     @FXML
@@ -123,8 +120,6 @@ public class AddStore implements Controller {
         });
 
         closeButton.setOnAction(actionEvent -> {
-            // reload previous stage
-            previousController.reloadStage();
             thisStage.close();
         });
     }

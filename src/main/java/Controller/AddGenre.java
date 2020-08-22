@@ -57,13 +57,10 @@ public class AddGenre {
     }
 
     public void showStage() {
-        thisStage.show();
+        thisStage.showAndWait();
     }
 
     public void reloadStage() {
-        AddGenre reload = new AddGenre(parent, previousController);
-        reload.showStage();
-        thisStage.close();
     }
 
     @FXML

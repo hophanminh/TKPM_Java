@@ -1,7 +1,9 @@
 package Model.DAO;
 
 import Main.App;
+import Model.Class.Bill_Item;
 import Model.Class.Employee;
+import Model.Class.Item;
 import Model.Class.Store;
 import org.hibernate.Session;
 import org.hibernate.query.Query;
@@ -29,6 +31,18 @@ public class StoreDAO {
         try{
             session.getTransaction().begin();
             session.update(store);
+            session.getTransaction().commit();
+        } catch (Exception exception) {
+            exception.printStackTrace();
+            session.getTransaction().rollback();
+        }
+    }
+
+    public void delete(Store store) {
+        Session session = App.getSession();
+        try{
+            session.getTransaction().begin();
+            session.remove(store);
             session.getTransaction().commit();
         } catch (Exception exception) {
             exception.printStackTrace();
@@ -95,6 +109,52 @@ public class StoreDAO {
             );
             query.setParameter("idStore", idStore);
             resultList = query.getSingleResult();
+
+            session.getTransaction().commit();
+        } catch (Exception exception) {
+            exception.printStackTrace();
+            session.getTransaction().rollback();
+        }
+        return resultList;
+    }
+
+    public List<Store> getAllStoresExceptOne(int idStore){
+        Session session = App.getSession();
+        List<Store> resultList = null;
+
+        try{
+            session.getTransaction().begin();
+
+            // get all Item and book from database
+            Query<Store> query = session.createQuery(
+                    "FROM Store " +
+                            "WHERE idStore <> :idStore" , Store.class
+            );
+            query.setParameter("idStore", idStore);
+            resultList = query.list();
+
+            session.getTransaction().commit();
+        } catch (Exception exception) {
+            exception.printStackTrace();
+            session.getTransaction().rollback();
+        }
+        return resultList;
+    }
+
+    public List<Store> getStoreByStorage(int idStorage) {
+        Session session = App.getSession();
+        List<Store> resultList = null;
+
+        try{
+            session.getTransaction().begin();
+
+            // get all Item and book from database
+            Query<Store> query = session.createQuery(
+                    "FROM Store as st JOIN FETCH st.storageList " +
+                            "WHERE idStorage = :idStorage" , Store.class
+            );
+            query.setParameter("idStorage", idStorage);
+            resultList = query.list();
 
             session.getTransaction().commit();
         } catch (Exception exception) {

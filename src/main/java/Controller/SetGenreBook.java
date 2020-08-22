@@ -32,10 +32,10 @@ public class SetGenreBook implements Controller {
     private GenreDAO genreDAO;
 
     private HashSet<Genre> previousList;
-
+    private List<Genre> list;
     private FlowPane flowPane;
-    String type;
-
+    private String type;
+    private List<CheckBox> listCheckBox;
     @FXML
     private BorderPane borderPane;
 
@@ -44,6 +44,9 @@ public class SetGenreBook implements Controller {
 
     @FXML
     private Button closeButton;
+
+    @FXML
+    private Button addButton;
 
     public SetGenreBook(Stage previousStage, Controller previous, HashSet<Genre> list, String type){
         try {
@@ -82,11 +85,12 @@ public class SetGenreBook implements Controller {
     @FXML
     private void initialize() {
         // get all genre
-        List<Genre> list = genreDAO.getAllGenresInitialized();
-        List<CheckBox> listCheckBox = new ArrayList<>();
+        list = genreDAO.getAllGenresInitialized();
+        listCheckBox = new ArrayList<>();
 
         // create flow panel
-        FlowPane flowPane = createFlowPane(list, listCheckBox);
+        flowPane = new FlowPane();
+        createFlowPane(list, listCheckBox);
         ScrollPane scroll = new ScrollPane(flowPane);
         scroll.setFitToHeight(true);
         scroll.setFitToWidth(true);
@@ -131,13 +135,23 @@ public class SetGenreBook implements Controller {
             }
         });
 
+        addButton.setOnAction(actionEvent -> {
+            AddGenre controller = new AddGenre(thisStage, this);
+            controller.showStage();
+
+            list = genreDAO.getAllGenresInitialized();
+            listCheckBox = new ArrayList<>();
+            createFlowPane(list, listCheckBox);
+        });
+
         closeButton.setOnAction(actionEvent -> {
             thisStage.close();
         });
+
     }
 
-    private FlowPane createFlowPane(List<Genre> list, List<CheckBox> listCheckBox) {
-        FlowPane flowPane = new FlowPane();
+    private void createFlowPane(List<Genre> list, List<CheckBox> listCheckBox) {
+        flowPane.getChildren().clear();
 
         for (Genre genre: list) {
             // create checkbox for each genre
@@ -166,7 +180,5 @@ public class SetGenreBook implements Controller {
             flowPane.setVgap(20);
             flowPane.setPadding(new Insets(10, 0, 10, 20));
         }
-
-        return flowPane;
     }
 }

@@ -1,0 +1,133 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.geometry.*?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+<?import javafx.scene.text.*?>
+
+<GridPane fx:id="gridPane" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="342.0" prefWidth="595.0" xmlns="http://javafx.com/javafx/10.0.2-internal" xmlns:fx="http://javafx.com/fxml/1">
+   <columnConstraints>
+      <ColumnConstraints hgrow="SOMETIMES" maxWidth="259.0" minWidth="10.0" prefWidth="207.0" />
+      <ColumnConstraints hgrow="SOMETIMES" maxWidth="650.0" minWidth="10.0" prefWidth="348.0" />
+      <ColumnConstraints />
+   </columnConstraints>
+   <rowConstraints>
+      <RowConstraints maxHeight="90.0" minHeight="10.0" prefHeight="90.0" vgrow="SOMETIMES" />
+      <RowConstraints maxHeight="50.0" minHeight="50.0" prefHeight="0.0" vgrow="SOMETIMES" />
+      <RowConstraints maxHeight="50.0" minHeight="50.0" prefHeight="0.0" vgrow="SOMETIMES" />
+      <RowConstraints maxHeight="50.0" minHeight="50.0" prefHeight="30.0" vgrow="SOMETIMES" />
+      <RowConstraints maxHeight="50.0" minHeight="50.0" prefHeight="0.0" vgrow="SOMETIMES" />
+      <RowConstraints maxHeight="70.0" minHeight="70.0" prefHeight="50.0" />
+   </rowConstraints>
+   <children>
+      <Label text="Chuyển sản phẩm" GridPane.columnSpan="3" GridPane.halignment="CENTER">
+         <font>
+            <Font size="35.0" />
+         </font>
+      </Label>
+      <ComboBox fx:id="locationNameField" maxWidth="1.7976931348623157E308" nodeOrientation="LEFT_TO_RIGHT" prefHeight="25.0" prefWidth="521.0" GridPane.columnIndex="1" GridPane.hgrow="ALWAYS" GridPane.rowIndex="3">
+         <GridPane.margin>
+            <Insets bottom="20.0" left="20.0" right="20.0" top="20.0" />
+         </GridPane.margin>
+      </ComboBox>
+      <HBox alignment="CENTER_RIGHT" prefHeight="116.0" prefWidth="689.0" spacing="10.0" GridPane.columnSpan="3" GridPane.rowIndex="5">
+         <children>
+            <Button fx:id="acceptButton" minWidth="150.0" mnemonicParsing="false" prefHeight="30.0" prefWidth="100.0" text="Xác nhận">
+               <HBox.margin>
+                  <Insets />
+               </HBox.margin>
+               <font>
+                  <Font size="15.0" />
+               </font>
+            </Button>
+
+            <Button fx:id="closeButton" minWidth="150.0" mnemonicParsing="false" prefHeight="30.0" prefWidth="100.0" text="Trở về">
+               <HBox.margin>
+                  <Insets />
+               </HBox.margin>
+               <font>
+                  <Font size="15.0" />
+               </font>
+            </Button>
+         </children>
+         <GridPane.margin>
+            <Insets bottom="20.0" left="20.0" right="20.0" top="20.0" />
+         </GridPane.margin>
+      </HBox>
+      <HBox alignment="CENTER_LEFT" spacing="10.0" GridPane.columnIndex="1" GridPane.rowIndex="4">
+         <GridPane.margin>
+            <Insets bottom="20.0" left="20.0" right="20.0" top="20.0" />
+         </GridPane.margin>
+         <children>
+            <TextField fx:id="quantityField" alignment="CENTER_RIGHT" maxHeight="25.0" maxWidth="80.0" prefHeight="25.0" prefWidth="80.0" text="1">
+               <font>
+                  <Font size="15.0" />
+               </font>
+            </TextField>
+            <Label fx:id="maxLabel" text="Tối đa: 1">
+               <font>
+                  <Font size="19.0" />
+               </font>
+            </Label>
+         </children>
+      </HBox>
+      <HBox alignment="CENTER_RIGHT" prefHeight="100.0" prefWidth="200.0" GridPane.rowIndex="1">
+         <children>
+            <Label text="Tên sản phẩm">
+               <font>
+                  <Font size="19.0" />
+               </font>
+            </Label>
+         </children>
+         <GridPane.margin>
+            <Insets />
+         </GridPane.margin>
+      </HBox>
+      <HBox alignment="CENTER_RIGHT" prefHeight="100.0" prefWidth="200.0" GridPane.rowIndex="2">
+         <children>
+            <Label text="Chuyển sang">
+               <font>
+                  <Font size="19.0" />
+               </font>
+            </Label>
+            <Label style="-fx-text-fill: red;" text=" ">
+               <font>
+                  <Font size="19.0" />
+               </font>
+            </Label>
+         </children>
+         <GridPane.margin>
+            <Insets />
+         </GridPane.margin>
+      </HBox>
+      <HBox alignment="CENTER_RIGHT" prefHeight="100.0" prefWidth="200.0" GridPane.rowIndex="4">
+         <children>
+            <Label text="Số lượng">
+               <font>
+                  <Font size="19.0" />
+               </font>
+            </Label>
+         </children>
+         <GridPane.margin>
+            <Insets />
+         </GridPane.margin>
+      </HBox>
+      <HBox GridPane.columnIndex="1" GridPane.rowIndex="1">
+         <GridPane.margin>
+            <Insets bottom="20.0" left="20.0" right="20.0" top="20.0" />
+         </GridPane.margin>
+         <children>
+            <Label fx:id="nameLabel" text="name">
+               <font>
+                  <Font size="19.0" />
+               </font>
+            </Label>
+         </children>
+      </HBox>
+      <ComboBox fx:id="locationField" prefHeight="25.0" prefWidth="165.0" GridPane.columnIndex="1" GridPane.rowIndex="2">
+         <GridPane.margin>
+            <Insets bottom="20.0" left="20.0" right="20.0" top="20.0" />
+         </GridPane.margin>
+      </ComboBox>
+   </children>
+</GridPane>

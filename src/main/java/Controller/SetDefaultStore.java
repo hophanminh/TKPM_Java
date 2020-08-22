@@ -8,9 +8,8 @@ import View.AlertDialog;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Scene;
-import javafx.scene.control.Alert;
-import javafx.scene.control.Button;
-import javafx.scene.control.ComboBox;
+import javafx.scene.control.*;
+import javafx.stage.Modality;
 import javafx.stage.Stage;
 
 import java.io.IOException;
@@ -19,8 +18,13 @@ import java.util.prefs.Preferences;
 
 public class SetDefaultStore implements Controller {
     private Stage thisStage;
+    private Stage parentStage;
+    private Controller previousController;
     private StoreDAO storeDAO;
     private Preferences pref;
+
+    @FXML
+    public Label nameField;
 
     @FXML
     public ComboBox comboBox;
@@ -31,12 +35,14 @@ public class SetDefaultStore implements Controller {
     @FXML
     public Button acceptButton;
 
-    public SetDefaultStore(Stage stage) {
+    public SetDefaultStore(Stage previousStage, Controller previous) {
         try {
             // keep stage, change scene
-            thisStage = stage;
-            storeDAO = new StoreDAO();
+            thisStage = new Stage();
+            parentStage = previousStage;
+            previousController = previous;
             pref = Preferences.userNodeForPackage(Employee.class);
+            storeDAO = new StoreDAO();
 
             FXMLLoader loader = new FXMLLoader(getClass().getResource("/fxml/setDefaultStore.fxml"));
             loader.setController(this);
@@ -44,6 +50,9 @@ public class SetDefaultStore implements Controller {
             thisStage.setTitle("Cài đặt cửa hàng");
             thisStage.setResizable(false);
 
+            // lock to previous stage
+            thisStage.initOwner(previousStage);
+            thisStage.initModality(Modality.WINDOW_MODAL);
         } catch (IOException e) {
             e.printStackTrace();
         }
@@ -51,12 +60,10 @@ public class SetDefaultStore implements Controller {
     }
 
     public void showStage() {
-        thisStage.show();
+        thisStage.showAndWait();
     }
 
     public void reloadStage() {
-        SetDefaultStore reload = new SetDefaultStore(thisStage);
-        reload.showStage();
     }
 
     @FXML
@@ -65,19 +72,24 @@ public class SetDefaultStore implements Controller {
         List<Store> list = storeDAO.getAllStores();
         comboBox.getItems().addAll(list);
 
+
         // default select first option
         if (!comboBox.getItems().isEmpty()) {
             comboBox.getSelectionModel().selectFirst();
         }
 
+        int current = pref.getInt("defaultStore", -1);
+        if (current != -1){
+            Store store = storeDAO.getStoreById(current);
+            nameField.setText(store.getNameStore());
+            comboBox.getSelectionModel().select(store);
+        };
+
         acceptButton.setOnAction(actionEvent -> {
             if (!comboBox.getItems().isEmpty()) {
                 Store selected = (Store) comboBox.getSelectionModel().getSelectedItem();
                 pref.putInt("defaultStore", selected.getIdStore());
-
-                // go to Main
-                MainController controller1 = new MainController(thisStage);
-                controller1.showStage();
+                thisStage.close();
             }
             else {
                 // Create and display AlertWindow
@@ -93,6 +105,9 @@ public class SetDefaultStore implements Controller {
         addButton.setOnAction(actionEvent -> {
             AddStore controller = new AddStore(thisStage, this);
             controller.showStage();
+            comboBox.getItems().clear();
+            comboBox.getItems().addAll(storeDAO.getAllStores());
+            comboBox.getSelectionModel().selectFirst();
         });
 
     }

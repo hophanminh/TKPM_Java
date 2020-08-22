@@ -30,27 +30,27 @@
                         <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
                     </rowConstraints>
                      <children>
-                        <Label text="Name employee" GridPane.rowIndex="1">
+                        <Label text="Tên nhân viên" GridPane.rowIndex="1">
                            <GridPane.margin>
                               <Insets />
                            </GridPane.margin>
                         </Label>
-                        <Label text="Address" GridPane.rowIndex="2" />
-                        <Label text="Phone" GridPane.rowIndex="3" />
-                        <Label text="Start" GridPane.columnIndex="1" GridPane.rowIndex="5">
+                        <Label text="Địa chỉ" GridPane.rowIndex="2" />
+                        <Label text="Điện thoại" GridPane.rowIndex="3" />
+                        <Label text="Ngày bắt đầu" GridPane.columnIndex="1" GridPane.rowIndex="5">
                            <GridPane.margin>
                               <Insets left="10.0" />
                            </GridPane.margin>
                         </Label>
-                        <Label text="Status" GridPane.rowIndex="6" />
-                        <Label text="Position" GridPane.columnIndex="1" GridPane.rowIndex="6">
+                        <Label text="Trạng thái" GridPane.rowIndex="6" />
+                        <Label text="Chức vụ" GridPane.columnIndex="1" GridPane.rowIndex="6">
                            <GridPane.margin>
                               <Insets left="10.0" />
                            </GridPane.margin>
                         </Label>
-                        <Label text="Salary" GridPane.rowIndex="5" />
-                        <Label text="Store working" GridPane.rowIndex="7" />
-                        <Label text="Storage working" GridPane.columnIndex="1" GridPane.rowIndex="7">
+                        <Label text="Lương" GridPane.rowIndex="5" />
+                        <Label text="Cửa hàng" GridPane.rowIndex="7" />
+                        <Label text="Kho" GridPane.columnIndex="1" GridPane.rowIndex="7">
                            <GridPane.margin>
                               <Insets left="10.0" />
                            </GridPane.margin>
@@ -88,7 +88,7 @@
                               <Insets left="100.0" />
                            </GridPane.margin>
                         </TextField>
-                        <Label text="BASIC INFORMATION">
+                        <Label text="Thông tin cở bản">
                            <font>
                               <Font size="15.0" />
                            </font>
@@ -96,7 +96,7 @@
                               <Insets />
                            </GridPane.margin>
                         </Label>
-                        <Label text="EMPLOYEE'S COMPANY INFORMATION" GridPane.rowIndex="4">
+                        <Label text="Thông tin chi tiết" GridPane.rowIndex="4">
                            <font>
                               <Font size="15.0" />
                            </font>
@@ -114,7 +114,7 @@
                      <children>
                         <HBox alignment="CENTER_LEFT" prefHeight="46.0" prefWidth="422.0">
                            <children>
-                              <Button fx:id="closeButton" mnemonicParsing="false" text="Close">
+                              <Button fx:id="closeButton" mnemonicParsing="false" text="Trở về">
                                  <HBox.margin>
                                     <Insets left="10.0" />
                                  </HBox.margin></Button>
@@ -122,7 +122,7 @@
                         </HBox>
                         <HBox alignment="CENTER_RIGHT" prefHeight="100.0" prefWidth="200.0">
                            <children>
-                              <Button fx:id="updateButton" mnemonicParsing="false" text="Update">
+                              <Button fx:id="updateButton" mnemonicParsing="false" text="Cập nhập">
                                  <HBox.margin>
                                     <Insets right="10.0" />
                                  </HBox.margin>

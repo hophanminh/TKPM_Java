@@ -87,8 +87,8 @@ public class SendEmail {
             AlertDialog successDialog = new AlertDialog();
             Alert successAlert = successDialog.createAlert(thisStage,
                     "INFORMATION",
-                    "Summary",
-                    "Sent "+ success+ "/"+ listCustomer.size()+" emails successfully");
+                    "Gửi thành công",
+                    "Gửi "+ success+ "/"+ listCustomer.size()+" email thành công");
             successAlert.showAndWait();
             thisStage.close();
         });
