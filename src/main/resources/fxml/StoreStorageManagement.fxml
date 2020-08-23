@@ -54,7 +54,7 @@
                         <Region prefHeight="200.0" prefWidth="200.0" HBox.hgrow="ALWAYS" />
                         <HBox alignment="CENTER_RIGHT" prefHeight="30.0" prefWidth="100.0">
                            <children>
-                              <Button fx:id="addButton" mnemonicParsing="false" prefHeight="30.0" prefWidth="100.0" text="Xác nhận">
+                              <Button fx:id="addButton" mnemonicParsing="false" prefHeight="30.0" prefWidth="100.0" text="Thêm">
                                  <font>
                                     <Font size="15.0" />
                                  </font></Button>

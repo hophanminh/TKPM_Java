@@ -3,7 +3,7 @@ package Controller;
 import Model.Class.Customer;
 import Model.DAO.CustomerDAO;
 import View.AlertDialog;
-import View.EmailUtil;
+import utils.EmailUtil;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Scene;

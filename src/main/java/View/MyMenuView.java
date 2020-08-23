@@ -76,12 +76,18 @@ public class MyMenuView {
             Report report = new Report(currentStage, currentController);
             report.showStage();
         });
+        // see bill list
+        MenuItem manageMenuItem4 = new MenuItem("Lịch sử bán");
+        manageMenuItem4.setOnAction(e -> {
+            ViewBill viewBill = new ViewBill(currentStage, currentController, pref.getInt("defaultStore", -1));
+            viewBill.showStage();
+        });
 
         if (pref.getInt("position", 0) != 2) {              // boss
             manageMenu.getItems().addAll(manageMenuItem2, manageMenuItem3);
         }
         else {
-            manageMenu.getItems().addAll(manageMenuItem1, manageMenuItem2, manageMenuItem3);
+            manageMenu.getItems().addAll(manageMenuItem1, manageMenuItem2, manageMenuItem3, manageMenuItem4);
         }
 
 

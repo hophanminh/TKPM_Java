@@ -48,13 +48,34 @@ public class BillDAO {
         }
     }
 
+    public List<Bill_Item> getBillItemByIDBill(int idBill){
+        Session session = App.getSession();
+        List<Bill_Item> resultList = null;
+        try {
+            session.getTransaction().begin();
+            Query<Bill_Item> query = session.createQuery(
+                    "FROM Bill_Item as bi " +
+                            " JOIN FETCH bi.bill as b " +
+                            "WHERE b.idBill = :idBill ", Bill_Item.class);
+            query.setParameter("idBill", idBill);
+            resultList = query.list();
+            session.getTransaction().commit();
+        } catch (Exception e){
+            e.printStackTrace();
+            session.getTransaction().rollback();
+        }
+        return resultList;
+    }
+
     public List<Bill> getBillByStore(Store store){
         Session session = App.getSession();
         List<Bill> resultList = null;
         try {
             session.getTransaction().begin();
-            Query<Bill> query = session.createQuery("SELECT b " +
+            Query<Bill> query = session.createQuery(
                     "FROM Bill as b " +
+                            "LEFT JOIN FETCH b.customer " +
+                            "LEFT JOIN FETCH b.employee " +
                     "WHERE b.store = :store ", Bill.class);
             query.setParameter("store", store);
             resultList = query.list();

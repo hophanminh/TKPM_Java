@@ -1,4 +1,4 @@
-package View;
+package utils;
 
 import Model.Class.Customer;
 import javafx.stage.Stage;
